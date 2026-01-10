@@ -39,8 +39,6 @@
             scale: 1 !important;
             opacity: 1 !important;
         }
-
-        .group-hover-menu:hover .dropdown-content { display: block; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col">
@@ -125,20 +123,21 @@
             input.value = '';
             btnArea.innerHTML = '';
             if(showInput) setTimeout(() => input.focus(), 100);
+            
             if (type === 'confirm') {
                 btnArea.innerHTML = `
                     <button onclick="closeModal()" class="flex-1 py-2 bg-gray-700 hover:bg-gray-600 rounded-xl transition">Batal</button>
-                    <button id="confirmAction" class="flex-1 py-2 bg-red-600 hover:bg-red-500 rounded-xl font-bold transition">Hapus</button>
+                    <button id="confirmAction" class="flex-1 py-2 bg-red-600 hover:bg-red-500 rounded-xl font-bold transition text-white">Hapus</button>
                 `;
                 document.getElementById('confirmAction').onclick = () => { onConfirm(); closeModal(); };
             } else if (type === 'auth') {
                 btnArea.innerHTML = `
                     <button onclick="closeModal()" class="flex-1 py-2 bg-gray-700 hover:bg-gray-600 rounded-xl transition">Batal</button>
-                    <button id="verifyAction" class="flex-1 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold transition">Verify</button>
+                    <button id="verifyAction" class="flex-1 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold transition text-white">Verify</button>
                 `;
                 document.getElementById('verifyAction').onclick = onConfirm;
             } else {
-                btnArea.innerHTML = `<button onclick="closeModal()" class="w-full py-2 bg-blue-600 rounded-xl font-bold">Oke</button>`;
+                btnArea.innerHTML = `<button onclick="closeModal()" class="w-full py-2 bg-blue-600 rounded-xl font-bold text-white">Oke</button>`;
             }
         }
 
@@ -149,13 +148,13 @@
 
         function alertCustom(title, desc, theme = 'success') {
             const color = theme === 'success' ? 'text-green-500' : 'text-red-500';
-            const iconContent = theme === 'success' ? 
-                '<path d="M5 13l4 4L19 7"></path>' : 
-                '<path d="M6 18L18 6M6 6l12 12"></path>';
+            const iconSvg = theme === 'success' ? 
+                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>' : 
+                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
             showModal({
                 title: title,
                 desc: desc,
-                icon: `<div class="p-3 bg-gray-700 rounded-full flex items-center justify-center ${color}"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">${iconContent}</svg></div>`,
+                icon: `<div class="p-3 bg-gray-700 rounded-full flex items-center justify-center ${color}"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">${iconSvg}</svg></div>`,
                 type: 'alert'
             });
         }
@@ -169,20 +168,14 @@
                     showInput: true,
                     type: 'auth',
                     onConfirm: () => {
-                        const pass = document.getElementById('modalInput').value;
-                        if (pass === DEV_KEY) {
-                            isDev = true;
-                            updateUI();
-                            closeModal();
+                        if (document.getElementById('modalInput').value === DEV_KEY) {
+                            isDev = true; updateUI(); closeModal();
                         } else {
                             alertCustom("Akses Ditolak", "Password salah!", "error");
                         }
                     }
                 });
-            } else {
-                isDev = false;
-                updateUI();
-            }
+            } else { isDev = false; updateUI(); }
         }
 
         function updateUI() {
@@ -211,18 +204,11 @@
                 codes = codes.map(c => c.id == editId ? { ...c, title, content } : c);
                 alertCustom("Berhasil!", "Kode telah diperbarui.");
             } else {
-                const newCode = {
-                    id: Date.now(),
-                    title: title,
-                    content: content,
-                    date: new Date().toLocaleString('id-ID')
-                };
-                codes.unshift(newCode);
+                codes.unshift({ id: Date.now(), title, content, date: new Date().toLocaleString('id-ID') });
                 alertCustom("Berhasil!", "Kode berhasil dipublish.");
             }
             localStorage.setItem('sharedCodes', JSON.stringify(codes));
-            resetForm();
-            renderCodes();
+            resetForm(); renderCodes();
         }
 
         function deleteCode(id) {
@@ -233,16 +219,14 @@
                 type: 'confirm',
                 onConfirm: () => {
                     let codes = JSON.parse(localStorage.getItem('sharedCodes')) || [];
-                    codes = codes.filter(c => c.id !== id);
-                    localStorage.setItem('sharedCodes', JSON.stringify(codes));
+                    localStorage.setItem('sharedCodes', JSON.stringify(codes.filter(c => c.id !== id)));
                     renderCodes();
                 }
             });
         }
 
         function startEdit(id) {
-            const codes = JSON.parse(localStorage.getItem('sharedCodes')) || [];
-            const target = codes.find(c => c.id === id);
+            const target = (JSON.parse(localStorage.getItem('sharedCodes')) || []).find(c => c.id === id);
             if (target) {
                 document.getElementById('editId').value = target.id;
                 document.getElementById('codeTitle').value = target.title;
@@ -263,15 +247,13 @@
             document.getElementById('cancelEditBtn').classList.add('hidden');
         }
 
-        function copyToClipboard(btn, text) {
+        function copyByElementId(elementId, btn) {
+            const text = document.getElementById(elementId).innerText;
             navigator.clipboard.writeText(text).then(() => {
                 const originalText = btn.innerText;
                 btn.innerText = "Copied!";
                 btn.classList.add('bg-blue-600');
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.classList.remove('bg-blue-600');
-                }, 1500);
+                setTimeout(() => { btn.innerText = originalText; btn.classList.remove('bg-blue-600'); }, 1500);
             });
         }
 
@@ -291,14 +273,14 @@
         function renderCodes() {
             const displayArea = document.getElementById('codeDisplayArea');
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            let codes = JSON.parse(localStorage.getItem('sharedCodes')) || [];
-            const filteredCodes = codes.filter(c => c.title.toLowerCase().includes(searchTerm));
-            if (filteredCodes.length === 0) {
+            const codes = (JSON.parse(localStorage.getItem('sharedCodes')) || []).filter(c => c.title.toLowerCase().includes(searchTerm));
+            
+            if (codes.length === 0) {
                 displayArea.innerHTML = '<p class="text-gray-500 text-center py-10 italic">Tidak ada kode ditemukan.</p>';
                 return;
             }
             displayArea.innerHTML = '';
-            filteredCodes.forEach(item => {
+            codes.forEach(item => {
                 displayArea.innerHTML += `
                     <div class="bg-gray-800 p-5 rounded-lg border border-gray-700 shadow-md relative group">
                         <div class="flex justify-between items-start mb-3">
@@ -307,13 +289,10 @@
                                 <span class="text-xs text-gray-500">${item.date}</span>
                             </div>
                             <div class="flex items-center gap-3">
-                                <button onclick="copyToClipboard(this, \`${item.content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" 
-                                    class="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded transition border border-gray-600">Copy</button>
+                                <button onclick="copyByElementId('code-${item.id}', this)" class="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded transition border border-gray-600">Copy</button>
                                 ${isDev ? `
                                 <div class="relative group/menu inline-block">
-                                    <button class="p-1 hover:bg-gray-700 rounded-full transition">
-                                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
-                                    </button>
+                                    <button class="p-1 hover:bg-gray-700 rounded-full transition"><svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg></button>
                                     <div class="hidden group-hover/menu:block absolute right-0 mt-1 w-28 bg-gray-700 border border-gray-600 rounded-md shadow-xl z-20">
                                         <button onclick="startEdit(${item.id})" class="block w-full text-left px-4 py-2 text-sm hover:bg-blue-600 transition">Edit</button>
                                         <button onclick="deleteCode(${item.id})" class="block w-full text-left px-4 py-2 text-sm hover:bg-red-600 transition">Hapus</button>
@@ -323,12 +302,11 @@
                             </div>
                         </div>
                         <div id="cont-${item.id}" class="code-container">
-                            <pre class="bg-black p-4 rounded text-sm text-green-400 border border-gray-900 code-block whitespace-pre"><code>${escapeHTML(item.content)}</code></pre>
+                            <pre class="bg-black p-4 rounded text-sm text-green-400 border border-gray-900 code-block whitespace-pre"><code id="code-${item.id}">${escapeHTML(item.content)}</code></pre>
                             <div class="fade-bottom"></div>
                         </div>
                         <button onclick="toggleExpand(${item.id})" id="btn-${item.id}" class="mt-2 text-xs text-blue-400 hover:text-blue-200 font-semibold transition">Tampilkan Semua ↓</button>
-                    </div>
-                `;
+                    </div>`;
             });
         }
 
@@ -337,7 +315,6 @@
         }
 
         document.getElementById('modalInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') document.getElementById('verifyAction')?.click(); });
-
         renderCodes();
     </script>
 </body>
