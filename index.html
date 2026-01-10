@@ -10,29 +10,35 @@
         .hidden { display: none; }
         
         .code-container {
-            max-height: 150px;
-            overflow: hidden;
-            transition: max-height 0.4s ease-in-out;
+            width: 100%;
+            margin-top: 10px;
             position: relative;
         }
 
-        .code-container.expanded {
-            max-height: 5000px;
+        pre {
+            background-color: #000;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid #1f2937;
             overflow-x: auto;
+            white-space: pre !important;
+            tab-size: 4;
+            scrollbar-width: thin;
+            scrollbar-color: #3b82f6 #000;
         }
 
-        .fade-bottom {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 50px;
-            background: linear-gradient(transparent, rgba(31, 41, 55, 0.95));
-            pointer-events: none;
+        pre::-webkit-scrollbar {
+            height: 6px;
+        }
+        pre::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 10px;
         }
 
-        .expanded .fade-bottom {
-            display: none;
+        code {
+            color: #34d399;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
         }
 
         .modal-show {
@@ -46,7 +52,7 @@
     <nav class="p-5 bg-gray-800 border-b border-blue-500 shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-bold text-blue-400 tracking-wider">DEV_SHARE</h1>
-            <button id="loginBtn" onclick="toggleDevMode()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm transition font-medium">
+            <button id="loginBtn" onclick="toggleDevMode()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm transition font-bold shadow-lg shadow-blue-900/20">
                 Developer Access
             </button>
         </div>
@@ -54,52 +60,52 @@
 
     <main class="container mx-auto p-6 flex-grow">
         
-        <section id="devSection" class="hidden mb-10 p-6 bg-gray-800 rounded-lg border border-dashed border-blue-400">
+        <section id="devSection" class="hidden mb-10 p-6 bg-gray-800 rounded-xl border border-dashed border-blue-400">
             <h2 id="formTitle" class="text-xl font-semibold mb-4 text-blue-300">Share New Code</h2>
             <div class="space-y-4">
                 <input type="hidden" id="editId">
-                <input type="text" id="codeTitle" placeholder="Judul Kode (Contoh: Koneksi Database)" class="w-full p-2 bg-gray-700 rounded border border-gray-600 focus:outline-none focus:border-blue-400 text-white">
-                <textarea id="codeContent" rows="5" placeholder="Tempel kode di sini..." class="w-full p-2 bg-gray-700 rounded border border-gray-600 focus:outline-none focus:border-blue-400 code-block text-white"></textarea>
+                <input type="text" id="codeTitle" placeholder="Judul Kode (Contoh: Koneksi Database)" class="w-full p-3 bg-gray-700 rounded-xl border border-gray-600 focus:outline-none focus:border-blue-400 text-white transition-all">
+                <textarea id="codeContent" rows="8" placeholder="Tempel kode di sini..." class="w-full p-3 bg-gray-700 rounded-xl border border-gray-600 focus:outline-none focus:border-blue-400 code-block text-white transition-all"></textarea>
                 <div class="flex gap-2">
-                    <button id="saveBtn" onclick="saveCode()" class="flex-grow bg-green-600 hover:bg-green-700 p-2 rounded font-bold transition">Publish Code</button>
-                    <button id="cancelEditBtn" onclick="resetForm()" class="hidden bg-gray-600 hover:bg-gray-700 p-2 rounded font-bold transition px-6">Batal</button>
+                    <button id="saveBtn" onclick="saveCode()" class="flex-grow bg-green-600 hover:bg-green-700 p-3 rounded-xl font-bold transition-all shadow-lg shadow-green-900/20">Publish Code</button>
+                    <button id="cancelEditBtn" onclick="resetForm()" class="hidden bg-gray-600 hover:bg-gray-700 p-3 rounded-xl font-bold transition px-8">Batal</button>
                 </div>
             </div>
         </section>
 
         <section>
-            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <h2 class="text-2xl font-semibold">Latest Shared Codes</h2>
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <h2 class="text-2xl font-bold border-l-4 border-blue-500 pl-4">Latest Shared Codes</h2>
                 <div class="relative w-full md:w-80">
-                    <input type="text" id="searchInput" onkeyup="renderCodes()" placeholder="Cari judul kode..." class="w-full p-2 pl-4 bg-gray-800 rounded-full border border-gray-700 focus:outline-none focus:border-blue-400 transition">
+                    <input type="text" id="searchInput" onkeyup="renderCodes()" placeholder="Cari judul kode..." class="w-full p-3 pl-5 bg-gray-800 rounded-full border border-gray-700 focus:outline-none focus:border-blue-400 transition-all shadow-inner">
                 </div>
             </div>
 
-            <div id="codeDisplayArea" class="grid gap-6"></div>
+            <div id="codeDisplayArea" class="grid gap-8"></div>
         </section>
     </main>
 
-    <footer class="bg-gray-800 p-8 border-t border-gray-700 mt-10">
+    <footer class="bg-gray-800 p-10 border-t border-gray-700 mt-10">
         <div class="container mx-auto text-center">
-            <div class="flex justify-center flex-wrap gap-6 text-sm">
-                <a href="https://github.com/Kayzen-dev-tech" class="hover:text-blue-400 transition">GitHub</a>
-                <a href="https://wa.me/628152313006" class="hover:text-green-400 transition">WhatsApp</a>
-                <a href="https://instagram.com/kayzenfry" class="hover:text-pink-400 transition">Instagram</a>
-                <a href="https://t.me/nonewpo" class="hover:text-blue-300 transition">Telegram</a>
+            <div class="flex justify-center flex-wrap gap-8 text-sm font-medium">
+                <a href="https://github.com/Kayzen-dev-tech" target="_blank" class="hover:text-blue-400 transition-all">GitHub</a>
+                <a href="https://wa.me/628152313006" target="_blank" class="hover:text-green-400 transition-all">WhatsApp</a>
+                <a href="https://instagram.com/kayzenfry" target="_blank" class="hover:text-pink-400 transition-all">Instagram</a>
+                <a href="https://t.me/nonewpo" target="_blank" class="hover:text-blue-300 transition-all">Telegram</a>
             </div>
-            <p class="mt-6 text-xs text-gray-600">© 2026 DevShare. Built with Passion.</p>
+            <p class="mt-8 text-xs text-gray-500 tracking-widest uppercase">© 2026 DevShare. Built with Passion by Kayzen.</p>
         </div>
     </footer>
 
-    <div id="customModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-        <div id="modalBox" class="bg-gray-800 border border-gray-700 p-6 rounded-2xl shadow-2xl w-full max-w-sm transform transition-all scale-95 opacity-0">
-            <div id="modalIcon" class="mb-4 flex justify-center"></div>
-            <h3 id="modalTitle" class="text-xl font-bold text-center mb-2"></h3>
-            <p id="modalDesc" class="text-sm text-gray-400 text-center mb-6"></p>
-            <div id="modalInputArea" class="hidden mb-6">
-                <input type="password" id="modalInput" class="w-full p-3 bg-gray-900 border border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white text-center tracking-widest" placeholder="••••••••">
+    <div id="customModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4">
+        <div id="modalBox" class="bg-gray-800 border border-gray-700 p-8 rounded-3xl shadow-2xl w-full max-w-sm transform transition-all scale-95 opacity-0">
+            <div id="modalIcon" class="mb-5 flex justify-center"></div>
+            <h3 id="modalTitle" class="text-2xl font-bold text-center mb-2"></h3>
+            <p id="modalDesc" class="text-sm text-gray-400 text-center mb-8"></p>
+            <div id="modalInputArea" class="hidden mb-8">
+                <input type="password" id="modalInput" class="w-full p-4 bg-gray-900 border border-gray-700 rounded-2xl focus:outline-none focus:border-blue-500 text-white text-center tracking-[0.5em] text-xl" placeholder="••••">
             </div>
-            <div class="flex gap-3" id="modalButtons"></div>
+            <div class="flex gap-4" id="modalButtons"></div>
         </div>
     </div>
 
@@ -126,18 +132,18 @@
             
             if (type === 'confirm') {
                 btnArea.innerHTML = `
-                    <button onclick="closeModal()" class="flex-1 py-2 bg-gray-700 hover:bg-gray-600 rounded-xl transition">Batal</button>
-                    <button id="confirmAction" class="flex-1 py-2 bg-red-600 hover:bg-red-500 rounded-xl font-bold transition text-white">Hapus</button>
+                    <button onclick="closeModal()" class="flex-1 py-3 bg-gray-700 hover:bg-gray-600 rounded-2xl transition font-bold">Batal</button>
+                    <button id="confirmAction" class="flex-1 py-3 bg-red-600 hover:bg-red-500 rounded-2xl font-bold transition text-white shadow-lg shadow-red-900/20">Hapus</button>
                 `;
                 document.getElementById('confirmAction').onclick = () => { onConfirm(); closeModal(); };
             } else if (type === 'auth') {
                 btnArea.innerHTML = `
-                    <button onclick="closeModal()" class="flex-1 py-2 bg-gray-700 hover:bg-gray-600 rounded-xl transition">Batal</button>
-                    <button id="verifyAction" class="flex-1 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold transition text-white">Verify</button>
+                    <button onclick="closeModal()" class="flex-1 py-3 bg-gray-700 hover:bg-gray-600 rounded-2xl transition font-bold">Batal</button>
+                    <button id="verifyAction" class="flex-1 py-3 bg-blue-600 hover:bg-blue-500 rounded-2xl font-bold transition text-white shadow-lg shadow-blue-900/20">Verify</button>
                 `;
                 document.getElementById('verifyAction').onclick = onConfirm;
             } else {
-                btnArea.innerHTML = `<button onclick="closeModal()" class="w-full py-2 bg-blue-600 rounded-xl font-bold text-white">Oke</button>`;
+                btnArea.innerHTML = `<button onclick="closeModal()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-2xl font-bold text-white shadow-lg shadow-blue-900/20">Oke</button>`;
             }
         }
 
@@ -147,14 +153,14 @@
         }
 
         function alertCustom(title, desc, theme = 'success') {
-            const color = theme === 'success' ? 'text-green-500' : 'text-red-500';
+            const color = theme === 'success' ? 'text-green-400' : 'text-red-400';
             const iconSvg = theme === 'success' ? 
                 '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>' : 
                 '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
             showModal({
                 title: title,
                 desc: desc,
-                icon: `<div class="p-3 bg-gray-700 rounded-full flex items-center justify-center ${color}"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">${iconSvg}</svg></div>`,
+                icon: `<div class="p-4 bg-gray-900/50 rounded-full flex items-center justify-center ${color} border border-gray-700 shadow-xl"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">${iconSvg}</svg></div>`,
                 type: 'alert'
             });
         }
@@ -164,7 +170,7 @@
                 showModal({
                     title: 'Developer Access',
                     desc: 'Masukkan password admin untuk mengelola kode.',
-                    icon: '<div class="p-3 bg-blue-500/20 rounded-full"><svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div>',
+                    icon: '<div class="p-4 bg-blue-500/10 rounded-full border border-blue-500/20"><svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div>',
                     showInput: true,
                     type: 'auth',
                     onConfirm: () => {
@@ -215,7 +221,7 @@
             showModal({
                 title: 'Hapus Kode?',
                 desc: 'Tindakan ini tidak bisa dibatalkan.',
-                icon: '<div class="p-3 bg-red-500/20 rounded-full"><svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></div>',
+                icon: '<div class="p-4 bg-red-500/10 rounded-full border border-red-500/20"><svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></div>',
                 type: 'confirm',
                 onConfirm: () => {
                     let codes = JSON.parse(localStorage.getItem('sharedCodes')) || [];
@@ -253,21 +259,13 @@
                 const originalText = btn.innerText;
                 btn.innerText = "Copied!";
                 btn.classList.add('bg-blue-600');
-                setTimeout(() => { btn.innerText = originalText; btn.classList.remove('bg-blue-600'); }, 1500);
+                btn.classList.add('text-white');
+                setTimeout(() => { 
+                    btn.innerText = originalText; 
+                    btn.classList.remove('bg-blue-600'); 
+                    btn.classList.remove('text-white');
+                }, 1500);
             });
-        }
-
-        function toggleExpand(id) {
-            const container = document.getElementById(`cont-${id}`);
-            const btn = document.getElementById(`btn-${id}`);
-            if (container.classList.contains('expanded')) {
-                container.classList.remove('expanded');
-                btn.innerText = "Tampilkan Semua ↓";
-                container.parentElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            } else {
-                container.classList.add('expanded');
-                btn.innerText = "Sembunyikan ↑";
-            }
         }
 
         function renderCodes() {
@@ -276,36 +274,42 @@
             const codes = (JSON.parse(localStorage.getItem('sharedCodes')) || []).filter(c => c.title.toLowerCase().includes(searchTerm));
             
             if (codes.length === 0) {
-                displayArea.innerHTML = '<p class="text-gray-500 text-center py-10 italic">Tidak ada kode ditemukan.</p>';
+                displayArea.innerHTML = `
+                    <div class="bg-gray-800/50 p-12 rounded-3xl border border-gray-700 text-center">
+                        <p class="text-gray-500 italic text-lg">Tidak ada kode ditemukan.</p>
+                    </div>`;
                 return;
             }
             displayArea.innerHTML = '';
             codes.forEach(item => {
                 displayArea.innerHTML += `
-                    <div class="bg-gray-800 p-5 rounded-lg border border-gray-700 shadow-md relative group">
-                        <div class="flex justify-between items-start mb-3">
+                    <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700 shadow-xl transition-all hover:border-blue-500/50">
+                        <div class="flex justify-between items-start mb-5">
                             <div>
-                                <h3 class="text-lg font-bold text-blue-300">${item.title}</h3>
-                                <span class="text-xs text-gray-500">${item.date}</span>
+                                <h3 class="text-xl font-bold text-blue-300 mb-1">${item.title}</h3>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                                    <span class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">${item.date}</span>
+                                </div>
                             </div>
                             <div class="flex items-center gap-3">
-                                <button onclick="copyByElementId('code-${item.id}', this)" class="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded transition border border-gray-600">Copy</button>
+                                <button onclick="copyByElementId('code-${item.id}', this)" class="text-xs bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-xl transition-all border border-gray-600 font-bold active:scale-95 uppercase tracking-tighter">Copy Code</button>
                                 ${isDev ? `
                                 <div class="relative group/menu inline-block">
-                                    <button class="p-1 hover:bg-gray-700 rounded-full transition"><svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg></button>
-                                    <div class="hidden group-hover/menu:block absolute right-0 mt-1 w-28 bg-gray-700 border border-gray-600 rounded-md shadow-xl z-20">
-                                        <button onclick="startEdit(${item.id})" class="block w-full text-left px-4 py-2 text-sm hover:bg-blue-600 transition">Edit</button>
-                                        <button onclick="deleteCode(${item.id})" class="block w-full text-left px-4 py-2 text-sm hover:bg-red-600 transition">Hapus</button>
+                                    <button class="p-2 hover:bg-gray-700 rounded-xl transition-all border border-transparent hover:border-gray-600">
+                                        <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+                                    </button>
+                                    <div class="hidden group-hover/menu:block absolute right-0 mt-2 w-32 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl z-20 overflow-hidden">
+                                        <button onclick="startEdit(${item.id})" class="block w-full text-left px-4 py-3 text-sm hover:bg-blue-600 transition-all font-medium">Edit</button>
+                                        <button onclick="deleteCode(${item.id})" class="block w-full text-left px-4 py-3 text-sm hover:bg-red-600 transition-all font-medium">Hapus</button>
                                     </div>
                                 </div>
                                 ` : ''}
                             </div>
                         </div>
-                        <div id="cont-${item.id}" class="code-container">
-                            <pre class="bg-black p-4 rounded text-sm text-green-400 border border-gray-900 code-block whitespace-pre"><code id="code-${item.id}">${escapeHTML(item.content)}</code></pre>
-                            <div class="fade-bottom"></div>
+                        <div class="code-container">
+                            <pre><code id="code-${item.id}">${escapeHTML(item.content)}</code></pre>
                         </div>
-                        <button onclick="toggleExpand(${item.id})" id="btn-${item.id}" class="mt-2 text-xs text-blue-400 hover:text-blue-200 font-semibold transition">Tampilkan Semua ↓</button>
                     </div>`;
             });
         }
@@ -318,4 +322,5 @@
         renderCodes();
     </script>
 </body>
-</html>
+    </html>
+    
