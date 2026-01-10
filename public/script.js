@@ -51,4 +51,9 @@ function shareCode() {
   .then(r => {
     msg.innerText = r.success ? "✅ Shared!" : "❌ Failed"
   })
-      }
+
+  fetch("/api/codes")
+  .then(r => r.text())
+  .then(console.log)
+}
+
