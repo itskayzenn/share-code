@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="profile.jpg" type="image/png">
+    <link rel="icon" href="profile.jpg" type="image/jpeg">
     <title>DevCode Share - Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -11,14 +11,14 @@
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            /* PAKAI FILE LOKAL: background.jpg */
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('image.jpg');
+            /* BACKGROUND: image.jpg */
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('image.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             min-height: 100vh;
             margin: 0;
+            color: #f3f4f6;
         }
 
         .glass {
@@ -29,45 +29,41 @@
         }
 
         .glass-dark {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .code-block { font-family: 'Courier New', Courier, monospace; }
         
         pre {
-            background: rgba(0, 0, 0, 0.4) !important;
+            background: rgba(0, 0, 0, 0.5) !important;
             padding: 1.25rem;
-            margin: 0;
             border-radius: 16px;
             overflow-x: auto;
         }
 
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 10px; }
-
+        .modal-show { transform: scale(1) !important; opacity: 1 !important; }
         .hidden { display: none; }
-        .modal-show { scale: 1 !important; opacity: 1 !important; }
         
         .verified-badge {
             display: inline-flex;
-            align-items: center;
-            justify-content: center;
             color: #3b82f6;
             filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5));
         }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 10px; }
     </style>
 </head>
-<body class="text-gray-100 flex flex-col">
+<body class="flex flex-col">
 
     <nav class="p-4 glass sticky top-0 z-50 w-full border-b border-white/5">
         <div class="max-w-6xl mx-auto flex justify-between items-center px-4">
             <div class="flex items-center gap-3">
-                <img src="profile.jpg" class="w-8 h-8 rounded-lg border border-white/20 shadow-lg object-cover">
-                <h1 class="text-lg font-black text-white tracking-tighter">DEV_SHARE</h1>
+                <img src="profile.jpg" class="w-8 h-8 rounded-lg border border-white/20 object-cover">
+                <h1 class="text-lg font-black tracking-tighter">DEV_SHARE</h1>
             </div>
             <button id="loginBtn" onclick="toggleDevMode()" class="bg-white/5 hover:bg-white/10 border border-white/10 px-6 py-2 rounded-full text-[11px] transition-all font-bold uppercase tracking-widest backdrop-blur-xl">
                 Access Admin
@@ -76,76 +72,65 @@
     </nav>
 
     <main class="p-6 flex-grow w-full max-w-5xl mx-auto">
-        
         <section class="mb-16 text-center pt-12">
             <div class="relative inline-block">
-                <img src="profile.jpg" alt="Profile" class="w-32 h-32 rounded-[2.5rem] border-2 border-white/10 p-1 backdrop-blur-md shadow-2xl object-cover">
+                <img src="profile.jpg" class="w-32 h-32 rounded-[2.5rem] border-2 border-white/10 p-1 backdrop-blur-md shadow-2xl object-cover">
                 <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-gray-900 rounded-2xl flex items-center justify-center border border-white/10 shadow-xl">
                     <span class="verified-badge">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M22.5 12.5c0-1.58-.88-2.95-2.18-3.66.26-.54.43-1.14.43-1.78 0-2.28-1.85-4.13-4.13-4.13-.64 0-1.24.17-1.78.43-1.07-1.78-2.95-2.18-3.66-2.18-1.58 0-2.95.88-3.66 2.18-.54-.26-1.14-.43-1.78-.43-2.28 0-4.13 1.85-4.13 4.13 0 .64.17 1.24.43 1.78-1.3 0.71-2.18 2.08-2.18 3.66 0 1.58.88 2.95 2.18 3.66-.26.54-.43 1.14-.43 1.78 0 2.28 1.85 4.13 4.13 4.13.64 0 1.24-.17 1.78-.43 0.71 1.3 2.08 2.18 3.66 2.18s2.95-.88 3.66-2.18c0.54.26 1.14.43 1.78.43 2.28 0 4.13-1.85 4.13-4.13 0-.64-.17-1.24-.43-1.78 1.3-0.71 2.18-2.08 2.18-3.66zM10 16.5l-3.5-3.5 1.41-1.41L10 13.67l6.09-6.09 1.41 1.41L10 16.5z"></path>
-                        </svg>
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.5 12.5c0-1.58-.88-2.95-2.18-3.66.26-.54.43-1.14.43-1.78 0-2.28-1.85-4.13-4.13-4.13-.64 0-1.24.17-1.78.43-1.07-1.78-2.95-2.18-3.66-2.18-1.58 0-2.95.88-3.66 2.18-.54-.26-1.14-.43-1.78-.43-2.28 0-4.13 1.85-4.13 4.13 0 .64.17 1.24.43 1.78-1.3 0.71-2.18 2.08-2.18 3.66 0 1.58.88 2.95 2.18 3.66-.26.54-.43 1.14-.43 1.78 0 2.28 1.85 4.13 4.13 4.13.64 0 1.24-.17 1.78-.43 0.71 1.3 2.08 2.18 3.66 2.18s2.95-.88 3.66-2.18c0.54.26 1.14.43 1.78.43 2.28 0 4.13-1.85 4.13-4.13 0-.64-.17-1.24-.43-1.78 1.3-0.71 2.18-2.08 2.18-3.66zM10 16.5l-3.5-3.5 1.41-1.41L10 13.67l6.09-6.09 1.41 1.41L10 16.5z"></path></svg>
                     </span>
                 </div>
             </div>
-            
             <div class="flex items-center justify-center gap-2 mt-6">
                 <h2 class="text-3xl font-black tracking-tight">Kayzen Fry</h2>
-                <span class="verified-badge mt-1">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M22.5 12.5c0-1.58-.88-2.95-2.18-3.66.26-.54.43-1.14.43-1.78 0-2.28-1.85-4.13-4.13-4.13-.64 0-1.24.17-1.78.43-1.07-1.78-2.95-2.18-3.66-2.18-1.58 0-2.95.88-3.66 2.18-.54-.26-1.14-.43-1.78-.43-2.28 0-4.13 1.85-4.13 4.13 0 .64.17 1.24.43 1.78-1.3 0.71-2.18 2.08-2.18 3.66 0 1.58.88 2.95 2.18 3.66-.26.54-.43 1.14-.43 1.78 0 2.28 1.85 4.13 4.13 4.13.64 0 1.24-.17 1.78-.43 0.71 1.3 2.08 2.18 3.66 2.18s2.95-.88 3.66-2.18c0.54.26 1.14.43 1.78.43 2.28 0 4.13-1.85 4.13-4.13 0-.64-.17-1.24-.43-1.78 1.3-0.71 2.18-2.08 2.18-3.66zM10 16.5l-3.5-3.5 1.41-1.41L10 13.67l6.09-6.09 1.41 1.41L10 16.5z"></path>
-                    </svg>
-                </span>
+                <span class="verified-badge mt-1"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22.5 12.5c0-1.58-.88-2.95-2.18-3.66.26-.54.43-1.14.43-1.78 0-2.28-1.85-4.13-4.13-4.13-.64 0-1.24.17-1.78.43-1.07-1.78-2.95-2.18-3.66-2.18-1.58 0-2.95.88-3.66 2.18-.54-.26-1.14-.43-1.78-.43-2.28 0-4.13 1.85-4.13 4.13 0 .64.17 1.24.43 1.78-1.3 0.71-2.18 2.08-2.18 3.66 0 1.58.88 2.95 2.18 3.66-.26.54-.43 1.14-.43 1.78 0 2.28 1.85 4.13 4.13 4.13.64 0 1.24-.17 1.78-.43 0.71 1.3 2.08 2.18 3.66 2.18s2.95-.88 3.66-2.18c0.54.26 1.14.43 1.78.43 2.28 0 4.13-1.85-4.13-4.13 0-.64-.17-1.24-.43-1.78 1.3-0.71 2.18-2.08 2.18-3.66zM10 16.5l-3.5-3.5 1.41-1.41L10 13.67l6.09-6.09 1.41 1.41L10 16.5z"></path></svg></span>
             </div>
             <p class="text-white/40 font-bold text-xs uppercase tracking-[0.3em] mt-2">Verified Developer & Creator</p>
         </section>
 
-        <section id="devSection" class="hidden mb-12 p-8 glass-dark rounded-[2.5rem] border border-white/10 shadow-2xl">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="w-1.5 h-6 bg-blue-500 rounded-full"></div>
-                <h2 id="formTitle" class="text-xl font-bold text-white">Share New Snippet</h2>
-            </div>
+        <section id="devSection" class="hidden mb-12 p-8 glass-dark rounded-[2.5rem]">
+            <h2 id="formTitle" class="text-xl font-bold mb-6">Share New Snippet</h2>
             <div class="space-y-4">
                 <input type="hidden" id="editId">
-                <input type="text" id="codeTitle" placeholder="Filename (e.g. index.js)" class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 focus:outline-none focus:border-blue-500/50 text-white transition-all backdrop-blur-sm">
-                <textarea id="codeContent" rows="8" placeholder="Enter your code here..." class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 focus:outline-none focus:border-blue-500/50 code-block text-white transition-all backdrop-blur-sm"></textarea>
-                <div class="flex gap-4 pt-2">
-                    <button id="saveBtn" onclick="saveCode()" class="flex-grow bg-blue-600 hover:bg-blue-500 p-4 rounded-2xl font-black transition-all shadow-xl shadow-blue-600/20 uppercase text-xs tracking-widest">Publish Code</button>
-                    <button id="cancelEditBtn" onclick="resetForm()" class="hidden bg-white/5 hover:bg-white/10 p-4 rounded-2xl font-bold transition px-8 text-xs uppercase tracking-widest">Cancel</button>
+                <input type="text" id="codeTitle" placeholder="Filename..." class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 focus:outline-none focus:border-blue-500/50 text-white">
+                <textarea id="codeContent" rows="8" placeholder="Paste code..." class="w-full p-4 bg-white/5 rounded-2xl border border-white/10 focus:outline-none focus:border-blue-500/50 code-block text-white"></textarea>
+                <div class="flex gap-4">
+                    <button id="saveBtn" onclick="saveCode()" class="flex-grow bg-blue-600 p-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/20">Publish</button>
+                    <button id="cancelEditBtn" onclick="resetForm()" class="hidden bg-white/5 p-4 rounded-2xl font-bold px-8 hover:bg-white/10 transition-all">Cancel</button>
                 </div>
             </div>
         </section>
 
         <section class="w-full">
             <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
-                <div class="w-full">
-                    <h2 class="text-xl font-black uppercase tracking-tighter flex items-center gap-2">
-                        Latest Codes
-                        <span class="text-[10px] bg-blue-500 text-white px-2 py-0.5 rounded-md font-bold">LIVE</span>
-                    </h2>
-                </div>
-                <div class="relative w-full md:w-1/2">
-                    <input type="text" id="searchInput" onkeyup="renderCodes()" placeholder="Search project..." class="w-full p-4 pl-6 bg-white/5 rounded-full border border-white/10 focus:outline-none focus:border-blue-500/50 backdrop-blur-md transition-all text-sm">
-                </div>
+                <h2 class="text-xl font-black uppercase tracking-tighter">Latest Snippets</h2>
+                <input type="text" id="searchInput" onkeyup="renderCodes()" placeholder="Search project..." class="w-full md:w-1/2 p-4 bg-white/5 rounded-full border border-white/10 focus:outline-none focus:border-blue-500/50 backdrop-blur-md text-white transition-all">
             </div>
-            <div id="codeDisplayArea" class="grid gap-10"></div>
+            <div id="codeDisplayArea" class="grid gap-8"></div>
         </section>
     </main>
 
-    <footer class="glass-dark border-t border-white/5 p-12 mt-20">
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="flex justify-center gap-10 text-[11px] font-black uppercase tracking-[0.2em] opacity-40 hover:opacity-100 transition-opacity">
-                <a href="https://github.com/Kayzen-dev-tech" target="_blank">GitHub</a>
-                <a href="https://wa.me/628152313006" target="_blank">WhatsApp</a>
-                <a href="https://instagram.com/kayzenfry" target="_blank">Instagram</a>
-                <a href="https://t.me/nonewpo" target="_blank">Telegram</a>
-            </div>
-            <p class="mt-8 text-[9px] text-white/20 tracking-[0.5em] uppercase">Built for developers by Kayzen • 2026</p>
+    <footer class="glass-dark p-12 mt-20 text-center border-t border-white/5">
+        <div class="flex justify-center gap-10 text-[11px] font-black uppercase tracking-[0.2em] opacity-40 hover:opacity-100 transition-opacity">
+            <a href="https://github.com/Kayzen-dev-tech" target="_blank">GitHub</a>
+            <a href="https://wa.me/628152313006" target="_blank">WhatsApp</a>
         </div>
+        <p class="mt-8 text-[9px] text-white/20 tracking-[0.5em] uppercase">© 2026 Kayzen Fry • Built with Ghost UI</p>
     </footer>
 
+    <div id="customModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div id="modalBox" class="glass-dark p-8 rounded-[3rem] shadow-2xl w-full max-w-sm transform transition-all scale-95 opacity-0">
+            <div id="modalIcon" class="mb-5 flex justify-center"></div>
+            <h3 id="modalTitle" class="text-2xl font-black text-center mb-2"></h3>
+            <p id="modalDesc" class="text-sm text-white/40 text-center mb-8"></p>
+            <div id="modalInputArea" class="hidden mb-8">
+                <input type="password" id="modalInput" class="w-full p-5 bg-black/40 border border-white/5 rounded-2xl focus:outline-none focus:border-blue-500 text-white text-center tracking-[0.5em] text-xl font-bold">
+            </div>
+            <div class="flex gap-4" id="modalButtons"></div>
+        </div>
+    </div>
+
     <script>
-        // ... (Logika JavaScript tetap sama seperti versi sebelumnya)
         let isDev = false;
         const DEV_KEY = "kayzenganteng"; 
         const modal = document.getElementById('customModal');
@@ -160,17 +145,24 @@
             const inputArea = document.getElementById('modalInputArea');
             const input = document.getElementById('modalInput');
             const btnArea = document.getElementById('modalButtons');
+            
             inputArea.classList.toggle('hidden', !showInput);
             input.value = '';
             btnArea.innerHTML = '';
-            if(showInput) setTimeout(() => input.focus(), 100);
-            
-            if (type === 'confirm') {
-                btnArea.innerHTML = `<button onclick="closeModal()" class="flex-1 py-4 bg-white/5 rounded-2xl font-bold">Batal</button><button id="confirmAction" class="flex-1 py-4 bg-red-600 rounded-2xl font-bold">Hapus</button>`;
-                document.getElementById('confirmAction').onclick = () => { onConfirm(); closeModal(); };
-            } else if (type === 'auth') {
-                btnArea.innerHTML = `<button onclick="closeModal()" class="flex-1 py-4 bg-white/5 rounded-2xl font-bold">Batal</button><button id="verifyAction" class="flex-1 py-4 bg-blue-600 rounded-2xl font-bold">Verify</button>`;
+
+            if (type === 'auth') {
+                btnArea.innerHTML = `
+                    <button onclick="closeModal()" class="flex-1 py-4 bg-white/5 rounded-2xl font-bold">Batal</button>
+                    <button id="verifyAction" class="flex-1 py-4 bg-blue-600 rounded-2xl font-bold">Verify</button>
+                `;
                 document.getElementById('verifyAction').onclick = onConfirm;
+                if(showInput) setTimeout(() => input.focus(), 100);
+            } else if (type === 'confirm') {
+                btnArea.innerHTML = `
+                    <button onclick="closeModal()" class="flex-1 py-4 bg-white/5 rounded-2xl font-bold">Batal</button>
+                    <button id="confirmAction" class="flex-1 py-4 bg-red-600 rounded-2xl font-bold">Hapus</button>
+                `;
+                document.getElementById('confirmAction').onclick = () => { onConfirm(); closeModal(); };
             } else {
                 btnArea.innerHTML = `<button onclick="closeModal()" class="w-full py-4 bg-blue-600 rounded-2xl font-bold">Oke</button>`;
             }
@@ -181,21 +173,11 @@
             setTimeout(() => modal.classList.add('hidden'), 200);
         }
 
-        function alertCustom(title, desc, theme = 'success') {
-            const color = theme === 'success' ? 'text-green-400' : 'text-red-400';
-            showModal({
-                title: title,
-                desc: desc,
-                icon: `<div class="p-5 bg-white/5 rounded-full ${color}"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${theme === 'success' ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12'}"></path></svg></div>`,
-                type: 'alert'
-            });
-        }
-
         function toggleDevMode() {
             if (!isDev) {
                 showModal({
-                    title: 'Developer Auth',
-                    desc: 'Input password to access admin features.',
+                    title: 'Admin Access',
+                    desc: 'Input password admin.',
                     icon: '<div class="p-5 bg-blue-500/10 rounded-full text-blue-500"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div>',
                     showInput: true,
                     type: 'auth',
@@ -203,7 +185,7 @@
                         if (document.getElementById('modalInput').value === DEV_KEY) {
                             isDev = true; updateUI(); closeModal();
                         } else {
-                            alertCustom("Denied", "Incorrect password!", "error");
+                            alert("Password Salah!");
                         }
                     }
                 });
@@ -216,11 +198,13 @@
             if (isDev) {
                 devSection.classList.remove('hidden');
                 loginBtn.innerText = "Logout Admin";
-                loginBtn.classList.replace('bg-white/5', 'bg-red-600/20');
+                loginBtn.style.backgroundColor = "rgba(220, 38, 38, 0.2)";
+                loginBtn.style.borderColor = "rgba(220, 38, 38, 0.4)";
             } else {
                 devSection.classList.add('hidden');
                 loginBtn.innerText = "Access Admin";
-                loginBtn.classList.replace('bg-red-600/20', 'bg-white/5');
+                loginBtn.style.backgroundColor = "rgba(255, 255, 255, 0.05)";
+                loginBtn.style.borderColor = "rgba(255, 255, 255, 0.1)";
                 resetForm();
             }
             renderCodes();
@@ -230,81 +214,101 @@
             const title = document.getElementById('codeTitle').value;
             const content = document.getElementById('codeContent').value;
             const editId = document.getElementById('editId').value;
-            if (!title || !content) return alertCustom("Empty", "Please fill all fields!", "error");
+            if (!title || !content) return alert("Isi semua bro!");
+
             let codes = JSON.parse(localStorage.getItem('sharedCodes')) || [];
             if (editId) {
                 codes = codes.map(c => c.id == editId ? { ...c, title, content } : c);
-                alertCustom("Updated", "Your code has been modified.");
             } else {
                 codes.unshift({ id: Date.now(), title, content, date: new Date().toLocaleDateString('id-ID') });
-                alertCustom("Published", "New code is now live.");
             }
             localStorage.setItem('sharedCodes', JSON.stringify(codes));
             resetForm(); renderCodes();
         }
 
-        function renderCodes() {
-            const displayArea = document.getElementById('codeDisplayArea');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const codes = (JSON.parse(localStorage.getItem('sharedCodes')) || []).filter(c => c.title.toLowerCase().includes(searchTerm));
-            
-            if (codes.length === 0) {
-                displayArea.innerHTML = `<div class="glass p-16 rounded-[3rem] text-center border-dashed border-white/5"><p class="text-white/20 italic text-sm tracking-widest uppercase">Database Empty</p></div>`;
-                return;
+        function deleteCode(id) {
+            showModal({
+                title: 'Hapus Kode?',
+                desc: 'Tindakan ini permanen.',
+                icon: '<div class="p-5 bg-red-500/10 rounded-full text-red-500">🗑️</div>',
+                type: 'confirm',
+                onConfirm: () => {
+                    let codes = JSON.parse(localStorage.getItem('sharedCodes')) || [];
+                    localStorage.setItem('sharedCodes', JSON.stringify(codes.filter(c => c.id !== id)));
+                    renderCodes();
+                }
+            });
+        }
+
+        function startEdit(id) {
+            const codes = JSON.parse(localStorage.getItem('sharedCodes')) || [];
+            const target = codes.find(c => c.id === id);
+            if (target) {
+                document.getElementById('editId').value = target.id;
+                document.getElementById('codeTitle').value = target.title;
+                document.getElementById('codeContent').value = target.content;
+                document.getElementById('formTitle').innerText = "Edit Snippet";
+                document.getElementById('saveBtn').innerText = "Update";
+                document.getElementById('cancelEditBtn').classList.remove('hidden');
+                document.getElementById('devSection').scrollIntoView({ behavior: 'smooth' });
             }
-            displayArea.innerHTML = '';
+        }
+
+        function resetForm() {
+            document.getElementById('editId').value = '';
+            document.getElementById('codeTitle').value = '';
+            document.getElementById('codeContent').value = '';
+            document.getElementById('formTitle').innerText = "Share New Snippet";
+            document.getElementById('saveBtn').innerText = "Publish";
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+        }
+
+        function renderCodes() {
+            const area = document.getElementById('codeDisplayArea');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const codes = (JSON.parse(localStorage.getItem('sharedCodes')) || []).filter(c => c.title.toLowerCase().includes(search));
+            
+            area.innerHTML = codes.length ? '' : '<div class="glass p-10 text-center opacity-30">Database Empty</div>';
             codes.forEach(item => {
-                displayArea.innerHTML += `
-                    <div class="glass p-8 rounded-[2.5rem] transition-all hover:bg-white/[0.04] group border border-white/5 shadow-xl">
-                        <div class="flex justify-between items-start mb-8">
-                            <div class="flex items-start gap-4">
-                                <div class="p-3 bg-blue-500/10 rounded-2xl text-blue-400 group-hover:scale-110 transition-transform">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                area.innerHTML += `
+                    <div class="glass p-6 rounded-[2rem] border border-white/5 hover:bg-white/[0.04] transition-all">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex items-center gap-4">
+                                <div class="p-3 bg-blue-600/10 rounded-xl text-blue-400">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-xl font-bold text-white tracking-tight">${item.title}</h3>
-                                    <div class="text-[10px] text-white/30 font-bold uppercase tracking-widest mt-1">${item.date}</div>
+                                    <h3 class="font-bold text-lg text-white">${item.title}</h3>
+                                    <p class="text-[10px] opacity-40 uppercase tracking-widest">${item.date}</p>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-3">
-                                <button onclick="copyByElementId('code-${item.id}', this)" class="text-[9px] bg-white/5 hover:bg-white/10 px-5 py-2.5 rounded-xl border border-white/10 transition-all font-black uppercase tracking-widest">Copy</button>
-                                ${isDev ? `<button onclick="startEdit(${item.id})" class="p-2 hover:bg-blue-600 rounded-xl transition-all">Edit</button>` : ''}
+                            <div class="flex gap-2">
+                                <button onclick="copyCode('${item.id}', this)" class="bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl text-[10px] font-bold transition-all">COPY</button>
+                                ${isDev ? `
+                                    <button onclick="startEdit(${item.id})" class="bg-blue-600/20 px-4 py-2 rounded-xl text-[10px] font-bold">EDIT</button>
+                                    <button onclick="deleteCode(${item.id})" class="bg-red-600/20 px-4 py-2 rounded-xl text-[10px] font-bold text-red-400">HAPUS</button>
+                                ` : ''}
                             </div>
                         </div>
-                        <div class="rounded-2xl overflow-hidden border border-white/5 shadow-inner">
-                            <pre><code id="code-${item.id}" class="text-blue-200/80 text-xs leading-relaxed">${escapeHTML(item.content)}</code></pre>
-                        </div>
+                        <pre><code id="code-${item.id}" class="text-xs text-blue-200 leading-relaxed">${item.content.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]))}</code></pre>
                     </div>`;
             });
         }
 
-        function escapeHTML(str) { return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
-        function copyByElementId(elementId, btn) {
-            const text = document.getElementById(elementId).innerText;
+        function copyCode(id, btn) {
+            const text = document.getElementById('code-'+id).innerText;
             navigator.clipboard.writeText(text).then(() => {
-                const originalText = btn.innerText; btn.innerText = "COPIED";
-                setTimeout(() => { btn.innerText = originalText; }, 1500);
+                const original = btn.innerText;
+                btn.innerText = "COPIED";
+                btn.classList.add('text-blue-400');
+                setTimeout(() => {
+                    btn.innerText = original;
+                    btn.classList.remove('text-blue-400');
+                }, 1500);
             });
-        }
-        function resetForm() {
-            document.getElementById('editId').value = ''; document.getElementById('codeTitle').value = '';
-            document.getElementById('codeContent').value = ''; document.getElementById('formTitle').innerText = "Share New Snippet";
-            document.getElementById('saveBtn').innerText = "Publish Code"; document.getElementById('cancelEditBtn').classList.add('hidden');
         }
 
         renderCodes();
     </script>
-
-    <div id="customModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-        <div id="modalBox" class="glass-dark p-8 rounded-[3rem] shadow-2xl w-full max-w-sm transform transition-all scale-95 opacity-0 border border-white/10">
-            <div id="modalIcon" class="mb-5 flex justify-center"></div>
-            <h3 id="modalTitle" class="text-2xl font-black text-center mb-2"></h3>
-            <p id="modalDesc" class="text-sm text-white/40 text-center mb-8"></p>
-            <div id="modalInputArea" class="hidden mb-8">
-                <input type="password" id="modalInput" class="w-full p-5 bg-black/40 border border-white/5 rounded-2xl focus:outline-none focus:border-blue-500 text-white text-center tracking-[0.5em] text-xl font-bold">
-            </div>
-            <div class="flex gap-4" id="modalButtons"></div>
-        </div>
-    </div>
 </body>
 </html>
