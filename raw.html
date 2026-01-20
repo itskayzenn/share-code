@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raw Code</title>
+
+<style>
+body {
+    background: #0e0e0e;
+    color: #fff;
+    font-family: monospace;
+    padding: 20px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+</style>
+</head>
+
+<body>
+<pre id="code">Loading...</pre>
+
+<script>
+const params = new URLSearchParams(location.search);
+const id = params.get('id');
+
+const data = JSON.parse(localStorage.getItem('sharedCodes')) || [];
+const item = data.find(x => x.id == id);
+
+if(!item){
+    document.body.innerText = "Code not found";
+} else {
+    document.title = "Raw - " + item.title;
+    document.getElementById('code').innerText = item.content;
+}
+</script>
+</body>
+</html>
