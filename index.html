@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="profile.jpg" type="image/jpeg">
+    <title>DevCode Share - Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), url('image.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            min-height: 100vh; margin: 0; color: #f3f4f6;
+        }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .glass-dark { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .code-block { font-family: 'Courier New', Courier, monospace; }
+        pre { background: rgba(0, 0, 0, 0.5) !important; padding: 1.25rem; border-radius: 16px; overflow-x: auto; border: 1px solid rgba(255,255,255,0.05); }
+        .modal-show { transform: scale(1) !important; opacity: 1 !important; }
+        
+        /* Memastikan area interaktif selalu bisa diklik */
+        button, input, textarea, a {
+            position: relative;
+            z-index: 10;
+            cursor: pointer;
+            pointer-events: auto !important;
+        }
+        
+        .hidden { display: none !important; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 10px; }
+    </style>
+</head>
+<body class="flex flex-col">
+
+    <div id="main-ui">
+        <nav class="p-4 glass sticky top-0 z-[100] w-full border-b border-white/5">
+            <div class="max-w-6xl mx-auto flex justify-between items-center px-4">
+                <div class="flex items-center gap-3">
+                    <img src="profile.jpg" class="w-8 h-8 rounded-lg border border-white/20 object-cover">
+                    <h1 class="text-lg font-black tracking-tighter">DEV_SHARE</h1>
+                </div>
+                <button id="loginBtn" onclick="toggleDevMode()" class="bg-white/5 hover:bg-white/10 border border-white/10 px-6 py-2 rounded-full text-[11px] transition-all font-bold uppercase tracking-widest">
+                    Access Admin
+                </button>
+            </div>
+        </nav>
+
+        <main class="p-6 flex-grow w-full max-w-5xl mx-auto relative z-10">
+            <section class="mb-16 text-center pt-12">
+                <div class="relative inline-block">
+                    <img src="profile.jpg" class="w-32 h-32 rounded-[2.5rem] border-2 border-white/10 p-1 backdrop-blur-md shadow-2xl object-cover">
+                </div>
+                <h2 class="text-3xl font-black tracking-tight mt-6 text-white">Kayzen Fry</h2>
+                <p class="text-white/40 font-bold text-xs uppercase tracking-[0.3em] mt-2">Verified Developer & Creator</p>
+            </section>
+
+            <section id="devSection" class="hidden mb-12 p-8 glass-dark rounded-[2.5rem] border border-blue-500/20">
+                <h2 id="formTitle" class="text-xl font-bold mb-6 text-blue-400">Share New Snippet</h2>
+                <div class="space-y-4">
+                    <input type="hidden" id="editId">
+                    <input type="text" id="codeTitle" placeholder="Filename (e.g: bot-tele.js)" class="w-full p-4 bg-black/40 rounded-2xl border border-white/10 text-white focus:border-blue-500 outline-none transition-all">
+                    <textarea id="codeContent" rows="8" placeholder="Paste your code here..." class="w-full p-4 bg-black/40 rounded-2xl border border-white/10 code-block text-white focus:border-blue-500 outline-none transition-all"></textarea>
+                    <div class="flex gap-4">
+                        <button id="saveBtn" onclick="saveCode()" class="flex-grow bg-blue-600 hover:bg-blue-500 p-4 rounded-2xl font-black uppercase text-xs transition-all shadow-lg shadow-blue-600/20">Publish Code</button>
+                        <button id="cancelEditBtn" onclick="resetForm()" class="hidden bg-white/10 hover:bg-white/20 p-4 rounded-2xl font-bold px-8 transition-all">Cancel</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="w-full">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+                    <h2 class="text-xl font-black uppercase tracking-tighter">Latest Snippets</h2>
+                    <input type="text" id="searchInput" onkeyup="renderCodes()" placeholder="Search project..." class="w-full md:w-1/2 p-4 bg-white/5 rounded-full border border-white/10 text-white outline-none focus:border-blue-500/50 transition-all">
+                </div>
+                <div id="codeDisplayArea" class="grid gap-8">
+                    </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="customModal" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-md p-4">
+        <div id="modalBox" class="glass-dark p-8 rounded-[3rem] shadow-2xl w-full max-w-sm transform transition-all scale-95 opacity-0">
+            <h3 id="modalTitle" class="text-2xl font-black text-center mb-2"></h3>
+            <p id="modalDesc" class="text-sm text-white/40 text-center mb-8"></p>
+            <div id="modalInputArea" class="hidden mb-8">
+                <input type="password" id="modalInput" placeholder="••••••••" class="w-full p-5 bg-black/40 border border-white/10 rounded-2xl text-white text-center text-xl tracking-widest outline-none focus:border-blue-500">
+            </div>
+            <div class="flex gap-4" id="modalButtons"></div>
+        </div>
+    </div>
+
+    <script>
+        // Gunakan credentials yang Anda miliki
+        const SB_URL = "https://oyigbnkieycdzltmfdtp.supabase.co";
+        const SB_KEY = "sb_publishable_vkzTWgG--oOHu8Jc_v-qWQ_j2U74BxN"; 
+        const DEV_KEY = "kayzenganteng";
+        const TG_TOKEN = "8415064497:AAGprLIhNq45Kr6m-QNu5ZFcpcWvvlRWYuk";
+        const TG_CHAT_ID = "6442476342";
+
+        const supabase = window.supabase.createClient(SB_URL, SB_KEY);
+        let isDev = false;
+
+        async function sendNotif(status, input) {
+            const msg = `🔔 *Login Attempt*\nStatus: ${status}\nInput: ${input}\nTime: ${new Date().toLocaleString()}`;
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`).catch(()=>{});
+        }
+
+        function toggleDevMode() {
+            if (!isDev) {
+                showModal({
+                    title: 'Admin Access', 
+                    desc: 'Masukkan password untuk mengelola kode.', 
+                    showInput: true,
+                    onConfirm: () => {
+                        const pass = document.getElementById('modalInput').value;
+                        if (pass === DEV_KEY) {
+                            isDev = true; 
+                            updateUI(); 
+                            closeModal(); 
+                            sendNotif("✅ BERHASIL", pass);
+                        } else {
+                            alert("Password Salah!"); 
+                            sendNotif("❌ GAGAL", pass);
+                        }
+                    }
+                });
+            } else { 
+                isDev = false; 
+                updateUI(); 
+            }
+        }
+
+        function updateUI() {
+            const devSection = document.getElementById('devSection');
+            const loginBtn = document.getElementById('loginBtn');
+            if(isDev) {
+                devSection.classList.remove('hidden');
+                loginBtn.innerText = "Logout Admin";
+                loginBtn.classList.add('bg-red-500/20', 'border-red-500/40', 'text-red-400');
+            } else {
+                devSection.classList.add('hidden');
+                loginBtn.innerText = "Access Admin";
+                loginBtn.classList.remove('bg-red-500/20', 'border-red-500/40', 'text-red-400');
+                resetForm();
+            }
+            renderCodes();
+        }
+
+        async function saveCode() {
+            const title = document.getElementById('codeTitle').value;
+            const content = document.getElementById('codeContent').value;
+            const editId = document.getElementById('editId').value;
+            
+            if (!title || !content) return alert("Lengkapi judul dan isi kode!");
+
+            const btn = document.getElementById('saveBtn');
+            const originalText = btn.innerText;
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            try {
+                if (editId) {
+                    await supabase.from('shared_codes').update({ title, content }).eq('id', editId);
+                } else {
+                    await supabase.from('shared_codes').insert([{ title, content }]);
+                }
+                resetForm(); 
+                renderCodes();
+            } catch (err) {
+                alert("Gagal menyimpan kode. Cek koneksi/database.");
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function renderCodes() {
+            const area = document.getElementById('codeDisplayArea');
+            const { data: codes, error } = await supabase.from('shared_codes').select('*').order('created_at', { ascending: false });
+            
+            if (error) {
+                area.innerHTML = `<div class="p-10 text-center text-red-400">Database error: ${error.message}</div>`;
+                return;
+            }
+
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = codes?.filter(c => c.title.toLowerCase().includes(search)) || [];
+            
+            area.innerHTML = filtered.length ? '' : '<div class="glass p-10 text-center opacity-30">Tidak ada kode ditemukan</div>';
+            
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "glass p-6 rounded-[2rem] border border-white/5 hover:bg-white/[0.03] transition-all relative";
+                
+                // Menangani karakter spesial untuk display
+                const displayContent = item.content.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]));
+
+                card.innerHTML = `
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="p-3 bg-blue-600/10 rounded-xl text-blue-400">📄</div>
+                            <h3 class="font-bold text-lg text-white">${item.title}</h3>
+                        </div>
+                        <div class="flex flex-wrap gap-2 relative z-20">
+                            <a href="javascript:void(0)" onclick="openRaw('${encodeURIComponent(item.title)}')" class="bg-white/5 hover:bg-white/10 px-4 py-2 rounded-xl text-[10px] font-bold border border-white/5 transition-all">RAW</a>
+                            <button onclick="copyCode(${item.id}, this)" class="bg-white/5 hover:bg-white/10 px-4 py-2 rounded-xl text-[10px] font-bold border border-white/5 transition-all">COPY</button>
+                            ${isDev ? `
+                                <button id="edit-btn-${item.id}" class="bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 px-4 py-2 rounded-xl text-[10px] font-bold transition-all">EDIT</button>
+                                <button onclick="deleteCode(${item.id})" class="bg-red-600/20 hover:bg-red-600/40 text-red-400 px-4 py-2 rounded-xl text-[10px] font-bold transition-all">DELETE</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <pre><code id="code-${item.id}" class="text-xs text-blue-200">${displayContent}</code></pre>
+                `;
+                
+                area.appendChild(card);
+
+                // Pasang event edit secara manual untuk menghindari masalah quoting JavaScript
+                if (isDev) {
+                    document.getElementById(`edit-btn-${item.id}`).onclick = () => startEdit(item.id, item.title, item.content);
+                }
+            });
+        }
+
+        function openRaw(title) {
+            // Karena ini aplikasi statis, fungsi raw sebaiknya membuka window baru dengan content saja
+            const codeText = document.getElementById('code-display-area').innerText; // fallback simple
+            // Idealnya diarahkan ke URL /raw/ namun di statis kita bisa buat simulasi:
+            alert("Membuka versi RAW untuk: " + decodeURIComponent(title));
+            window.open(`/raw/${title}`, '_blank');
+        }
+
+        async function deleteCode(id) {
+            if(confirm("Hapus kode ini selamanya?")) {
+                await supabase.from('shared_codes').delete().eq('id', id);
+                renderCodes();
+            }
+        }
+
+        function startEdit(id, title, content) {
+            document.getElementById('editId').value = id;
+            document.getElementById('codeTitle').value = title;
+            document.getElementById('codeContent').value = content;
+            document.getElementById('formTitle').innerText = "Edit Snippet";
+            document.getElementById('saveBtn').innerText = "Update Code";
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+            document.getElementById('devSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('editId').value = '';
+            document.getElementById('codeTitle').value = '';
+            document.getElementById('codeContent').value = '';
+            document.getElementById('formTitle').innerText = "Share New Snippet";
+            document.getElementById('saveBtn').innerText = "Publish Code";
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+        }
+
+        function copyCode(id, btn) {
+            const text = document.getElementById('code-'+id).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const oldText = btn.innerText;
+                btn.innerText = "COPIED!";
+                btn.classList.add('bg-green-500/20', 'text-green-400');
+                setTimeout(() => {
+                    btn.innerText = oldText;
+                    btn.classList.remove('bg-green-500/20', 'text-green-400');
+                }, 1500);
+            });
+        }
+
+        function showModal({ title, desc, showInput, onConfirm }) {
+            const m = document.getElementById('customModal');
+            const b = document.getElementById('modalBox');
+            m.classList.remove('hidden');
+            setTimeout(() => b.classList.add('modal-show'), 10);
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('modalInputArea').classList.toggle('hidden', !showInput);
+            document.getElementById('modalInput').value = '';
+            document.getElementById('modalButtons').innerHTML = `
+                <button onclick="closeModal()" class="flex-1 py-4 bg-white/5 hover:bg-white/10 rounded-2xl font-bold transition-all">Batal</button>
+                <button id="modalAction" class="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl font-bold transition-all">Verify</button>`;
+            document.getElementById('modalAction').onclick = onConfirm;
+        }
+
+        function closeModal() {
+            document.getElementById('modalBox').classList.remove('modal-show');
+            setTimeout(() => document.getElementById('customModal').classList.add('hidden'), 200);
+        }
+
+        // Jalankan render awal
+        renderCodes();
+    </script>
+</body>
+</html>
