@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevCode Share - Cloud</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0a0a0a; color: #f3f4f6; min-height: 100vh;
+        }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glass-dark { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        pre { background: rgba(0, 0, 0, 0.4) !important; padding: 1rem; border-radius: 12px; font-size: 0.8rem; overflow-x: auto; border: 1px solid rgba(255,255,255,0.05); }
+        .modal-show { transform: scale(1); opacity: 1; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <nav class="max-w-5xl mx-auto flex justify-between items-center mb-12">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center font-black">K</div>
+            <h1 class="text-xl font-bold tracking-tighter">KAYZEN_CLOUD</h1>
+        </div>
+        <button id="adminBtn" onclick="handleAuthAction()" class="glass px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all hover:bg-white/10"></button>
+    </nav>
+
+    <main class="max-w-5xl mx-auto">
+        <section id="adminPanel" class="hidden mb-12 p-6 glass rounded-3xl">
+            <h2 id="formTitle" class="text-lg font-bold mb-4">Post New Code</h2>
+            <div class="space-y-4">
+                <input type="hidden" id="editId">
+                <input type="text" id="codeTitle" placeholder="Filename (e.g. script.py)" class="w-full p-4 bg-black/20 rounded-xl border border-white/10 outline-none focus:border-blue-500 transition-all">
+                <textarea id="codeContent" rows="6" placeholder="Paste your code here..." class="w-full p-4 bg-black/20 rounded-xl border border-white/10 outline-none focus:border-blue-500 font-mono text-sm"></textarea>
+                <div class="flex gap-3">
+                    <button onclick="saveToSupabase()" class="flex-grow bg-blue-600 hover:bg-blue-500 p-4 rounded-xl font-bold text-sm uppercase">Save to Cloud</button>
+                    <button id="cancelBtn" onclick="resetForm()" class="hidden bg-white/5 px-6 rounded-xl font-bold text-sm">Cancel</button>
+                </div>
+            </div>
+        </section>
+
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <h2 class="text-2xl font-black">DATABASE</h2>
+            <input type="text" id="searchInput" onkeyup="renderItems()" placeholder="Search snippets..." class="w-full md:w-1/3 p-3 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-blue-500">
+        </div>
+
+        <div id="listContainer" class="grid gap-6">
+            <div class="text-center py-20 opacity-40">Initializing Cloud Connection...</div>
+        </div>
+    </main>
+
+    <div id="loginModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/90 backdrop-blur-md p-4">
+        <div class="glass-dark p-8 rounded-[2rem] w-full max-w-sm text-center">
+            <div class="text-4xl mb-4">🔐</div>
+            <h3 class="text-xl font-bold mb-2">Admin Verification</h3>
+            <p class="text-sm text-white/40 mb-6">Please enter your master key</p>
+            <input type="password" id="passInput" class="w-full p-4 bg-black/40 border border-white/10 rounded-xl text-center text-xl tracking-[0.3em] mb-4 outline-none focus:border-blue-500">
+            <div class="flex gap-2">
+                <button onclick="closeLogin()" class="flex-1 p-3 bg-white/5 rounded-xl font-bold">Back</button>
+                <button onclick="verifyLogin()" class="flex-1 p-3 bg-blue-600 rounded-xl font-bold">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://oyigbnkieycdzltmfdtp.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_vkzTWgG--oOHu8Jc_v-qWQ_j2U74BxN";
+        const MASTER_KEY = "kayzenganteng";
+        
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let snippets = [];
+        let isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+
+        // --- AUTH LOGIC ---
+        function handleAuthAction() {
+            if (isAdmin) {
+                sessionStorage.removeItem('isAdmin');
+                location.reload();
+            } else {
+                document.getElementById('loginModal').classList.remove('hidden');
+                document.getElementById('passInput').focus();
+            }
+        }
+
+        function closeLogin() { document.getElementById('loginModal').classList.add('hidden'); }
+
+        function verifyLogin() {
+            const val = document.getElementById('passInput').value;
+            if (val === MASTER_KEY) {
+                sessionStorage.setItem('isAdmin', 'true');
+                isAdmin = true;
+                closeLogin();
+                updateUI();
+            } else {
+                alert("Wrong Key!");
+            }
+        }
+
+        function updateUI() {
+            const btn = document.getElementById('adminBtn');
+            const panel = document.getElementById('adminPanel');
+            btn.innerText = isAdmin ? "Logout Admin" : "Access Admin";
+            btn.classList.toggle('text-red-400', isAdmin);
+            panel.classList.toggle('hidden', !isAdmin);
+            renderItems();
+        }
+
+        // --- DATABASE LOGIC ---
+        async function loadData() {
+            const { data, error } = await _supabase.from('snippets').select('*').order('id', { ascending: false });
+            if (error) console.error(error);
+            else snippets = data;
+            renderItems();
+        }
+
+        async function saveToSupabase() {
+            const title = document.getElementById('codeTitle').value;
+            const content = document.getElementById('codeContent').value;
+            const editId = document.getElementById('editId').value;
+
+            if(!title || !content) return alert("Fill all fields!");
+
+            const obj = { title, content, date: new Date().toLocaleDateString('id-ID') };
+
+            if(editId) {
+                await _supabase.from('snippets').update(obj).eq('id', editId);
+            } else {
+                await _supabase.from('snippets').insert([obj]);
+            }
+
+            resetForm();
+            loadData();
+        }
+
+        async function deleteItem(id) {
+            if(confirm("Hapus kode ini?")) {
+                await _supabase.from('snippets').delete().eq('id', id);
+                loadData();
+            }
+        }
+
+        function renderItems() {
+            const container = document.getElementById('listContainer');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = snippets.filter(s => s.title.toLowerCase().includes(search));
+
+            container.innerHTML = filtered.length ? '' : '<div class="p-20 text-center opacity-20">No data found</div>';
+
+            filtered.forEach(item => {
+                container.innerHTML += `
+                    <div class="glass p-5 rounded-2xl relative group">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="font-bold text-blue-400">${item.title}</h3>
+                                <span class="text-[10px] opacity-30">${item.date}</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="copyCode('${item.id}', this)" class="text-[10px] bg-white/5 px-3 py-1 rounded-lg hover:bg-white/10 font-bold">COPY</button>
+                                ${isAdmin ? `
+                                    <button onclick="startEdit(${item.id})" class="text-[10px] bg-blue-600/20 text-blue-400 px-3 py-1 rounded-lg font-bold">EDIT</button>
+                                    <button onclick="deleteItem(${item.id})" class="text-[10px] bg-red-600/20 text-red-400 px-3 py-1 rounded-lg font-bold">DEL</button>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <pre><code>${item.content.replace(/</g, "&lt;")}</code></pre>
+                    </div>
+                `;
+            });
+        }
+
+        function startEdit(id) {
+            const item = snippets.find(s => s.id === id);
+            document.getElementById('editId').value = item.id;
+            document.getElementById('codeTitle').value = item.title;
+            document.getElementById('codeContent').value = item.content;
+            document.getElementById('formTitle').innerText = "Update Snippet";
+            document.getElementById('cancelBtn').classList.remove('hidden');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function resetForm() {
+            document.getElementById('editId').value = '';
+            document.getElementById('codeTitle').value = '';
+            document.getElementById('codeContent').value = '';
+            document.getElementById('formTitle').innerText = "Post New Code";
+            document.getElementById('cancelBtn').classList.add('hidden');
+        }
+
+        function copyCode(id, btn) {
+            const item = snippets.find(s => s.id == id);
+            navigator.clipboard.writeText(item.content);
+            btn.innerText = "DONE!";
+            setTimeout(() => btn.innerText = "COPY", 1500);
+        }
+
+        // Init
+        updateUI();
+        loadData();
+    </script>
+</body>
+</html>
