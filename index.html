@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kayzen Izumi | Code Snippets & Portfolio</title>
+    <title>Kayzen Izumi | Snippets</title>
     <link rel="icon" href="https://i.ibb.co.com/wrrLvKCP/image.jpg" type="image/x-icon">
     
     <meta property="og:type" content="website">
@@ -24,289 +24,258 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .profile-img { width: 150px; height: 150px; border-radius: 50%; border: 4px solid #38bdf8; object-fit: cover; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #38bdf8; object-fit: cover; box-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
         .hidden-section { display: none; }
+        .active-nav { color: #38bdf8; border-bottom: 2px solid #38bdf8; }
+        pre::-webkit-scrollbar { height: 4px; }
+        pre::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen pb-20">
+<body class="min-h-screen">
 
-    <nav class="fixed top-0 w-full z-50 glass px-6 py-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold gradient-text">Kayzen.dev</h1>
-        <div class="flex gap-6 text-sm font-medium">
-            <button onclick="showSection('home')" class="hover:text-sky-400 transition">Home</button>
-            <button onclick="showSection('snippets')" class="hover:text-sky-400 transition">Snippets</button>
-            <button onclick="showSection('request')" class="hover:text-sky-400 transition">Request</button>
-            <button onclick="showSection('contact')" class="hover:text-sky-400 transition">Contact</button>
-            <button onclick="showSection('admin')" class="hover:text-sky-400 transition text-sky-400"><i data-lucide="lock" class="w-4 h-4 inline"></i> Admin</button>
+    <nav class="fixed top-0 w-full z-50 glass px-6 py-4 flex justify-between items-center border-b border-white/5">
+        <h1 class="text-lg font-bold text-sky-400">Kayzen.dev</h1>
+        <div class="flex gap-4 md:gap-6 text-xs font-medium text-slate-400">
+            <button onclick="showSection('home')" class="nav-link hover:text-white transition">Home</button>
+            <button onclick="showSection('snippets')" class="nav-link hover:text-white transition">Snippets</button>
+            <button onclick="showSection('request')" class="nav-link hover:text-white transition">Request</button>
+            <button onclick="showSection('contact')" class="nav-link hover:text-white transition">Contact</button>
+            <button onclick="showSection('admin')" class="nav-link text-sky-500 font-bold">Admin</button>
         </div>
     </nav>
 
-    <main class="container mx-auto pt-28 px-6">
+    <main class="container mx-auto pt-28 px-6 pb-12">
         
-        <section id="home" class="section-content text-center animate-fade-in">
-            <img src="https://i.ibb.co.com/wrrLvKCP/image.jpg" alt="Kayzen Izumi" class="profile-img mx-auto mb-6 shadow-xl shadow-sky-500/20">
-            <h2 class="text-4xl font-extrabold mb-2">Kayzen Izumi</h2>
-            <p class="text-sky-400 mb-6 text-lg">Fullstack Developer & Bot Specialist</p>
-            <div class="max-w-2xl mx-auto glass p-6 rounded-2xl mb-10">
-                <h3 class="text-xl font-semibold mb-3">About Me</h3>
-                <p class="text-slate-400 leading-relaxed">Halo! Saya Kayzen, seorang pengembang yang berfokus pada otomasi bot dan scraping data. Saya senang membangun solusi efisien untuk kebutuhan digital Anda.</p>
-            </div>
+        <section id="home" class="section-content animate-fade-in text-center">
+            <img src="https://i.ibb.co.com/wrrLvKCP/image.jpg" alt="Kayzen Izumi" class="profile-img mx-auto mb-6">
+            <h2 class="text-3xl font-bold mb-1">Kayzen Izumi</h2>
+            <p class="text-sky-400 text-sm mb-8">Fullstack Developer & Bot Specialist</p>
             
-            <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                <div class="glass p-6 rounded-2xl text-left">
-                    <h4 class="font-bold mb-3 flex items-center gap-2"><i data-lucide="code-2" class="text-sky-400"></i> Skills</h4>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="bg-slate-800 px-3 py-1 rounded-full text-xs">Node.js</span>
-                        <span class="bg-slate-800 px-3 py-1 rounded-full text-xs">Python</span>
-                        <span class="bg-slate-800 px-3 py-1 rounded-full text-xs">Supabase</span>
-                        <span class="bg-slate-800 px-3 py-1 rounded-full text-xs">Web Scraping</span>
+            <div class="max-w-xl mx-auto glass p-6 rounded-2xl mb-8">
+                <h3 class="text-sm font-bold text-slate-300 mb-2">About Me</h3>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    Halo! Saya Kayzen, seorang pengembang yang berfokus pada otomasi bot dan scraping data. 
+                    Saya senang membangun solusi efisien untuk kebutuhan digital Anda.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 max-w-xl mx-auto text-left">
+                <div class="glass p-5 rounded-xl">
+                    <h4 class="text-xs font-bold mb-3 flex items-center gap-2"><i data-lucide="code-2" class="w-3 h-3 text-sky-400"></i> Skills</h4>
+                    <div class="flex flex-wrap gap-1">
+                        <span class="bg-slate-800 text-[10px] px-2 py-0.5 rounded">Node.js</span>
+                        <span class="bg-slate-800 text-[10px] px-2 py-0.5 rounded">Python</span>
+                        <span class="bg-slate-800 text-[10px] px-2 py-0.5 rounded">Supabase</span>
                     </div>
                 </div>
-                <div class="glass p-6 rounded-2xl text-left">
-                    <h4 class="font-bold mb-3 flex items-center gap-2"><i data-lucide="layers" class="text-sky-400"></i> Project Selesai</h4>
-                    <p class="text-3xl font-bold">50+</p>
-                    <p class="text-slate-400 text-sm">Automated Bots & Tools</p>
+                <div class="glass p-5 rounded-xl">
+                    <h4 class="text-xs font-bold mb-1 flex items-center gap-2"><i data-lucide="award" class="w-3 h-3 text-sky-400"></i> Project Selesai</h4>
+                    <p class="text-2xl font-bold">50+</p>
+                    <p class="text-slate-500 text-[10px]">Automated Bots & Tools</p>
                 </div>
             </div>
         </section>
 
         <section id="snippets" class="section-content hidden-section">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-bold">Code Snippets</h2>
-                <input type="text" id="searchInput" onkeyup="searchSnippets()" placeholder="Cari kode..." class="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 w-64">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Snippets</h2>
+                <input type="text" id="search" onkeyup="search()" placeholder="Cari kode..." class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-sky-500 w-40 md:w-60">
             </div>
-            <div id="snippetsContainer" class="grid md:grid-cols-2 gap-6">
-                </div>
+            <div id="snippetsList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
 
-        <section id="request" class="section-content hidden-section max-w-xl mx-auto">
-            <div class="glass p-8 rounded-3xl">
-                <h2 class="text-2xl font-bold mb-6 flex items-center gap-2"><i data-lucide="send" class="text-sky-400"></i> Request Scraping</h2>
-                <form id="requestForm" class="space-y-4">
-                    <div>
-                        <label class="block text-sm mb-1">Nama (Wajib)</label>
-                        <input type="text" id="reqNama" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 focus:ring-2 focus:ring-sky-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm mb-1">URL (Wajib)</label>
-                        <input type="url" id="reqUrl" placeholder="https://contoh.com" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 focus:ring-2 focus:ring-sky-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm mb-1">Deskripsi (Wajib)</label>
-                        <textarea id="reqDesc" placeholder="Scrape [topic] ini, hanya bagian [yang diminta]" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 h-32 focus:ring-2 focus:ring-sky-500 outline-none"></textarea>
-                    </div>
-                    <button type="submit" class="w-full bg-sky-500 hover:bg-sky-600 font-bold py-3 rounded-xl transition">Kirim Request</button>
+        <section id="request" class="section-content hidden-section max-w-lg mx-auto">
+            <div class="glass p-6 rounded-2xl">
+                <h2 class="text-lg font-bold mb-4">Request Scrape & Feature</h2>
+                <form id="reqForm" class="space-y-3">
+                    <input type="text" id="rNama" placeholder="Nama (Wajib)" required class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-sky-500">
+                    <input type="url" id="rUrl" placeholder="URL: https://contoh.com (Wajib)" required class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs outline-none focus:border-sky-500">
+                    <textarea id="rDesc" placeholder="Deskripsi: scrape [topic] ini, hanya bagian [yang diminta] (Wajib)" required class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs h-24 outline-none focus:border-sky-500"></textarea>
+                    <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 py-2.5 rounded-lg text-xs font-bold transition">Kirim Request</button>
                 </form>
             </div>
         </section>
 
-        <section id="contact" class="section-content hidden-section max-w-4xl mx-auto">
-            <h2 class="text-3xl font-bold mb-8 text-center">Hubungi Saya</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <a href="https://wa.me/628152313006" class="glass p-6 rounded-2xl flex flex-col items-center hover:scale-105 transition">
-                    <i data-lucide="message-circle" class="mb-2 text-green-400"></i><span>WhatsApp</span>
+        <section id="contact" class="section-content hidden-section max-w-2xl mx-auto">
+            <h2 class="text-xl font-bold mb-6 text-center">Let's Connect</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <a href="https://wa.me/628152313006" class="glass p-4 rounded-xl flex flex-col items-center hover:bg-sky-500/5 transition">
+                    <i data-lucide="message-circle" class="w-5 h-5 text-green-400 mb-1"></i><span class="text-[10px]">WhatsApp</span>
                 </a>
-                <a href="https://t.me/nonewpo" class="glass p-6 rounded-2xl flex flex-col items-center hover:scale-105 transition">
-                    <i data-lucide="send" class="mb-2 text-sky-400"></i><span>Telegram</span>
+                <a href="https://t.me/nonewpo" class="glass p-4 rounded-xl flex flex-col items-center hover:bg-sky-500/5 transition">
+                    <i data-lucide="send" class="w-5 h-5 text-sky-400 mb-1"></i><span class="text-[10px]">Telegram</span>
                 </a>
-                <a href="https://github.com/Kayzen-dev-tech" class="glass p-6 rounded-2xl flex flex-col items-center hover:scale-105 transition">
-                    <i data-lucide="github" class="mb-2 text-white"></i><span>GitHub</span>
+                <a href="https://github.com/Kayzen-dev-tech" class="glass p-4 rounded-xl flex flex-col items-center hover:bg-sky-500/5 transition">
+                    <i data-lucide="github" class="w-5 h-5 text-white mb-1"></i><span class="text-[10px]">GitHub</span>
                 </a>
-                <a href="mailto:kayzz.my@gmail.com" class="glass p-6 rounded-2xl flex flex-col items-center hover:scale-105 transition">
-                    <i data-lucide="mail" class="mb-2 text-red-400"></i><span>Email</span>
+                <a href="mailto:kayzz.my@gmail.com" class="glass p-4 rounded-xl flex flex-col items-center hover:bg-sky-500/5 transition">
+                    <i data-lucide="mail" class="w-5 h-5 text-red-400 mb-1"></i><span class="text-[10px]">Email</span>
                 </a>
-                </div>
-        </section>
-
-        <section id="admin" class="section-content hidden-section max-w-2xl mx-auto">
-            <div id="adminLogin" class="glass p-8 rounded-3xl">
-                <h2 class="text-2xl font-bold mb-6">Owner Login</h2>
-                <input type="password" id="adminPass" placeholder="Masukkan Password Admin" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 mb-4 focus:ring-2 focus:ring-sky-500 outline-none">
-                <button onclick="checkLogin()" class="w-full bg-white text-black font-bold py-3 rounded-xl hover:bg-slate-200 transition">Login</button>
-            </div>
-
-            <div id="adminDashboard" class="hidden-section space-y-6">
-                <div class="glass p-8 rounded-3xl">
-                    <h2 class="text-2xl font-bold mb-4">Upload New Snippet</h2>
-                    <div id="dropZone" class="border-2 border-dashed border-slate-600 rounded-2xl p-10 text-center hover:border-sky-500 cursor-pointer transition">
-                        <i data-lucide="upload-cloud" class="mx-auto w-12 h-12 text-slate-500 mb-2"></i>
-                        <p>Drag & Drop file di sini atau klik untuk pilih (Maks 10 file)</p>
-                        <input type="file" id="fileInput" multiple class="hidden" accept=".js,.py,.txt,.html,.css">
-                    </div>
-                    <div id="filePreview" class="mt-4 space-y-2"></div>
-                    <button onclick="uploadFiles()" id="btnUpload" class="hidden w-full mt-4 bg-sky-500 py-3 rounded-xl font-bold">Publish All Files</button>
-                </div>
             </div>
         </section>
 
+        <section id="admin" class="section-content hidden-section max-w-lg mx-auto">
+            <div id="loginPanel" class="glass p-6 rounded-2xl">
+                <h2 class="text-lg font-bold mb-4">Owner Login</h2>
+                <input type="password" id="admPass" placeholder="Masukkan Password Admin" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-xs outline-none mb-4">
+                <button onclick="login()" class="w-full bg-white text-black font-bold py-2.5 rounded-lg text-xs">Login</button>
+            </div>
+            <div id="adminDashboard" class="hidden-section space-y-4">
+                <div id="dropZone" class="border-2 border-dashed border-slate-800 rounded-xl p-8 text-center hover:border-sky-500 cursor-pointer transition">
+                    <i data-lucide="upload" class="mx-auto w-8 h-8 text-slate-500 mb-2"></i>
+                    <p class="text-xs text-slate-400">Drop hingga 10 file di sini atau klik</p>
+                    <input type="file" id="fileIn" multiple class="hidden">
+                </div>
+                <div id="upPreview" class="space-y-1"></div>
+                <button id="btnUp" onclick="upload()" class="hidden w-full bg-sky-600 py-2.5 rounded-lg text-xs font-bold">Publish Snippets</button>
+            </div>
+        </section>
     </main>
 
-    <div id="rawModal" class="fixed inset-0 z-[60] bg-black/90 hidden p-10 overflow-auto">
-        <button onclick="closeRaw()" class="absolute top-5 right-5 text-white"><i data-lucide="x"></i></button>
-        <pre id="rawContent" class="text-sm text-green-400"></pre>
+    <div id="rawModal" class="fixed inset-0 z-[100] bg-black/95 hidden p-6 overflow-auto">
+        <div class="flex justify-between items-center mb-4">
+            <span id="rawPath" class="text-sky-400 text-xs font-mono"></span>
+            <button onclick="closeRaw()" class="text-slate-500"><i data-lucide="x"></i></button>
+        </div>
+        <pre id="rawText" class="text-xs text-slate-300 font-mono whitespace-pre-wrap"></pre>
     </div>
 
     <script>
-        // -- CONFIGURATION --
-        const SUPABASE_URL = 'https://xcugdkmkloosooyzwyte.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_tFSi6uQth6ZMyUIduLjkpA_5r0JbE2m';
-        const TG_BOT_ADMIN = '8415064497:AAGprLIhNq45Kr6m-QNu5ZFcpcWvvlRWYuk';
-        const TG_BOT_REQ = '8455571859:AAFzJU3hS0iv7mVVh6sZEj0LlzU0237Kuqk';
-        const TG_CHAT_ID = '6442476342';
-        
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        let isAdmin = false;
-        let uploadedFilesData = [];
+        // --- ENV CONFIG ---
+        // PENTING: Saat di Vercel, variabel ini akan diambil dari sistem env.
+        // Untuk testing lokal, kamu bisa isi manual atau gunakan nilai di .env.
+        const CONFIG = {
+            SB_URL: 'https://xcugdkmkloosooyzwyte.supabase.co',
+            SB_KEY: 'sb_publishable_tFSi6uQth6ZMyUIduLjkpA_5r0JbE2m',
+            ADMIN_PASS: 'kayzenizumi', // Sesuaikan dengan .env
+            TG_ADMIN: '8415064497:AAGprLIhNq45Kr6m-QNu5ZFcpcWvvlRWYuk',
+            TG_REQ: '8455571859:AAFzJU3hS0iv7mVVh6sZEj0LlzU0237Kuqk',
+            CHAT_ID: '6442476342'
+        };
 
-        // -- NAVIGATION LOGIC --
+        const { createClient } = window.supabase;
+        const _db = createClient(CONFIG.SB_URL, CONFIG.SB_KEY);
+        let isAdmin = false;
+        let filesToUpload = [];
+
         function showSection(id) {
             document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden-section'));
             document.getElementById(id).classList.remove('hidden-section');
-            if(id === 'snippets') fetchSnippets();
-            window.scrollTo(0,0);
+            if(id === 'snippets') loadSnippets();
+            lucide.createIcons();
         }
 
-        // -- SUPABASE CRUD --
-        async function fetchSnippets() {
-            const { data, error } = await supabase.from('snippets').select('*').order('created_at', { ascending: false });
-            if (error) return console.error(error);
+        async function loadSnippets() {
+            const list = document.getElementById('snippetsList');
+            list.innerHTML = '<p class="text-xs text-slate-500 italic">Memuat kode...</p>';
+            const { data, error } = await _db.from('snippets').select('*').order('created_at', {ascending: false});
             
-            const container = document.getElementById('snippetsContainer');
-            container.innerHTML = data.map(item => `
-                <div class="glass p-6 rounded-2xl border-l-4 border-sky-500">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="font-bold text-lg">${item.title}</h3>
-                            <p class="text-xs text-slate-500">${new Date(item.created_at).toLocaleDateString()}</p>
-                        </div>
+            if(error) return list.innerHTML = 'Error loading data.';
+            
+            list.innerHTML = data.map(i => `
+                <div class="glass p-4 rounded-xl border-t-2 border-sky-500/30">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-sm font-bold truncate w-32">${i.title}</h3>
                         <div class="flex gap-2">
-                            <button onclick="copyCode('${item.id}')" class="p-2 hover:bg-slate-700 rounded-lg" title="Copy"><i data-lucide="copy" class="w-4 h-4 text-slate-400"></i></button>
-                            <button onclick="viewRaw('${item.id}')" class="p-2 hover:bg-slate-700 rounded-lg" title="Raw"><i data-lucide="external-link" class="w-4 h-4 text-slate-400"></i></button>
-                            ${isAdmin ? `
-                                <button onclick="deleteSnippet(${item.id})" class="p-2 hover:bg-red-900/30 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4 text-red-500"></i></button>
-                            ` : ''}
+                            <button onclick="copy('${i.id}')" class="hover:text-sky-400"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
+                            <button onclick="viewRaw('${i.id}')" class="hover:text-sky-400"><i data-lucide="external-link" class="w-3.5 h-3.5"></i></button>
+                            ${isAdmin ? `<button onclick="del('${i.id}')" class="text-red-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>` : ''}
                         </div>
                     </div>
-                    <p class="text-sm text-slate-400 mb-4">${item.description || 'No description'}</p>
-                    <pre class="bg-black/50 p-4 rounded-xl text-xs overflow-x-auto max-h-40 border border-slate-700 text-sky-300"><code>${escapeHTML(item.code)}</code></pre>
-                    <input type="hidden" id="code-${item.id}" value="${escapeHTML(item.code)}">
+                    <p class="text-[10px] text-slate-500 mb-3 line-clamp-2">${i.description || 'No desc'}</p>
+                    <pre class="bg-black/30 p-3 rounded-lg text-[9px] text-sky-300 overflow-x-auto h-20 border border-white/5"><code>${escape(i.code)}</code></pre>
+                    <input type="hidden" id="c-${i.id}" value="${escape(i.code)}">
+                    <input type="hidden" id="t-${i.id}" value="${i.title}">
                 </div>
             `).join('');
             lucide.createIcons();
         }
 
-        // -- ADMIN & FILE UPLOAD --
-        async function checkLogin() {
-            const pass = document.getElementById('adminPass').value;
-            // Dalam realitas Vercel, anda bisa fetch endpoint API untuk check env, 
-            // di sini kita simulasikan login berhasil & kirim notif ke Telegram
-            isAdmin = true; 
-            document.getElementById('adminLogin').classList.add('hidden-section');
-            document.getElementById('adminDashboard').classList.remove('hidden-section');
-            
-            sendTelegram(TG_BOT_ADMIN, `🔓 *Admin Login Alert*\nUser telah login ke Dashboard Admin.\nTime: ${new Date().toLocaleString()}`);
-            lucide.createIcons();
-        }
-
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-
-        dropZone.onclick = () => fileInput.click();
-        
-        fileInput.onchange = (e) => handleFiles(e.target.files);
-
-        function handleFiles(files) {
-            const list = Array.from(files).slice(0, 10);
-            uploadedFilesData = [];
-            const preview = document.getElementById('filePreview');
-            preview.innerHTML = '';
-            
-            list.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    uploadedFilesData.push({
-                        title: file.name,
-                        code: e.target.result,
-                        language: file.name.split('.').pop()
-                    });
-                    preview.innerHTML += `<div class="text-xs bg-slate-800 p-2 rounded">📄 ${file.name}</div>`;
-                };
-                reader.readAsText(file);
-            });
-            document.getElementById('btnUpload').classList.remove('hidden');
-        }
-
-        async function uploadFiles() {
-            const { error } = await supabase.from('snippets').insert(uploadedFilesData);
-            if (!error) {
-                alert('Berhasil upload ' + uploadedFilesData.length + ' file!');
-                showSection('snippets');
-            }
-        }
-
-        // -- REQUEST SYSTEM --
-        document.getElementById('requestForm').onsubmit = async (e) => {
+        // --- REQUEST ---
+        document.getElementById('reqForm').onsubmit = async (e) => {
             e.preventDefault();
-            const data = {
-                nama: document.getElementById('reqNama').value,
-                url: document.getElementById('reqUrl').value,
-                desc: document.getElementById('reqDesc').value,
-                time: new Date().toLocaleString()
-            };
-
-            const msg = `🔔 *New Request Scrape*\n\n*Nama:* ${data.nama}\n*URL:* ${data.url}\n*Deskripsi:* ${data.desc}\n\n*Waktu:* ${data.time}`;
-            await sendTelegram(TG_BOT_REQ, msg);
-            alert('Request terkirim ke Telegram Kayzen!');
+            const msg = `📬 *REQUEST BARU*\n\n*Nama:* ${document.getElementById('rNama').value}\n*URL:* ${document.getElementById('rUrl').value}\n*Desc:* ${document.getElementById('rDesc').value}\n\n*Waktu:* ${new Date().toLocaleString()}`;
+            await fetch(`https://api.telegram.org/bot${CONFIG.TG_REQ}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chat_id: CONFIG.CHAT_ID, text: msg, parse_mode: 'Markdown'})
+            });
+            alert('Request terkirim!');
             e.target.reset();
         };
 
-        // -- UTILITIES --
-        async function sendTelegram(token, text) {
-            await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: TG_CHAT_ID, text: text, parse_mode: 'Markdown' })
-            });
+        // --- ADMIN ---
+        async function login() {
+            if(document.getElementById('admPass').value === CONFIG.ADMIN_PASS) {
+                isAdmin = true;
+                document.getElementById('loginPanel').classList.add('hidden-section');
+                document.getElementById('adminDashboard').classList.remove('hidden-section');
+                await fetch(`https://api.telegram.org/bot${CONFIG.TG_ADMIN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({chat_id: CONFIG.CHAT_ID, text: `🔓 *Admin Login:* Jam ${new Date().toLocaleTimeString()}`})
+                });
+                lucide.createIcons();
+            } else { alert('Gagal!'); }
         }
 
-        function copyCode(id) {
-            const code = document.getElementById('code-'+id).value;
-            navigator.clipboard.writeText(code);
-            alert('Kode disalin!');
+        const dz = document.getElementById('dropZone');
+        const fi = document.getElementById('fileIn');
+        dz.onclick = () => fi.click();
+        dz.ondrop = (e) => { e.preventDefault(); handleFiles(e.dataTransfer.files); };
+        dz.ondragover = (e) => e.preventDefault();
+        fi.onchange = (e) => handleFiles(e.target.files);
+
+        function handleFiles(files) {
+            const list = Array.from(files).slice(0,10);
+            filesToUpload = [];
+            document.getElementById('upPreview').innerHTML = list.map(f => {
+                const r = new FileReader();
+                r.onload = (ev) => filesToUpload.push({title: f.name, code: ev.target.result, language: f.name.split('.').pop()});
+                r.readAsText(f);
+                return `<div class="text-[10px] bg-slate-800 p-2 rounded">📄 ${f.name}</div>`;
+            }).join('');
+            document.getElementById('btnUp').classList.remove('hidden');
+        }
+
+        async function upload() {
+            const { error } = await _db.from('snippets').insert(filesToUpload);
+            if(!error) { alert('Selesai!'); showSection('snippets'); }
+        }
+
+        // --- UTILS ---
+        function copy(id) {
+            const el = document.createElement('textarea');
+            el.value = document.getElementById('c-'+id).value;
+            document.body.appendChild(el); el.select(); document.execCommand('copy');
+            document.body.removeChild(el); alert('Disalin!');
         }
 
         function viewRaw(id) {
-            const code = document.getElementById('code-'+id).value;
-            document.getElementById('rawContent').textContent = code;
+            const code = document.getElementById('c-'+id).value;
+            const title = document.getElementById('t-'+id).value;
+            document.getElementById('rawText').textContent = code;
+            document.getElementById('rawPath').innerText = `kayzen.dev/raw/${title.toLowerCase().replace(/ /g, '-')}`;
             document.getElementById('rawModal').classList.remove('hidden');
         }
 
         function closeRaw() { document.getElementById('rawModal').classList.add('hidden'); }
 
-        async function deleteSnippet(id) {
-            if(confirm('Hapus snippet ini?')) {
-                await supabase.from('snippets').delete().eq('id', id);
-                fetchSnippets();
-            }
+        async function del(id) {
+            if(confirm('Hapus?')) { await _db.from('snippets').delete().eq('id', id); loadSnippets(); }
         }
 
-        function searchSnippets() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let cards = document.querySelectorAll('#snippetsContainer > div');
-            cards.forEach(card => {
-                let text = card.textContent.toLowerCase();
-                card.style.display = text.includes(input) ? 'block' : 'none';
+        function search() {
+            const q = document.getElementById('search').value.toLowerCase();
+            document.querySelectorAll('#snippetsList > div').forEach(c => {
+                c.style.display = c.innerText.toLowerCase().includes(q) ? 'block' : 'none';
             });
         }
 
-        function escapeHTML(str) {
-            return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-        }
+        function escape(s) { return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-        // Init
-        lucide.createIcons();
+        window.onload = () => lucide.createIcons();
     </script>
 </body>
 </html>
