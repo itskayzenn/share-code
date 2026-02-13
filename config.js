@@ -1,0 +1,13 @@
+// ========== CONFIGURATION ==========
+// Simpan file ini dan jangan commit ke Git!
+// Copy dari .env.example dan isi dengan credentials Anda
+
+const CONFIG = {
+    SUPABASE_URL: 'https://xcugdkmkloosooyzwyte.supabase.co',
+    SUPABASE_ANON_KEY: 'sb_publishable_tFSi6uQth6ZMyUIduLjkpA_5r0JbE2m',
+    TELEGRAM_BOT_TOKEN_REQUEST: '8455571859:AAFzJU3hS0iv7mVVh6sZEj0LlzU0237Kuqk',
+    TELEGRAM_BOT_TOKEN_LOGIN: '8415064497:AAGprLIhNq45Kr6m-QNu5ZFcpcWvvlRWYuk',
+    TELEGRAM_CHAT_ID: '6442476342',
+    ADMIN_PASSWORD: 'kayzenganteng',
+    PROJECT_URL: window.location.origin
+};
