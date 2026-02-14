@@ -6,17 +6,10 @@
     <title>Kayzen Izumi - Code Snippets & Portfolio</title>
     <link rel="icon" href="https://i.ibb.co.com/wrrLvKCP/image.jpg" type="image/x-icon">
 
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://shcdn.vercel.app/">
     <meta property="og:title" content="Kayzen Izumi - Code Snippets & Portfolio">
     <meta property="og:description" content="Platform berbagi snippets dengan mudah dan cepat oleh Kayzen Izumi.">
     <meta property="og:image" content="https://i.ibb.co.com/wrrLvKCP/image.jpg">
-
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://shcdn.vercel.app/">
-    <meta property="twitter:title" content="Kayzen Izumi - Code Snippets & Portfolio">
-    <meta property="twitter:description" content="Platform berbagi snippets dengan mudah dan cepat oleh Kayzen Izumi.">
-    <meta property="twitter:image" content="https://i.ibb.co.com/wrrLvKCP/image.jpg">
+    <meta property="og:url" content="https://shcdn.vercel.app/">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -35,133 +28,160 @@
         }
     </script>
     <style>
-        body { background-color: #0f172a; color: #e2e8f0; min-height: 100vh; }
-        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-        .profile-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #3b82f6; }
-        .page-section { display: none; opacity: 0; transform: translateY(10px); transition: all 0.3s ease; }
-        .page-section.active { display: block; opacity: 1; transform: translateY(0); }
+        body { background-color: #0f172a; color: #e2e8f0; min-height: 100vh; overflow-x: hidden; }
+        .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .profile-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+        .page-section { display: none; opacity: 0; transform: translateY(10px); }
+        .page-section.active { display: block; opacity: 1; transform: translateY(0); transition: all 0.4s ease; }
         pre { scrollbar-width: thin; scrollbar-color: #334155 transparent; }
     </style>
 </head>
 <body class="font-sans">
 
     <div id="raw-view" class="hidden fixed inset-0 z-[100] bg-darker p-6 overflow-auto font-mono text-sm">
-        <button onclick="closeRaw()" class="fixed top-4 right-4 bg-red-500 text-white px-3 py-1 rounded">Close</button>
-        <pre id="raw-content" class="text-white whitespace-pre-wrap"></pre>
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-primary font-bold">Source Code</span>
+                <button onclick="closeRaw()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-lg transition">Close</button>
+            </div>
+            <pre id="raw-content" class="text-white whitespace-pre-wrap bg-dark p-4 rounded-xl border border-gray-800"></pre>
+        </div>
     </div>
 
     <nav class="fixed top-0 w-full z-50 glass">
         <div class="max-w-6xl mx-auto px-4 flex justify-between items-center h-16">
-            <span class="text-xl font-bold text-primary cursor-pointer" onclick="router('home')">&lt;Kayzen/&gt;</span>
-            <div class="hidden md:flex gap-6 text-sm font-medium">
-                <button onclick="router('home')" class="hover:text-primary transition">Home</button>
-                <button onclick="router('snippets')" class="hover:text-primary transition">Snippets</button>
-                <button onclick="router('request')" class="hover:text-primary transition">Request</button>
-                <button onclick="router('contact')" class="hover:text-primary transition">Contact</button>
-                <button onclick="router('admin')" class="bg-primary/10 text-primary px-3 py-1 rounded border border-primary/20">Admin</button>
+            <span class="text-xl font-bold text-primary cursor-pointer tracking-tighter" onclick="router('/home')">&lt;Kayzen/&gt;</span>
+            <div class="hidden md:flex gap-8 text-sm font-medium">
+                <button onclick="router('/home')" class="hover:text-primary transition">Home</button>
+                <button onclick="router('/snippets')" class="hover:text-primary transition">Snippets</button>
+                <button onclick="router('/request')" class="hover:text-primary transition">Request</button>
+                <button onclick="router('/contact')" class="hover:text-primary transition">Contact</button>
+                <button onclick="router('/admin')" class="bg-primary/20 text-primary px-4 py-1.5 rounded-lg border border-primary/30 hover:bg-primary/30 transition">Admin</button>
             </div>
-            <button class="md:hidden text-2xl" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+            <button class="md:hidden text-2xl text-primary" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
         </div>
-        <div id="mobile-nav" class="hidden md:hidden bg-dark border-t border-gray-800 p-4 flex flex-col gap-4 text-center">
-            <button onclick="router('home')">Home</button>
-            <button onclick="router('snippets')">Snippets</button>
-            <button onclick="router('request')">Request</button>
-            <button onclick="router('contact')">Contact</button>
-            <button onclick="router('admin')" class="text-primary font-bold">Admin</button>
+        <div id="mobile-nav" class="hidden md:hidden bg-darker border-t border-gray-800 p-6 flex flex-col gap-6 text-center shadow-2xl">
+            <button onclick="router('/home')" class="text-lg">Home</button>
+            <button onclick="router('/snippets')" class="text-lg">Snippets</button>
+            <button onclick="router('/request')" class="text-lg">Request</button>
+            <button onclick="router('/contact')" class="text-lg">Contact</button>
+            <button onclick="router('/admin')" class="text-primary font-bold text-lg">Admin Panel</button>
         </div>
     </nav>
 
     <main class="pt-24 pb-12 max-w-5xl mx-auto px-4 min-h-screen">
         
-        <section id="home" class="page-section active">
+        <section id="home" class="page-section">
             <div class="flex flex-col items-center text-center mb-12">
-                <img src="https://i.ibb.co.com/wrrLvKCP/image.jpg" class="profile-img mb-4 shadow-lg shadow-primary/20">
-                <h1 class="text-4xl font-bold mb-2">Kayzen Izumi</h1>
-                <p class="text-gray-400">Fullstack Developer | Scraper Enthusiast</p>
-                <div class="flex gap-4 mt-6">
-                    <button onclick="router('snippets')" class="bg-primary px-6 py-2 rounded-full font-bold shadow-lg shadow-primary/30">Explore Snippets</button>
-                    <button onclick="router('contact')" class="bg-card px-6 py-2 rounded-full font-bold border border-gray-700">Contact Me</button>
+                <img src="https://i.ibb.co.com/wrrLvKCP/image.jpg" class="profile-img mb-6">
+                <h1 class="text-5xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">Kayzen Izumi</h1>
+                <p class="text-gray-400 text-lg">Fullstack Developer | Scraper Enthusiast | Tech Creator</p>
+                <div class="flex gap-4 mt-8">
+                    <button onclick="router('/snippets')" class="bg-primary hover:bg-blue-600 px-8 py-3 rounded-full font-bold shadow-lg shadow-primary/30 transition-all transform hover:scale-105">Explore Snippets</button>
+                    <button onclick="router('/contact')" class="bg-card hover:bg-gray-800 px-8 py-3 rounded-full font-bold border border-gray-700 transition-all">Contact Me</button>
                 </div>
             </div>
             <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-card p-6 rounded-2xl border border-gray-700">
-                    <h2 class="text-xl font-bold mb-3 text-primary"><i class="fas fa-user mr-2"></i>About Me</h2>
-                    <p class="text-gray-300 text-sm leading-relaxed">Halo! Saya Kayzen. Fokus pada web scraping, automasi bot, dan backend dev. Web ini adalah library snippet kode pribadi saya.</p>
+                <div class="bg-card p-8 rounded-3xl border border-gray-800 hover:border-primary/30 transition shadow-xl">
+                    <h2 class="text-2xl font-bold mb-4 text-primary flex items-center"><i class="fas fa-user-circle mr-3"></i>About Me</h2>
+                    <p class="text-gray-300 leading-relaxed">Halo! Saya Kayzen. Berfokus pada pengembangan automasi, web scraping, dan arsitektur backend. Web ini adalah galeri kode yang saya kembangkan untuk mempermudah aksesibilitas script saya sendiri maupun publik.</p>
                 </div>
-                <div class="bg-card p-6 rounded-2xl border border-gray-700">
-                    <h2 class="text-xl font-bold mb-3 text-primary"><i class="fas fa-bolt mr-2"></i>Skills</h2>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="bg-dark px-3 py-1 rounded-lg text-xs border border-gray-700">JavaScript</span>
-                        <span class="bg-dark px-3 py-1 rounded-lg text-xs border border-gray-700">Node.js</span>
-                        <span class="bg-dark px-3 py-1 rounded-lg text-xs border border-gray-700">Python</span>
-                        <span class="bg-dark px-3 py-1 rounded-lg text-xs border border-gray-700">Supabase</span>
+                <div class="bg-card p-8 rounded-3xl border border-gray-800 hover:border-primary/30 transition shadow-xl">
+                    <h2 class="text-2xl font-bold mb-4 text-primary flex items-center"><i class="fas fa-code mr-3"></i>Tech Stack</h2>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="bg-darker px-4 py-2 rounded-xl text-sm border border-gray-700 text-blue-400">JavaScript (ES6+)</span>
+                        <span class="bg-darker px-4 py-2 rounded-xl text-sm border border-gray-700 text-green-400">Node.js</span>
+                        <span class="bg-darker px-4 py-2 rounded-xl text-sm border border-gray-700 text-yellow-400">Python</span>
+                        <span class="bg-darker px-4 py-2 rounded-xl text-sm border border-gray-700 text-teal-400">Supabase</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="snippets" class="page-section">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold">Library</h2>
-                <input type="text" id="search" oninput="renderSnippets()" placeholder="Search..." class="bg-card border border-gray-700 rounded-lg px-4 py-2 text-sm focus:border-primary outline-none">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <h2 class="text-3xl font-bold">Code Library</h2>
+                <div class="relative w-full md:w-80">
+                    <input type="text" id="search" oninput="renderSnippets()" placeholder="Search snippets..." class="w-full bg-card border border-gray-700 rounded-2xl px-5 py-3 text-sm focus:border-primary outline-none transition shadow-inner">
+                    <i class="fas fa-search absolute right-4 top-4 text-gray-500"></i>
+                </div>
             </div>
-            <div id="snippet-list" class="grid gap-4"></div>
+            <div id="snippet-list" class="grid gap-6"></div>
         </section>
 
         <section id="request" class="page-section">
-            <div class="max-w-xl mx-auto bg-card p-8 rounded-2xl border border-gray-700 shadow-xl">
-                <h2 class="text-2xl font-bold mb-6 text-center">Request Feature</h2>
-                <form id="req-form" onsubmit="sendRequest(event)" class="flex flex-col gap-4">
-                    <input type="text" name="nama" placeholder="Nama (Wajib)" required class="bg-dark border border-gray-700 p-3 rounded-xl outline-none focus:border-primary">
-                    <input type="url" name="url" placeholder="URL Target (Wajib)" required class="bg-dark border border-gray-700 p-3 rounded-xl outline-none focus:border-primary">
-                    <textarea name="desc" placeholder="Deskripsi Request..." rows="4" required class="bg-dark border border-gray-700 p-3 rounded-xl outline-none focus:border-primary"></textarea>
-                    <button type="submit" class="bg-primary py-3 rounded-xl font-bold">Kirim ke Telegram</button>
+            <div class="max-w-xl mx-auto bg-card p-10 rounded-3xl border border-gray-800 shadow-2xl">
+                <h2 class="text-3xl font-bold mb-6 text-center text-primary">Request Feature</h2>
+                <form id="req-form" onsubmit="sendRequest(event)" class="flex flex-col gap-5">
+                    <div class="space-y-2">
+                        <label class="text-sm text-gray-400 ml-1">Nama Lengkap</label>
+                        <input type="text" name="nama" placeholder="Masukkan nama Anda..." required class="w-full bg-darker border border-gray-700 p-4 rounded-2xl outline-none focus:border-primary transition">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm text-gray-400 ml-1">Target URL / Project</label>
+                        <input type="url" name="url" placeholder="https://example.com" required class="w-full bg-darker border border-gray-700 p-4 rounded-2xl outline-none focus:border-primary transition">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm text-gray-400 ml-1">Detail Request</label>
+                        <textarea name="desc" placeholder="Jelaskan fitur yang Anda inginkan..." rows="4" required class="w-full bg-darker border border-gray-700 p-4 rounded-2xl outline-none focus:border-primary transition"></textarea>
+                    </div>
+                    <button type="submit" class="bg-primary hover:bg-blue-600 py-4 rounded-2xl font-bold text-white transition transform active:scale-95 shadow-lg shadow-primary/20">Kirim ke Telegram</button>
                 </form>
             </div>
         </section>
 
         <section id="contact" class="page-section">
-            <h2 class="text-2xl font-bold mb-8 text-center">Contact Info</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="contact-grid"></div>
+            <h2 class="text-3xl font-bold mb-10 text-center">Connect With Me</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-6" id="contact-grid"></div>
         </section>
 
         <section id="admin" class="page-section">
-            <div id="login-area" class="max-w-sm mx-auto bg-card p-8 rounded-2xl border border-gray-700 text-center">
-                <h2 class="text-xl font-bold mb-4">Admin Login</h2>
-                <input type="password" id="pass" class="w-full bg-dark border border-gray-700 p-3 rounded-xl mb-4 outline-none">
-                <button onclick="doLogin()" class="w-full bg-primary py-2 rounded-xl font-bold">Login</button>
+            <div id="login-area" class="max-w-sm mx-auto bg-card p-10 rounded-3xl border border-gray-800 text-center shadow-2xl">
+                <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-6">Admin Access</h2>
+                <input type="password" id="pass" placeholder="Password" class="w-full bg-darker border border-gray-700 p-4 rounded-2xl mb-6 outline-none text-center focus:border-primary">
+                <button onclick="doLogin()" class="w-full bg-primary py-4 rounded-2xl font-bold hover:bg-blue-600 transition shadow-lg shadow-primary/20">Login</button>
             </div>
             <div id="dash-area" class="hidden">
-                <div class="flex justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-primary">Admin Dashboard</h2>
-                    <button onclick="logout()" class="text-red-400 text-sm">Logout</button>
+                <div class="flex justify-between items-center mb-8 bg-card p-6 rounded-2xl border border-gray-800">
+                    <h2 class="text-2xl font-bold text-primary">Dashboard Admin</h2>
+                    <button onclick="logout()" class="bg-red-500/10 text-red-500 px-4 py-2 rounded-lg hover:bg-red-500 hover:text-white transition font-medium">Logout Session</button>
                 </div>
-                <div id="drop-zone" class="border-2 border-dashed border-gray-700 rounded-2xl p-8 text-center mb-6 cursor-pointer hover:border-primary">
+                <div id="drop-zone" class="border-2 border-dashed border-gray-700 rounded-3xl p-12 text-center mb-8 cursor-pointer hover:border-primary hover:bg-primary/5 transition group">
                     <input type="file" id="file-in" multiple class="hidden" onchange="handleFiles(this.files)">
                     <div onclick="document.getElementById('file-in').click()">
-                        <i class="fas fa-cloud-upload-alt text-3xl mb-2 text-gray-500"></i>
-                        <p class="text-sm text-gray-400">Klik/Drop file di sini (Maks 10)</p>
+                        <i class="fas fa-cloud-upload-alt text-5xl mb-4 text-gray-600 group-hover:text-primary transition"></i>
+                        <p class="text-lg font-medium text-gray-400 group-hover:text-gray-200">Klik atau seret file ke sini</p>
+                        <p class="text-sm text-gray-600 mt-2">Format: .js, .py, .txt (Max 10 files)</p>
                     </div>
                 </div>
-                <form onsubmit="saveSnip(event)" class="bg-card p-6 rounded-2xl border border-gray-700 flex flex-col gap-4">
+                <form onsubmit="saveSnip(event)" class="bg-card p-8 rounded-3xl border border-gray-800 flex flex-col gap-6 shadow-xl">
                     <input type="hidden" id="snip-id">
-                    <input type="text" id="t-title" placeholder="Title" required class="bg-dark border border-gray-700 p-3 rounded-xl outline-none">
-                    <textarea id="t-code" placeholder="Paste Code Here..." rows="10" required class="bg-dark border border-gray-700 p-3 rounded-xl font-mono text-sm outline-none"></textarea>
+                    <div class="space-y-2">
+                        <label class="text-sm text-gray-400 ml-1">Snippet Title</label>
+                        <input type="text" id="t-title" placeholder="Nama script/snippet..." required class="w-full bg-darker border border-gray-700 p-4 rounded-2xl outline-none focus:border-primary">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm text-gray-400 ml-1">Source Code</label>
+                        <textarea id="t-code" placeholder="// Paste your code here..." rows="12" required class="w-full bg-darker border border-gray-700 p-4 rounded-2xl font-mono text-sm outline-none focus:border-primary"></textarea>
+                    </div>
                     <div class="flex gap-4">
-                        <button type="submit" class="flex-1 bg-green-600 py-3 rounded-xl font-bold">Save Snippet</button>
-                        <button type="button" onclick="clearForm()" class="bg-gray-700 px-6 rounded-xl">Clear</button>
+                        <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 py-4 rounded-2xl font-bold text-white transition shadow-lg shadow-green-500/20">Save to Database</button>
+                        <button type="button" onclick="clearForm()" class="bg-gray-700 hover:bg-gray-600 px-8 rounded-2xl font-bold transition">Reset</button>
                     </div>
                 </form>
             </div>
         </section>
     </main>
 
-    <footer class="text-center py-8 text-gray-600 text-xs border-t border-gray-900">
-        &copy; 2026 Kayzen Izumi. All Rights Reserved.
+    <footer class="text-center py-12 text-gray-600 text-sm border-t border-gray-900 mt-10">
+        <p>&copy; 2026 Kayzen Izumi. All Rights Reserved.</p>
     </footer>
 
     <script>
-        // CONFIG
+        // CONFIG - Tetap sama, pastikan kredensial benar
         const CONFIG = {
             URL: 'https://xcugdkmkloosooyzwyte.supabase.co',
             KEY: 'sb_publishable_tFSi6uQth6ZMyUIduLjkpA_5r0JbE2m',
@@ -174,25 +194,44 @@
         const sb = supabase.createClient(CONFIG.URL, CONFIG.KEY);
         let dataStore = [];
 
-        // ROUTER
-        function router(id) {
+        // NEW ROUTER (PATH-BASED)
+        function router(path) {
+            const id = path.replace(/^\//, '') || 'home';
+            
+            // UI Switch
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             const target = document.getElementById(id);
-            if(target) target.classList.add('active');
-            window.location.hash = id;
+            if(target) {
+                target.classList.add('active');
+                // History Push (Tanpa Reload)
+                if (window.location.pathname !== path) {
+                    window.history.pushState({}, "", path);
+                }
+            }
+
             document.getElementById('mobile-nav').classList.add('hidden');
-            window.scrollTo(0,0);
+            window.scrollTo({top: 0, behavior: 'smooth'});
+
+            // Data Triggers
             if(id === 'snippets') loadData();
             if(id === 'contact') loadContacts();
             if(id === 'admin') checkLog();
         }
 
+        // Handle Browser Back/Forward
+        window.onpopstate = () => router(window.location.pathname);
+
         function toggleMenu() { document.getElementById('mobile-nav').classList.toggle('hidden'); }
 
-        // SNIPPETS
+        // SNIPPETS LOGIC
         async function loadData() {
             const list = document.getElementById('snippet-list');
-            list.innerHTML = '<p class="text-center text-gray-500">Loading...</p>';
+            list.innerHTML = `
+                <div class="flex flex-col items-center py-20 opacity-50">
+                    <i class="fas fa-circle-notch fa-spin text-3xl text-primary mb-4"></i>
+                    <p>Fetching snippets from Supabase...</p>
+                </div>
+            `;
             const { data } = await sb.from('snippets').select('*').order('id', {ascending: false});
             dataStore = data || [];
             renderSnippets();
@@ -204,17 +243,28 @@
             const admin = localStorage.getItem('kayz_adm') === 'true';
             
             const filtered = dataStore.filter(s => s.title.toLowerCase().includes(q));
+            
+            if(filtered.length === 0) {
+                list.innerHTML = `<div class="text-center py-10 text-gray-500 bg-card rounded-2xl border border-gray-800">No snippets found for "${q}"</div>`;
+                return;
+            }
+
             list.innerHTML = filtered.map(s => `
-                <div class="bg-card p-5 rounded-xl border border-gray-700 flex justify-between items-center group">
-                    <div>
-                        <h3 class="font-bold text-primary">${s.title}</h3>
-                        <p class="text-xs text-gray-500 mt-1">ID: ${s.id}</p>
+                <div class="bg-card p-6 rounded-3xl border border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 hover:border-primary/40 transition shadow-lg group">
+                    <div class="flex items-center gap-4 w-full">
+                        <div class="w-12 h-12 bg-darker rounded-2xl flex items-center justify-center text-primary border border-gray-700">
+                            <i class="fas fa-file-code"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-200 group-hover:text-primary transition">${s.title}</h3>
+                            <p class="text-xs text-gray-600 font-mono">ID: ${s.id} • ${new Date(s.created_at || Date.now()).toLocaleDateString()}</p>
+                        </div>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="viewRaw('${s.id}')" class="text-xs bg-dark px-3 py-1 rounded border border-gray-700">Raw</button>
+                    <div class="flex gap-2 w-full md:w-auto">
+                        <button onclick="viewRaw('${s.id}')" class="flex-1 md:flex-none px-6 py-2 bg-darker hover:bg-primary hover:text-white rounded-xl border border-gray-700 transition font-medium">Raw</button>
                         ${admin ? `
-                            <button onclick="editMe('${s.id}')" class="text-xs text-yellow-500"><i class="fas fa-edit"></i></button>
-                            <button onclick="delMe('${s.id}')" class="text-xs text-red-500"><i class="fas fa-trash"></i></button>
+                            <button onclick="editMe('${s.id}')" class="p-2 text-yellow-500 hover:bg-yellow-500/10 rounded-lg"><i class="fas fa-edit"></i></button>
+                            <button onclick="delMe('${s.id}')" class="p-2 text-red-500 hover:bg-red-500/10 rounded-lg"><i class="fas fa-trash"></i></button>
                         ` : ''}
                     </div>
                 </div>
@@ -226,24 +276,41 @@
             if(s) {
                 document.getElementById('raw-content').innerText = s.code;
                 document.getElementById('raw-view').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
             }
         }
-        function closeRaw() { document.getElementById('raw-view').classList.add('hidden'); }
+        function closeRaw() { 
+            document.getElementById('raw-view').classList.add('hidden'); 
+            document.body.style.overflow = 'auto';
+        }
 
         // REQUEST
         async function sendRequest(e) {
             e.preventDefault();
+            const btn = e.submitter;
+            btn.disabled = true;
+            btn.innerText = "Sending...";
+            
             const f = new FormData(e.target);
-            const text = `📬 *NEW REQUEST*\n\n*Nama:* ${f.get('nama')}\n*URL:* ${f.get('url')}\n*Deskripsi:* ${f.get('desc')}`;
-            await fetch(`https://api.telegram.org/bot${CONFIG.REQ_BOT}/sendMessage`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ chat_id: CONFIG.CHAT_ID, text, parse_mode: 'Markdown' })
-            });
-            alert('Terkirim!'); e.target.reset();
+            const text = `📬 *NEW REQUEST FROM WEB*\n\n👤 *Nama:* ${f.get('nama')}\n🔗 *URL:* ${f.get('url')}\n📝 *Deskripsi:* ${f.get('desc')}\n\n⏰ _${new Date().toLocaleString()}_`;
+            
+            try {
+                await fetch(`https://api.telegram.org/bot${CONFIG.REQ_BOT}/sendMessage`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ chat_id: CONFIG.CHAT_ID, text, parse_mode: 'Markdown' })
+                });
+                alert('Request Anda telah terkirim ke Telegram Kayzen!');
+                e.target.reset();
+            } catch (err) {
+                alert('Gagal mengirim request.');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Kirim ke Telegram";
+            }
         }
 
-        // ADMIN
+        // ADMIN LOGIC
         function checkLog() {
             const isAdm = localStorage.getItem('kayz_adm') === 'true';
             document.getElementById('login-area').classList.toggle('hidden', isAdm);
@@ -256,67 +323,94 @@
                 fetch(`https://api.telegram.org/bot${CONFIG.LOG_BOT}/sendMessage`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ chat_id: CONFIG.CHAT_ID, text: '🔐 Admin Login Success' })
+                    body: JSON.stringify({ chat_id: CONFIG.CHAT_ID, text: '🔑 *Security Alert:* Admin dashboard accessed.' , parse_mode: 'Markdown' })
                 });
                 checkLog();
-            } else alert('Salah!');
+            } else {
+                alert('Password salah!');
+            }
         }
 
-        function logout() { localStorage.removeItem('kayz_adm'); checkLog(); }
+        function logout() { 
+            localStorage.removeItem('kayz_adm'); 
+            router('/home'); 
+        }
 
         async function saveSnip(e) {
             e.preventDefault();
             const id = document.getElementById('snip-id').value;
-            const payload = { title: document.getElementById('t-title').value, code: document.getElementById('t-code').value };
+            const payload = { 
+                title: document.getElementById('t-title').value, 
+                code: document.getElementById('t-code').value 
+            };
             
-            if(id) await sb.from('snippets').update(payload).eq('id', id);
-            else await sb.from('snippets').insert([payload]);
+            const { error } = id ? 
+                await sb.from('snippets').update(payload).eq('id', id) : 
+                await sb.from('snippets').insert([payload]);
             
-            alert('Saved!'); clearForm(); loadData();
+            if(!error) {
+                alert('Success!'); clearForm(); loadData();
+            } else {
+                alert('Error: ' + error.message);
+            }
         }
 
-        async function delMe(id) { if(confirm('Hapus?')) { await sb.from('snippets').delete().eq('id', id); loadData(); } }
+        async function delMe(id) { 
+            if(confirm('Hapus snippet ini secara permanen?')) { 
+                await sb.from('snippets').delete().eq('id', id); 
+                loadData(); 
+            } 
+        }
+
         function editMe(id) {
             const s = dataStore.find(x => x.id == id);
             if(s) {
                 document.getElementById('snip-id').value = s.id;
                 document.getElementById('t-title').value = s.title;
                 document.getElementById('t-code').value = s.code;
-                window.scrollTo(0, document.body.scrollHeight);
+                document.getElementById('admin').scrollIntoView({behavior:'smooth'});
             }
         }
-        function clearForm() { document.getElementById('snip-id').value=''; document.getElementById('t-title').value=''; document.getElementById('t-code').value=''; }
+
+        function clearForm() { 
+            document.getElementById('snip-id').value=''; 
+            document.getElementById('t-title').value=''; 
+            document.getElementById('t-code').value=''; 
+        }
 
         function handleFiles(files) {
             Array.from(files).slice(0, 10).forEach(f => {
                 const r = new FileReader();
-                r.onload = (e) => document.getElementById('t-code').value += `\n// --- ${f.name} ---\n${e.target.result}\n`;
+                r.onload = (e) => {
+                    document.getElementById('t-code').value += `\n// --- FILE: ${f.name} ---\n${e.target.result}\n`;
+                };
                 r.readAsText(f);
             });
         }
 
-        // CONTACTS
+        // CONTACT LIST
         function loadContacts() {
             const c = [
-                {n:'WhatsApp', i:'fa-whatsapp', l:'https://wa.me/628152313006'},
-                {n:'Telegram', i:'fa-telegram', l:'https://t.me/nonewpo'},
-                {n:'GitHub', i:'fa-github', l:'https://github.com/Kayzen-dev-tech'},
-                {n:'YouTube', i:'fa-youtube', l:'https://youtube.com/@kayzenfry'},
-                {n:'Instagram', i:'fa-instagram', l:'https://instagram.com/kayzenfry'},
-                {n:'Email', i:'fa-envelope', l:'mailto:kayzz.my@gmail.com'}
+                {n:'WhatsApp', i:'fa-whatsapp', l:'https://wa.me/628152313006', b:'bg-green-600/10', t:'text-green-500'},
+                {n:'Telegram', i:'fa-telegram', l:'https://t.me/nonewpo', b:'bg-blue-400/10', t:'text-blue-400'},
+                {n:'GitHub', i:'fa-github', l:'https://github.com/Kayzen-dev-tech', b:'bg-gray-100/10', t:'text-gray-100'},
+                {n:'YouTube', i:'fa-youtube', l:'https://youtube.com/@kayzenfry', b:'bg-red-600/10', t:'text-red-500'},
+                {n:'Instagram', i:'fa-instagram', l:'https://instagram.com/kayzenfry', b:'bg-pink-600/10', t:'text-pink-500'},
+                {n:'Email', i:'fa-envelope', l:'mailto:kayzz.my@gmail.com', b:'bg-yellow-500/10', t:'text-yellow-500'}
             ];
             document.getElementById('contact-grid').innerHTML = c.map(x => `
-                <a href="${x.l}" target="_blank" class="bg-card p-4 rounded-xl border border-gray-700 text-center hover:border-primary transition">
-                    <i class="fab ${x.i} text-2xl mb-2 text-primary"></i>
-                    <p class="text-xs font-bold">${x.n}</p>
+                <a href="${x.l}" target="_blank" class="bg-card p-8 rounded-3xl border border-gray-800 text-center hover:border-primary transition group shadow-lg">
+                    <div class="w-16 h-16 ${x.b} ${x.t} rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl group-hover:scale-110 transition">
+                        <i class="fab ${x.i}"></i>
+                    </div>
+                    <p class="font-bold text-lg">${x.n}</p>
                 </a>
             `).join('');
         }
 
-        // Init load
+        // INITIAL LOAD
         window.addEventListener('DOMContentLoaded', () => {
-            const hash = window.location.hash.replace('/','') || 'home';
-            router(hash);
+            router(window.location.pathname);
         });
     </script>
 </body>
