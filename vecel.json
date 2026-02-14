@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/raw/:title", "destination": "/index.html" }
+  ]
+}

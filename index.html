@@ -1,1601 +1,253 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kayzen Izumi | Snippets</title>
-    <link rel="icon" href="https://i.ibb.co.com/wrrLvKCP/image.jpg" type="image/x-icon">
-    
-    <meta name="description" content="Platform berbagi code snippets dengan mudah dan cepat oleh Kayzen Izumi. Full Stack Developer & Bot Creator.">
-    <meta name="keywords" content="code snippets, kayzen izumi, portfolio, web development, bot development, programming">
-    <meta name="author" content="Kayzen Izumi">
-    
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://shcdn.vercel.app/">
-    <meta property="og:title" content="Kayzen Izumi | Code Snippets & Portofolio">
-    <meta property="og:description" content="Platform berbagi snippets dengan mudah dan cepat oleh Kayzen Izumi.">
-    <meta property="og:image" content="https://i.ibb.co.com/wrrLvKCP/image.jpg">
-
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://shcdn.vercel.app/">
-    <meta property="twitter:title" content="Kayzen Izumi | Portfolio">
-    <meta property="twitter:description" content="Platform berbagi snippets dengan mudah dan cepat oleh Kayzen Izumi.">
-    <meta property="twitter:image" content="https://i.ibb.co.com/wrrLvKCP/image.jpg">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <script src="config.js"></script>
-    
-    <style>
-        :root {
-            --bg-primary: #0a0e17;
-            --bg-secondary: #141927;
-            --bg-card: #1a1f35;
-            --accent-primary: #00fff2;
-            --accent-secondary: #ff00ff;
-            --accent-gradient: linear-gradient(135deg, #00fff2 0%, #00b8ff 50%, #ff00ff 100%);
-            --text-primary: #e8eaed;
-            --text-secondary: #9ba3af;
-            --border-color: rgba(0, 255, 242, 0.15);
-            --shadow-glow: 0 0 30px rgba(0, 255, 242, 0.3);
-            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(0, 255, 242, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 0, 255, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .app-container {
-            position: relative;
-            z-index: 1;
-            min-height: 100vh;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(10, 14, 23, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-            padding: 1rem 0;
-        }
-
-        nav .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            font-weight: 900;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 2px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s;
-            position: relative;
-            padding: 0.5rem 0;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent-gradient);
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--accent-primary);
-        }
-
-        .nav-links a:hover::after,
-        .nav-links a.active::after {
-            width: 100%;
-        }
-
-        /* Main Content */
-        main {
-            margin-top: 80px;
-            padding: 2rem;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .page {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 4rem 0;
-            position: relative;
-        }
-
-        .profile-img {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 4px solid var(--accent-primary);
-            box-shadow: var(--shadow-glow);
-            margin-bottom: 2rem;
-            object-fit: cover;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        h1 {
-            font-family: 'Orbitron', monospace;
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .tagline {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-bottom: 3rem;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow-card);
-            transition: all 0.3s;
-        }
-
-        .card:hover {
-            border-color: var(--accent-primary);
-            box-shadow: var(--shadow-glow);
-            transform: translateY(-5px);
-        }
-
-        .card h2 {
-            font-family: 'Orbitron', monospace;
-            color: var(--accent-primary);
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-        }
-
-        .card h3 {
-            color: var(--accent-primary);
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        /* Skills Grid */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .skill-tag {
-            background: rgba(0, 255, 242, 0.1);
-            border: 1px solid var(--accent-primary);
-            padding: 0.8rem;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .skill-tag:hover {
-            background: rgba(0, 255, 242, 0.2);
-            transform: scale(1.05);
-        }
-
-        /* Snippets Grid */
-        .snippets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .snippet-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .snippet-card:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .snippet-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .snippet-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
-            color: var(--accent-primary);
-        }
-
-        .snippet-lang {
-            background: rgba(255, 0, 255, 0.2);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: var(--accent-secondary);
-            border: 1px solid var(--accent-secondary);
-        }
-
-        .snippet-desc {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .snippet-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Inter', sans-serif;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: var(--accent-gradient);
-            color: var(--bg-primary);
-        }
-
-        .btn-primary:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--accent-primary);
-        }
-
-        .btn-small {
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
-        }
-
-        .btn-danger {
-            background: rgba(255, 0, 0, 0.2);
-            color: #ff4444;
-            border: 1px solid #ff4444;
-        }
-
-        .btn-danger:hover {
-            background: rgba(255, 0, 0, 0.3);
-        }
-
-        /* Forms */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--accent-primary);
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(0, 255, 242, 0.1);
-        }
-
-        textarea.form-control {
-            font-family: 'JetBrains Mono', monospace;
-            min-height: 200px;
-            resize: vertical;
-        }
-
-        /* Search Bar */
-        .search-bar {
-            position: relative;
-            margin-bottom: 2rem;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 1rem 3rem 1rem 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 50px;
-            color: var(--text-primary);
-            font-size: 1rem;
-        }
-
-        .search-bar i {
-            position: absolute;
-            right: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--accent-primary);
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 2000;
-            padding: 2rem;
-            overflow-y: auto;
-        }
-
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.3s;
-        }
-
-        .modal-content {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 2rem;
-            max-width: 900px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s;
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 0, 0, 0.2);
-            color: #ff4444;
-        }
-
-        .code-block {
-            background: #0d1117;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            border: 1px solid var(--border-color);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            overflow-x: auto;
-            position: relative;
-        }
-
-        .code-block pre {
-            margin: 0;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        .copy-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(0, 255, 242, 0.2);
-            border: 1px solid var(--accent-primary);
-            color: var(--accent-primary);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-        }
-
-        .copy-btn:hover {
-            background: rgba(0, 255, 242, 0.3);
-        }
-
-        /* File Upload */
-        .upload-area {
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 3rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 1rem;
-        }
-
-        .upload-area.dragover {
-            border-color: var(--accent-primary);
-            background: rgba(0, 255, 242, 0.05);
-        }
-
-        .upload-area i {
-            font-size: 3rem;
-            color: var(--accent-primary);
-            margin-bottom: 1rem;
-        }
-
-        .file-list {
-            margin-top: 1rem;
-        }
-
-        .file-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 0.8rem;
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-        }
-
-        .file-item button {
-            background: rgba(255, 0, 0, 0.2);
-            border: 1px solid #ff4444;
-            color: #ff4444;
-            padding: 0.3rem 0.8rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        /* Contact Links */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .contact-item {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            text-decoration: none;
-            color: var(--text-primary);
-            transition: all 0.3s;
-        }
-
-        .contact-item:hover {
-            border-color: var(--accent-primary);
-            background: rgba(0, 255, 242, 0.05);
-            transform: translateX(5px);
-        }
-
-        .contact-item i {
-            font-size: 1.8rem;
-            color: var(--accent-primary);
-        }
-
-        .contact-info h4 {
-            margin-bottom: 0.3rem;
-        }
-
-        .contact-info p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Alert */
-        .alert {
-            position: fixed;
-            top: 100px;
-            right: 2rem;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            background: var(--bg-card);
-            border: 1px solid var(--accent-primary);
-            box-shadow: var(--shadow-glow);
-            z-index: 3000;
-            animation: slideIn 0.3s;
-            max-width: 400px;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .alert-success {
-            border-color: #00ff00;
-        }
-
-        .alert-error {
-            border-color: #ff4444;
-        }
-
-        /* Loading */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(0, 255, 242, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--accent-primary);
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-                font-size: 0.9rem;
-            }
-
-            .snippets-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                padding: 1rem;
-            }
-        }
-
-        /* Projects Grid */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .project-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: all 0.3s;
-        }
-
-        .project-card:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-5px);
-        }
-
-        .project-card h4 {
-            color: var(--accent-primary);
-            margin-bottom: 0.8rem;
-        }
-
-        .project-card p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kayzen ShareCode</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+
+<style>
+:root{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --accent:#38bdf8;
+}
+body{
+  margin:0;
+  font-family:Inter, sans-serif;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:white;
+}
+nav{
+  display:flex;
+  justify-content:space-between;
+  padding:20px;
+  backdrop-filter:blur(10px);
+  background:rgba(30,41,59,.6);
+}
+nav a{
+  color:white;
+  text-decoration:none;
+  margin:0 10px;
+}
+.container{padding:40px;max-width:1000px;margin:auto;}
+.card{
+  background:rgba(30,41,59,.7);
+  padding:20px;
+  border-radius:15px;
+  margin:15px 0;
+  backdrop-filter:blur(12px);
+}
+.profile{
+  width:160px;height:160px;border-radius:50%;
+  border:4px solid var(--accent);object-fit:cover;
+}
+input,textarea{
+  width:100%;padding:12px;margin:8px 0;
+  border:none;border-radius:10px;background:#0f172a;color:white;
+}
+button{
+  padding:10px 15px;border:none;border-radius:8px;
+  background:var(--accent);color:black;cursor:pointer;
+}
+pre{border-radius:10px;}
+.dropzone{
+  border:2px dashed var(--accent);
+  padding:30px;text-align:center;border-radius:15px;
+}
+</style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Navigation -->
-        <nav>
-            <div class="container">
-                <div class="logo">Kayzen Izumi</div>
-                <ul class="nav-links">
-                    <li><a href="#home" class="active">Home</a></li>
-                    <li><a href="#snippets">Snippets</a></li>
-                    <li><a href="#admin">Admin</a></li>
-                    <li><a href="#request">Request</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </div>
-        </nav>
 
-        <!-- Main Content -->
-        <main>
-            <div class="container">
-                <!-- Home Page -->
-                <div id="home-page" class="page active">
-                    <div class="hero">
-                        <img src="https://i.ibb.co.com/wrrLvKCP/image.jpg" alt="Kayzen Izumi" class="profile-img">
-                        <h1>Kayzen Izumi</h1>
-                        <p class="tagline">Full Stack Developer & Bot Creator</p>
-                    </div>
-
-                    <div class="card">
-                        <h2><i class="fas fa-user-circle"></i> About Me</h2>
-                        <p style="line-height: 1.8; color: var(--text-secondary);">
-                            Saya adalah seorang developer yang passionate dalam bidang web development dan bot automation. 
-                            Fokus utama saya adalah membuat aplikasi yang user-friendly dan efficient. 
-                            Saya selalu bersemangat untuk belajar teknologi baru dan berbagi pengetahuan dengan komunitas.
-                        </p>
-                    </div>
-
-                    <div class="card">
-                        <h2><i class="fas fa-code"></i> Skills</h2>
-                        <div class="skills-grid">
-                            <div class="skill-tag">JavaScript</div>
-                            <div class="skill-tag">Node.js</div>
-                            <div class="skill-tag">Python</div>
-                            <div class="skill-tag">React</div>
-                            <div class="skill-tag">HTML/CSS</div>
-                            <div class="skill-tag">Bot Development</div>
-                            <div class="skill-tag">API Integration</div>
-                            <div class="skill-tag">Database (SQL)</div>
-                            <div class="skill-tag">Web Scraping</div>
-                            <div class="skill-tag">Telegram Bots</div>
-                            <div class="skill-tag">WhatsApp Bots</div>
-                            <div class="skill-tag">Git & GitHub</div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h2><i class="fas fa-project-diagram"></i> Featured Projects</h2>
-                        <div class="projects-grid">
-                            <div class="project-card">
-                                <h4>🤖 WhatsApp Bot</h4>
-                                <p>Bot automation untuk WhatsApp dengan berbagai fitur seperti auto-reply, scraping, dan commands system.</p>
-                            </div>
-                            <div class="project-card">
-                                <h4>📱 Telegram Bot</h4>
-                                <p>Bot Telegram multifungsi dengan integrasi API dan database untuk berbagai automation tasks.</p>
-                            </div>
-                            <div class="project-card">
-                                <h4>🌐 Code Sharing Platform</h4>
-                                <p>Platform modern untuk berbagi code snippets dengan syntax highlighting dan search features.</p>
-                            </div>
-                            <div class="project-card">
-                                <h4>🔍 Web Scraper</h4>
-                                <p>Tool untuk scraping data dari berbagai website dengan support untuk multiple formats.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Snippets Page -->
-                <div id="snippets-page" class="page">
-                    <h1 style="margin-bottom: 2rem;">Code Snippets</h1>
-                    
-                    <div class="search-bar">
-                        <input type="text" id="search-input" placeholder="Search snippets...">
-                        <i class="fas fa-search"></i>
-                    </div>
-
-                    <div id="snippets-container" class="snippets-grid">
-                        <!-- Snippets will be loaded here -->
-                    </div>
-                </div>
-
-                <!-- Admin Page -->
-                <div id="admin-page" class="page">
-                    <h1 style="margin-bottom: 2rem;">Admin Panel</h1>
-                    
-                    <div id="admin-login" class="card">
-                        <h2>Login</h2>
-                        <div class="form-group">
-                            <label>Password</label>
-                            <input type="password" id="admin-password" class="form-control" placeholder="Enter admin password">
-                        </div>
-                        <button class="btn btn-primary" onclick="adminLogin()">
-                            <i class="fas fa-sign-in-alt"></i> Login
-                        </button>
-                    </div>
-
-                    <div id="admin-panel" style="display: none;">
-                        <div class="card">
-                            <h2>Upload Code Snippets</h2>
-                            
-                            <div class="upload-area" id="upload-area">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <h3>Drag & Drop Files Here</h3>
-                                <p>or click to select (max 10 files)</p>
-                                <input type="file" id="file-input" multiple style="display: none;" accept=".js,.py,.html,.css,.json,.txt,.md,.jsx,.tsx,.vue,.php,.java,.cpp,.c,.go">
-                            </div>
-
-                            <div id="file-list" class="file-list"></div>
-
-                            <div class="form-group">
-                                <label>Title <span style="color: #ff4444;">*</span></label>
-                                <input type="text" id="snippet-title" class="form-control" placeholder="e.g., React Component Example">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea id="snippet-desc" class="form-control" placeholder="Brief description of your code..."></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Code <span style="color: #ff4444;">*</span></label>
-                                <textarea id="snippet-code" class="form-control" placeholder="Paste your code here..."></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Language</label>
-                                <input type="text" id="snippet-lang" class="form-control" placeholder="e.g., javascript, python, html">
-                            </div>
-
-                            <button class="btn btn-primary" onclick="uploadSnippet()">
-                                <i class="fas fa-upload"></i> Upload Snippet
-                            </button>
-                        </div>
-
-                        <div class="card">
-                            <h2>Manage Snippets</h2>
-                            <div id="admin-snippets" class="snippets-grid">
-                                <!-- Admin snippets will be loaded here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Request Page -->
-                <div id="request-page" class="page">
-                    <h1 style="margin-bottom: 2rem;">Request Scrape & Feature</h1>
-                    
-                    <div class="card">
-                        <h2>Submit Request</h2>
-                        <p style="color: var(--text-secondary); margin-bottom: 2rem;">
-                            Kirim request untuk scraping atau fitur bot WhatsApp/Telegram
-                        </p>
-
-                        <div class="form-group">
-                            <label>Nama <span style="color: #ff4444;">*</span></label>
-                            <input type="text" id="req-name" class="form-control" placeholder="Nama Anda">
-                        </div>
-
-                        <div class="form-group">
-                            <label>URL <span style="color: #ff4444;">*</span></label>
-                            <input type="url" id="req-url" class="form-control" placeholder="https://example.com">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Deskripsi <span style="color: #ff4444;">*</span></label>
-                            <textarea id="req-desc" class="form-control" placeholder="Jelaskan detail request Anda...&#10;Contoh: Scrape data produk dari halaman katalog, hanya ambil nama, harga, dan gambar"></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Screenshot (Optional, max 5MB)</label>
-                            <input type="file" id="req-screenshot" class="form-control" accept="image/*">
-                            <small style="color: var(--text-secondary);">Upload screenshot untuk memperjelas request</small>
-                        </div>
-
-                        <button class="btn btn-primary" onclick="submitRequest()">
-                            <i class="fas fa-paper-plane"></i> Submit Request
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Contact Page -->
-                <div id="contact-page" class="page">
-                    <h1 style="margin-bottom: 2rem;">Contact Me</h1>
-                    
-                    <div class="card">
-                        <h2>Get in Touch</h2>
-                        <p style="color: var(--text-secondary); margin-bottom: 2rem;">
-                            Jangan ragu untuk menghubungi saya melalui platform berikut:
-                        </p>
-
-                        <div class="contact-grid">
-                            <a href="https://wa.me/628152313006" target="_blank" class="contact-item">
-                                <i class="fab fa-whatsapp"></i>
-                                <div class="contact-info">
-                                    <h4>WhatsApp</h4>
-                                    <p>+62 815-2313-006</p>
-                                </div>
-                            </a>
-
-                            <a href="https://t.me/nonewpo" target="_blank" class="contact-item">
-                                <i class="fab fa-telegram"></i>
-                                <div class="contact-info">
-                                    <h4>Telegram</h4>
-                                    <p>@nonewpo</p>
-                                </div>
-                            </a>
-
-                            <a href="https://youtube.com/@kayzenfry" target="_blank" class="contact-item">
-                                <i class="fab fa-youtube"></i>
-                                <div class="contact-info">
-                                    <h4>YouTube</h4>
-                                    <p>@kayzenfry</p>
-                                </div>
-                            </a>
-
-                            <a href="https://github.com/Kayzen-dev-tech" target="_blank" class="contact-item">
-                                <i class="fab fa-github"></i>
-                                <div class="contact-info">
-                                    <h4>GitHub</h4>
-                                    <p>Kayzen-dev-tech</p>
-                                </div>
-                            </a>
-
-                            <a href="https://instagram.com/kayzenfry" target="_blank" class="contact-item">
-                                <i class="fab fa-instagram"></i>
-                                <div class="contact-info">
-                                    <h4>Instagram</h4>
-                                    <p>@kayzenfry</p>
-                                </div>
-                            </a>
-
-                            <a href="https://tiktok.com/@sczkayzen" target="_blank" class="contact-item">
-                                <i class="fab fa-tiktok"></i>
-                                <div class="contact-info">
-                                    <h4>TikTok</h4>
-                                    <p>@sczkayzen</p>
-                                </div>
-                            </a>
-
-                            <a href="https://twitter.com/kayzenfry" target="_blank" class="contact-item">
-                                <i class="fab fa-twitter"></i>
-                                <div class="contact-info">
-                                    <h4>Twitter/X</h4>
-                                    <p>@kayzenfry</p>
-                                </div>
-                            </a>
-
-                            <a href="mailto:kayzz.my@gmail.com" class="contact-item">
-                                <i class="fas fa-envelope"></i>
-                                <div class="contact-info">
-                                    <h4>Email</h4>
-                                    <p>kayzz.my@gmail.com</p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Snippet Modal -->
-        <div id="snippet-modal" class="modal">
-            <div class="modal-content">
-                <button class="modal-close" onclick="closeModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-                <h2 id="modal-title"></h2>
-                <p id="modal-desc" style="color: var(--text-secondary); margin: 1rem 0;"></p>
-                <span id="modal-lang" class="snippet-lang"></span>
-                
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode()">
-                        <i class="fas fa-copy"></i> Copy
-                    </button>
-                    <pre id="modal-code"></pre>
-                </div>
-
-                <div id="modal-actions" style="margin-top: 1rem; display: flex; gap: 1rem;">
-                    <button class="btn btn-secondary btn-small" onclick="openRaw()">
-                        <i class="fas fa-external-link-alt"></i> View Raw
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Configuration loaded from config.js
-
-        // ========== GLOBAL VARIABLES ==========
-        let currentSnippet = null;
-        let isAdmin = false;
-        let uploadedFiles = [];
-
-        // ========== SUPABASE CLIENT ==========
-        class SupabaseClient {
-            constructor(url, key) {
-                this.url = url;
-                this.key = key;
-                this.headers = {
-                    'apikey': key,
-                    'Authorization': `Bearer ${key}`,
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=representation'
-                };
-            }
-
-            async select(table, query = '*') {
-                const response = await fetch(`${this.url}/rest/v1/${table}?select=${query}&order=created_at.desc`, {
-                    headers: this.headers
-                });
-                return response.json();
-            }
-
-            async insert(table, data) {
-                const response = await fetch(`${this.url}/rest/v1/${table}`, {
-                    method: 'POST',
-                    headers: this.headers,
-                    body: JSON.stringify(data)
-                });
-                return response.json();
-            }
-
-            async update(table, id, data) {
-                const response = await fetch(`${this.url}/rest/v1/${table}?id=eq.${id}`, {
-                    method: 'PATCH',
-                    headers: this.headers,
-                    body: JSON.stringify(data)
-                });
-                return response.json();
-            }
-
-            async delete(table, id) {
-                const response = await fetch(`${this.url}/rest/v1/${table}?id=eq.${id}`, {
-                    method: 'DELETE',
-                    headers: this.headers
-                });
-                return response.ok;
-            }
-        }
-
-        const supabase = new SupabaseClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
-
-        // ========== NAVIGATION ==========
-        function navigate(page) {
-            // Update URL hash
-            window.location.hash = page;
-            
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            
-            // Show selected page
-            const pageElement = document.getElementById(`${page}-page`);
-            if (pageElement) {
-                pageElement.classList.add('active');
-            }
-            
-            // Update nav links
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${page}`) {
-                    link.classList.add('active');
-                }
-            });
-
-            // Load content based on page
-            if (page === 'snippets') {
-                loadSnippets();
-            } else if (page === 'admin' && isAdmin) {
-                loadAdminSnippets();
-            }
-        }
-
-        // Handle navigation clicks
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const page = link.getAttribute('href').substring(1);
-                navigate(page);
-            });
-        });
-
-        // Handle browser back/forward
-        window.addEventListener('hashchange', () => {
-            const page = window.location.hash.substring(1) || 'home';
-            navigate(page);
-        });
-
-        // Check for raw view
-        window.addEventListener('load', () => {
-            const hash = window.location.hash;
-            if (hash.includes('/raw/')) {
-                const title = hash.split('/raw/')[1];
-                viewRaw(decodeURIComponent(title));
-            } else {
-                const page = hash.substring(1) || 'home';
-                navigate(page);
-            }
-        });
-
-        // ========== SNIPPETS FUNCTIONS ==========
-        async function loadSnippets(searchTerm = '') {
-            try {
-                const snippets = await supabase.select('snippets');
-                const container = document.getElementById('snippets-container');
-                
-                // Filter by search term
-                const filtered = searchTerm 
-                    ? snippets.filter(s => 
-                        s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        (s.description && s.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                        s.language.toLowerCase().includes(searchTerm.toLowerCase())
-                    )
-                    : snippets;
-
-                if (filtered.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No snippets found.</p>';
-                    return;
-                }
-
-                container.innerHTML = filtered.map(snippet => `
-                    <div class="snippet-card" onclick='viewSnippet(${JSON.stringify(snippet)})'>
-                        <div class="snippet-header">
-                            <div class="snippet-title">${escapeHtml(snippet.title)}</div>
-                            <span class="snippet-lang">${escapeHtml(snippet.language || 'text')}</span>
-                        </div>
-                        <div class="snippet-desc">${escapeHtml(snippet.description || 'No description')}</div>
-                        <div class="snippet-actions">
-                            <button class="btn btn-secondary btn-small" onclick="event.stopPropagation(); copySnippetCode(${snippet.id})">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (error) {
-                showAlert('Error loading snippets: ' + error.message, 'error');
-            }
-        }
-
-        function viewSnippet(snippet) {
-            currentSnippet = snippet;
-            document.getElementById('modal-title').textContent = snippet.title;
-            document.getElementById('modal-desc').textContent = snippet.description || 'No description';
-            document.getElementById('modal-lang').textContent = snippet.language || 'text';
-            document.getElementById('modal-code').textContent = snippet.code;
-            document.getElementById('snippet-modal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('snippet-modal').classList.remove('active');
-            currentSnippet = null;
-        }
-
-        async function copySnippetCode(id) {
-            try {
-                const snippets = await supabase.select('snippets');
-                const snippet = snippets.find(s => s.id === id);
-                if (snippet) {
-                    await navigator.clipboard.writeText(snippet.code);
-                    showAlert('Code copied to clipboard!', 'success');
-                }
-            } catch (error) {
-                showAlert('Failed to copy code', 'error');
-            }
-        }
-
-        async function copyCode() {
-            if (currentSnippet) {
-                try {
-                    await navigator.clipboard.writeText(currentSnippet.code);
-                    showAlert('Code copied to clipboard!', 'success');
-                } catch (error) {
-                    showAlert('Failed to copy code', 'error');
-                }
-            }
-        }
-
-        function openRaw() {
-            if (currentSnippet) {
-                window.open(`#/raw/${encodeURIComponent(currentSnippet.title)}`, '_blank');
-            }
-        }
-
-        async function viewRaw(title) {
-            try {
-                const snippets = await supabase.select('snippets');
-                const snippet = snippets.find(s => s.title === title);
-                
-                if (snippet) {
-                    document.body.innerHTML = `<pre style="margin: 0; padding: 20px; background: #0d1117; color: #e8eaed; font-family: 'JetBrains Mono', monospace; white-space: pre-wrap; word-wrap: break-word;">${escapeHtml(snippet.code)}</pre>`;
-                } else {
-                    document.body.innerHTML = '<h1 style="color: #ff4444; text-align: center; margin-top: 50px;">Snippet not found</h1>';
-                }
-            } catch (error) {
-                document.body.innerHTML = '<h1 style="color: #ff4444; text-align: center; margin-top: 50px;">Error loading snippet</h1>';
-            }
-        }
-
-        // Search functionality
-        document.getElementById('search-input')?.addEventListener('input', (e) => {
-            loadSnippets(e.target.value);
-        });
-
-        // ========== ADMIN FUNCTIONS ==========
-        async function adminLogin() {
-            const password = document.getElementById('admin-password').value;
-            
-            if (password === CONFIG.ADMIN_PASSWORD) {
-                isAdmin = true;
-                document.getElementById('admin-login').style.display = 'none';
-                document.getElementById('admin-panel').style.display = 'block';
-                
-                // Send notification to Telegram
-                await sendTelegramMessage(
-                    CONFIG.TELEGRAM_BOT_TOKEN_LOGIN,
-                    `🔐 Admin Login\n\nWaktu: ${new Date().toLocaleString('id-ID')}\nIP: ${await getIP()}`
-                );
-                
-                showAlert('Login successful!', 'success');
-                loadAdminSnippets();
-            } else {
-                showAlert('Invalid password!', 'error');
-            }
-        }
-
-        async function getIP() {
-            try {
-                const response = await fetch('https://api.ipify.org?format=json');
-                const data = await response.json();
-                return data.ip;
-            } catch {
-                return 'Unknown';
-            }
-        }
-
-        // File upload handling
-        const uploadArea = document.getElementById('upload-area');
-        const fileInput = document.getElementById('file-input');
-
-        uploadArea?.addEventListener('click', () => fileInput.click());
-
-        uploadArea?.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-
-        uploadArea?.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-
-        uploadArea?.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            handleFiles(e.dataTransfer.files);
-        });
-
-        fileInput?.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
-
-        function handleFiles(files) {
-            if (files.length > 10) {
-                showAlert('Maximum 10 files allowed!', 'error');
-                return;
-            }
-
-            uploadedFiles = Array.from(files);
-            displayFileList();
-            
-            // Auto-fill first file
-            if (files.length > 0) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById('snippet-code').value = e.target.result;
-                    
-                    // Auto-detect language from extension
-                    const ext = files[0].name.split('.').pop().toLowerCase();
-                    const langMap = {
-                        'js': 'javascript', 'jsx': 'javascript', 'ts': 'typescript', 'tsx': 'typescript',
-                        'py': 'python', 'html': 'html', 'css': 'css', 'json': 'json',
-                        'md': 'markdown', 'txt': 'text', 'vue': 'vue', 'php': 'php',
-                        'java': 'java', 'cpp': 'cpp', 'c': 'c', 'go': 'go'
-                    };
-                    document.getElementById('snippet-lang').value = langMap[ext] || 'text';
-                    
-                    // Auto-fill title from filename if empty
-                    if (!document.getElementById('snippet-title').value) {
-                        document.getElementById('snippet-title').value = files[0].name;
-                    }
-                };
-                reader.readAsText(files[0]);
-            }
-        }
-
-        function displayFileList() {
-            const fileList = document.getElementById('file-list');
-            fileList.innerHTML = uploadedFiles.map((file, index) => `
-                <div class="file-item">
-                    <span><i class="fas fa-file-code"></i> ${file.name}</span>
-                    <button onclick="removeFile(${index})">Remove</button>
-                </div>
-            `).join('');
-        }
-
-        function removeFile(index) {
-            uploadedFiles.splice(index, 1);
-            displayFileList();
-        }
-
-        async function uploadSnippet() {
-            const title = document.getElementById('snippet-title').value.trim();
-            const description = document.getElementById('snippet-desc').value.trim();
-            const code = document.getElementById('snippet-code').value.trim();
-            const language = document.getElementById('snippet-lang').value.trim() || 'text';
-
-            if (!title || !code) {
-                showAlert('Title and Code are required!', 'error');
-                return;
-            }
-
-            try {
-                // If multiple files, upload each
-                if (uploadedFiles.length > 1) {
-                    for (const file of uploadedFiles) {
-                        const reader = new FileReader();
-                        const fileCode = await new Promise((resolve) => {
-                            reader.onload = (e) => resolve(e.target.result);
-                            reader.readAsText(file);
-                        });
-
-                        const ext = file.name.split('.').pop().toLowerCase();
-                        const langMap = {
-                            'js': 'javascript', 'jsx': 'javascript', 'ts': 'typescript', 'tsx': 'typescript',
-                            'py': 'python', 'html': 'html', 'css': 'css', 'json': 'json',
-                            'md': 'markdown', 'txt': 'text', 'vue': 'vue', 'php': 'php',
-                            'java': 'java', 'cpp': 'cpp', 'c': 'c', 'go': 'go'
-                        };
-
-                        await supabase.insert('snippets', {
-                            title: file.name,
-                            description: description,
-                            code: fileCode,
-                            language: langMap[ext] || 'text'
-                        });
-                    }
-                    showAlert(`${uploadedFiles.length} snippets uploaded successfully!`, 'success');
-                } else {
-                    // Single upload
-                    await supabase.insert('snippets', {
-                        title,
-                        description,
-                        code,
-                        language
-                    });
-                    showAlert('Snippet uploaded successfully!', 'success');
-                }
-
-                // Clear form
-                document.getElementById('snippet-title').value = '';
-                document.getElementById('snippet-desc').value = '';
-                document.getElementById('snippet-code').value = '';
-                document.getElementById('snippet-lang').value = '';
-                uploadedFiles = [];
-                displayFileList();
-                
-                loadAdminSnippets();
-            } catch (error) {
-                showAlert('Error uploading snippet: ' + error.message, 'error');
-            }
-        }
-
-        async function loadAdminSnippets() {
-            try {
-                const snippets = await supabase.select('snippets');
-                const container = document.getElementById('admin-snippets');
-                
-                container.innerHTML = snippets.map(snippet => `
-                    <div class="snippet-card">
-                        <div class="snippet-header">
-                            <div class="snippet-title">${escapeHtml(snippet.title)}</div>
-                            <span class="snippet-lang">${escapeHtml(snippet.language || 'text')}</span>
-                        </div>
-                        <div class="snippet-desc">${escapeHtml(snippet.description || 'No description')}</div>
-                        <div class="snippet-actions">
-                            <button class="btn btn-secondary btn-small" onclick="editSnippet(${snippet.id})">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="btn btn-danger btn-small" onclick="deleteSnippet(${snippet.id})">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (error) {
-                showAlert('Error loading snippets: ' + error.message, 'error');
-            }
-        }
-
-        async function editSnippet(id) {
-            try {
-                const snippets = await supabase.select('snippets');
-                const snippet = snippets.find(s => s.id === id);
-                
-                if (snippet) {
-                    document.getElementById('snippet-title').value = snippet.title;
-                    document.getElementById('snippet-desc').value = snippet.description || '';
-                    document.getElementById('snippet-code').value = snippet.code;
-                    document.getElementById('snippet-lang').value = snippet.language || 'text';
-                    
-                    // Scroll to form
-                    document.querySelector('#admin-panel .card').scrollIntoView({ behavior: 'smooth' });
-                    
-                    // Change button to update
-                    const btn = document.querySelector('#admin-panel .btn-primary');
-                    btn.innerHTML = '<i class="fas fa-save"></i> Update Snippet';
-                    btn.onclick = async () => {
-                        await updateSnippet(id);
-                        btn.innerHTML = '<i class="fas fa-upload"></i> Upload Snippet';
-                        btn.onclick = uploadSnippet;
-                    };
-                }
-            } catch (error) {
-                showAlert('Error loading snippet: ' + error.message, 'error');
-            }
-        }
-
-        async function updateSnippet(id) {
-            const title = document.getElementById('snippet-title').value.trim();
-            const description = document.getElementById('snippet-desc').value.trim();
-            const code = document.getElementById('snippet-code').value.trim();
-            const language = document.getElementById('snippet-lang').value.trim() || 'text';
-
-            if (!title || !code) {
-                showAlert('Title and Code are required!', 'error');
-                return;
-            }
-
-            try {
-                await supabase.update('snippets', id, {
-                    title,
-                    description,
-                    code,
-                    language
-                });
-
-                showAlert('Snippet updated successfully!', 'success');
-                
-                // Clear form
-                document.getElementById('snippet-title').value = '';
-                document.getElementById('snippet-desc').value = '';
-                document.getElementById('snippet-code').value = '';
-                document.getElementById('snippet-lang').value = '';
-                
-                loadAdminSnippets();
-            } catch (error) {
-                showAlert('Error updating snippet: ' + error.message, 'error');
-            }
-        }
-
-        async function deleteSnippet(id) {
-            if (!confirm('Are you sure you want to delete this snippet?')) {
-                return;
-            }
-
-            try {
-                await supabase.delete('snippets', id);
-                showAlert('Snippet deleted successfully!', 'success');
-                loadAdminSnippets();
-            } catch (error) {
-                showAlert('Error deleting snippet: ' + error.message, 'error');
-            }
-        }
-
-        // ========== REQUEST FUNCTIONS ==========
-        async function submitRequest() {
-            const name = document.getElementById('req-name').value.trim();
-            const url = document.getElementById('req-url').value.trim();
-            const desc = document.getElementById('req-desc').value.trim();
-            const screenshot = document.getElementById('req-screenshot').files[0];
-
-            if (!name || !url || !desc) {
-                showAlert('Name, URL, and Description are required!', 'error');
-                return;
-            }
-
-            if (screenshot && screenshot.size > 5 * 1024 * 1024) {
-                showAlert('Screenshot must be less than 5MB!', 'error');
-                return;
-            }
-
-            try {
-                const message = `📩 Request Scrape & Feature Bot WhatsApp/Telegram
-
-📝 Nama: ${name}
-🔗 URL: ${url}
-📄 Deskripsi: ${desc}
-⏰ Waktu: ${new Date().toLocaleString('id-ID')}`;
-
-                // Send to Telegram
-                if (screenshot) {
-                    await sendTelegramPhoto(CONFIG.TELEGRAM_BOT_TOKEN_REQUEST, screenshot, message);
-                } else {
-                    await sendTelegramMessage(CONFIG.TELEGRAM_BOT_TOKEN_REQUEST, message);
-                }
-
-                showAlert('Request submitted successfully!', 'success');
-                
-                // Clear form
-                document.getElementById('req-name').value = '';
-                document.getElementById('req-url').value = '';
-                document.getElementById('req-desc').value = '';
-                document.getElementById('req-screenshot').value = '';
-            } catch (error) {
-                showAlert('Error submitting request: ' + error.message, 'error');
-            }
-        }
-
-        async function sendTelegramMessage(token, text) {
-            await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: CONFIG.TELEGRAM_CHAT_ID,
-                    text: text,
-                    parse_mode: 'HTML'
-                })
-            });
-        }
-
-        async function sendTelegramPhoto(token, file, caption) {
-            const formData = new FormData();
-            formData.append('chat_id', CONFIG.TELEGRAM_CHAT_ID);
-            formData.append('photo', file);
-            formData.append('caption', caption);
-
-            await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-                method: 'POST',
-                body: formData
-            });
-        }
-
-        // ========== UTILITY FUNCTIONS ==========
-        function showAlert(message, type = 'success') {
-            const alert = document.createElement('div');
-            alert.className = `alert alert-${type}`;
-            alert.textContent = message;
-            document.body.appendChild(alert);
-
-            setTimeout(() => {
-                alert.remove();
-            }, 3000);
-        }
-
-        function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
-            return text.replace(/[&<>"']/g, m => map[m]);
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            const page = window.location.hash.substring(1) || 'home';
-            navigate(page);
-        });
-    </script>
+<nav>
+  <div><b>Kayzen ShareCode</b></div>
+  <div>
+    <a href="#home">Home</a>
+    <a href="#snippets">Snippets</a>
+    <a href="#admin">Admin</a>
+    <a href="#request">Request</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<div class="container" id="app"></div>
+
+<script>
+const supabase = window.supabase.createClient(
+  "YOUR_SUPABASE_URL",
+  "YOUR_SUPABASE_ANON_KEY"
+);
+
+let isAdmin=false;
+
+function router(){
+  const h=location.hash||"#home";
+  if(h.startsWith("#raw/")) return raw(h.split("/")[1]);
+  if(h=="#home") home();
+  if(h=="#snippets") snippets();
+  if(h=="#admin") admin();
+  if(h=="#request") requestPage();
+  if(h=="#contact") contact();
+}
+window.onhashchange=router;router();
+
+function home(){
+app.innerHTML=`
+<center>
+<img src="https://i.ibb.co.com/wrrLvKCP/image.jpg" class="profile"/>
+<h1>Kayzen Izumi</h1>
+<p>Fullstack Developer • Bot Automation • Scraping Expert</p>
+</center>
+
+<div class="card">
+<h3>About Me</h3>
+<p>Saya developer fokus automation & bot WhatsApp/Telegram.</p>
+</div>
+
+<div class="card">
+<h3>Skills</h3>
+JavaScript • NodeJS • Supabase • API • Web Scraping
+</div>`;
+}
+
+async function snippets(){
+const {data}=await supabase.from("snippets").select("*").order("id",{ascending:false});
+let html=`<h2>Snippets</h2>
+<input placeholder="Search..." oninput="searchSnippet(this.value)"/>`;
+data.forEach(s=>{
+html+=`
+<div class="card">
+<h3>${s.title}</h3>
+<p>${s.description||''}</p>
+<button onclick="viewSnippet(${s.id})">View</button>
+<button onclick="copyCode(\`${s.code}\`)">Copy</button>
+${isAdmin?`<button onclick="editSnippet(${s.id})">Edit</button>
+<button onclick="deleteSnippet(${s.id})">Delete</button>`:''}
+<a href="/raw/${s.title}" target="_blank">Raw</a>
+</div>`;
+});
+app.innerHTML=html;
+}
+
+async function viewSnippet(id){
+const {data}=await supabase.from("snippets").select("*").eq("id",id).single();
+app.innerHTML=`
+<h2>${data.title}</h2>
+<pre><code class="language-${data.language}">${escape(data.code)}</code></pre>
+<button onclick="location.hash='#snippets'">Back</button>`;
+Prism.highlightAll();
+}
+
+function copyCode(t){navigator.clipboard.writeText(t);alert("Copied!");}
+
+async function deleteSnippet(id){
+await supabase.from("snippets").delete().eq("id",id);
+snippets();
+}
+
+function admin(){
+if(!isAdmin){
+app.innerHTML=`
+<h2>Admin Login</h2>
+<input type="password" id="pass"/>
+<button onclick="login()">Login</button>`;
+}else{
+app.innerHTML=`
+<h2>Upload Snippet</h2>
+<div class="dropzone" id="drop">Drop file here (max 10)</div>
+<input id="title" placeholder="Title"/>
+<textarea id="desc" placeholder="Description"></textarea>
+<textarea id="code" placeholder="Code"></textarea>
+<button onclick="upload()">Upload</button>`;
+initDrop();
+}
+}
+
+async function login(){
+const r=await fetch("/api/admin-login",{method:"POST",body:JSON.stringify({password:pass.value})});
+const d=await r.json();
+if(d.success){isAdmin=true;admin();}
+else alert("Wrong password");
+}
+
+async function upload(){
+await supabase.from("snippets").insert({
+title:title.value,
+description:desc.value,
+code:code.value,
+language:detectLang(title.value)
+});
+alert("Uploaded");
+}
+
+function detectLang(name){
+if(name.endsWith(".js")) return "javascript";
+if(name.endsWith(".html")) return "markup";
+if(name.endsWith(".css")) return "css";
+return "text";
+}
+
+function initDrop(){
+const dz=document.getElementById("drop");
+dz.ondrop=e=>{
+e.preventDefault();
+const files=e.dataTransfer.files;
+if(files.length>10) return alert("Max 10 file");
+[...files].forEach(f=>{
+const reader=new FileReader();
+reader.onload=()=>{code.value=reader.result;title.value=f.name;}
+reader.readAsText(f);
+});
+};
+dz.ondragover=e=>e.preventDefault();
+}
+
+async function raw(title){
+const {data}=await supabase.from("snippets").select("*").eq("title",title).single();
+document.body.innerText=data.code;
+}
+
+function contact(){
+app.innerHTML=`
+<h2>Contact</h2>
+<div class="card">
+WhatsApp: 628152313006<br>
+Telegram: nonewpo<br>
+YouTube: kayzenfry<br>
+GitHub: Kayzen-dev-tech<br>
+Instagram: kayzenfry<br>
+TikTok: sczkayzen<br>
+Twitter/X: kayzenfry<br>
+Email: kayzz.my@gmail.com / kayzenfry@gmail.com
+</div>`;
+}
+
+function requestPage(){
+app.innerHTML=`
+<h2>Request Scrape & Feature Bot WhatsApp/Telegram</h2>
+<input id="nama" placeholder="Nama (wajib)"/>
+<input id="url" placeholder="https://contoh.com"/>
+<textarea id="deskripsi" placeholder="Deskripsi"></textarea>
+<button onclick="sendReq()">Send</button>`;
+}
+
+async function sendReq(){
+await fetch("/api/request",{
+method:"POST",
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+nama:nama.value,
+url:url.value,
+deskripsi:deskripsi.value
+})
+});
+alert("Request sent");
+}
+
+function escape(t){return t.replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+</script>
 </body>
 </html>
