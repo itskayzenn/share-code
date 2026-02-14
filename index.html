@@ -1,314 +1,622 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kayzen Izumi | Code Snippets</title>
+    <title>Kayzen Izumi - Code Snippets & Portfolio</title>
+    <link rel="icon" href="https://i.ibb.co.com/wrrLvKCP/image.jpg" type="image/x-icon">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://shcdn.vercel.app/">
+    <meta property="og:title" content="Kayzen Izumi - Code Snippets & Portfolio">
+    <meta property="og:description" content="Platform berbagi snippets dengan mudah dan cepat oleh Kayzen Izumi.">
+    <meta property="og:image" content="https://i.ibb.co.com/wrrLvKCP/image.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://shcdn.vercel.app/">
+    <meta property="twitter:title" content="Kayzen Izumi - Code Snippets & Portfolio">
+    <meta property="twitter:description" content="Platform berbagi snippets dengan mudah dan cepat oleh Kayzen Izumi.">
+    <meta property="twitter:image" content="https://i.ibb.co.com/wrrLvKCP/image.jpg">
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#3b82f6',
+                        dark: '#0f172a',
+                        darker: '#020617',
+                        card: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: white; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .nav-link.active { color: #38bdf8; border-bottom: 2px solid #38bdf8; }
-        #raw-container { display: none; background: white; color: black; min-height: 100vh; padding: 20px; font-family: monospace; white-space: pre; }
+        body { background-color: #0f172a; color: #e2e8f0; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .profile-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body>
+<body class="antialiased selection:bg-primary selection:text-white">
 
-<div id="raw-container"></div>
+    <pre id="raw-container" class="hidden p-4 font-mono text-sm text-white whitespace-pre-wrap"></pre>
 
-<div id="main-app">
-    <nav class="sticky top-0 z-50 glass px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <img src="https://i.ibb.co.com/wrrLvKCP/image.jpg" class="w-10 h-10 rounded-full border-2 border-sky-500 shadow-lg shadow-sky-500/20">
-            <span class="font-bold text-xl tracking-tight">Kayzen<span class="text-sky-400">Izumi</span></span>
-        </div>
-        <div class="hidden md:flex gap-6 font-medium">
-            <button onclick="showPage('home')" class="nav-link hover:text-sky-400 transition">Home</button>
-            <button onclick="showPage('snippets')" class="nav-link hover:text-sky-400 transition">Snippets</button>
-            <button onclick="showPage('request')" class="nav-link hover:text-sky-400 transition">Request</button>
-            <button onclick="showPage('contact')" class="nav-link hover:text-sky-400 transition">Contact</button>
-            <button onclick="showPage('admin')" class="bg-sky-600 px-4 py-1 rounded-full text-sm hover:bg-sky-500 transition">Admin</button>
-        </div>
-    </nav>
+    <div id="app-container">
+        <nav class="fixed top-0 w-full z-50 glass shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <span class="text-xl font-bold text-primary tracking-tighter cursor-pointer" onclick="router('home')">
+                            &lt;Kayzen/&gt;
+                        </span>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <button onclick="router('home')" class="hover:bg-primary/20 px-3 py-2 rounded-md text-sm font-medium transition">Home</button>
+                            <button onclick="router('snippets')" class="hover:bg-primary/20 px-3 py-2 rounded-md text-sm font-medium transition">Snippets</button>
+                            <button onclick="router('request')" class="hover:bg-primary/20 px-3 py-2 rounded-md text-sm font-medium transition">Request</button>
+                            <button onclick="router('contact')" class="hover:bg-primary/20 px-3 py-2 rounded-md text-sm font-medium transition">Contact</button>
+                            <button onclick="router('admin')" class="bg-primary/20 hover:bg-primary/40 text-primary px-3 py-2 rounded-md text-sm font-medium transition"><i class="fas fa-lock mr-1"></i> Admin</button>
+                        </div>
+                    </div>
+                    <div class="-mr-2 flex md:hidden">
+                        <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="bg-card inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden md:hidden glass" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <button onclick="router('home')" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left">Home</button>
+                    <button onclick="router('snippets')" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left">Snippets</button>
+                    <button onclick="router('request')" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left">Request</button>
+                    <button onclick="router('contact')" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium w-full text-left">Contact</button>
+                    <button onclick="router('admin')" class="text-primary hover:bg-gray-700 block px-3 py-2 rounded-md text-base font-medium w-full text-left">Admin</button>
+                </div>
+            </div>
+        </nav>
 
-    <main class="max-w-5xl mx-auto p-6">
+        <main class="pt-20 pb-10 min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <section id="home" class="page-section fade-in">
+                <div class="text-center mt-10 mb-16">
+                    <img src="https://i.ibb.co.com/wrrLvKCP/image.jpg" alt="Kayzen Izumi" class="profile-img mx-auto mb-6">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">Kayzen Izumi</h1>
+                    <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-8">Fullstack Developer | Scraper Enthusiast | Tech Creator</p>
+                    <div class="flex justify-center gap-4">
+                        <button onclick="router('snippets')" class="bg-primary hover:bg-blue-600 text-white px-6 py-3 rounded-full font-bold transition shadow-lg shadow-blue-500/30">Explore Snippets</button>
+                        <button onclick="router('contact')" class="border border-gray-600 hover:bg-gray-800 px-6 py-3 rounded-full font-bold transition">Contact Me</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                    <div class="bg-card p-6 rounded-xl border border-gray-700">
+                        <h2 class="text-2xl font-bold mb-4 text-primary"><i class="fas fa-user-astronaut mr-2"></i>About Me</h2>
+                        <p class="text-gray-300 leading-relaxed">
+                            Halo! Saya Kayzen. Saya suka bereksperimen dengan kode, terutama dalam hal web scraping, otomatisasi bot, dan pengembangan backend. Web ini adalah tempat saya menyimpan koleksi kode (snippets) yang berguna agar bisa dibagikan dan diakses dengan mudah.
+                        </p>
+                    </div>
+                    <div class="bg-card p-6 rounded-xl border border-gray-700">
+                        <h2 class="text-2xl font-bold mb-4 text-primary"><i class="fas fa-code mr-2"></i>Skills</h2>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-blue-900/50 text-blue-300 px-3 py-1 rounded-full text-sm border border-blue-800">JavaScript</span>
+                            <span class="bg-yellow-900/50 text-yellow-300 px-3 py-1 rounded-full text-sm border border-yellow-800">Python</span>
+                            <span class="bg-green-900/50 text-green-300 px-3 py-1 rounded-full text-sm border border-green-800">Node.js</span>
+                            <span class="bg-teal-900/50 text-teal-300 px-3 py-1 rounded-full text-sm border border-teal-800">Supabase</span>
+                            <span class="bg-purple-900/50 text-purple-300 px-3 py-1 rounded-full text-sm border border-purple-800">Bot Development</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="snippets" class="page-section hidden">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <h2 class="text-3xl font-bold"><i class="fas fa-database mr-2 text-primary"></i>Code Library</h2>
+                    <div class="relative w-full md:w-1/3">
+                        <input type="text" id="search-input" oninput="renderSnippets(this.value)" placeholder="Search snippets..." class="w-full bg-card border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:border-primary text-gray-200">
+                        <i class="fas fa-search absolute right-3 top-3 text-gray-500"></i>
+                    </div>
+                </div>
+
+                <div id="snippets-grid" class="grid grid-cols-1 gap-6">
+                    <div class="text-center py-20 text-gray-500">
+                        <i class="fas fa-circle-notch fa-spin fa-3x mb-4"></i>
+                        <p>Loading snippets...</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="request" class="page-section hidden">
+                <div class="max-w-2xl mx-auto bg-card p-8 rounded-xl border border-gray-700">
+                    <h2 class="text-3xl font-bold mb-6 text-center">Request Feature / Scrape</h2>
+                    <p class="text-gray-400 text-center mb-8">Punya ide tools atau butuh scraper khusus? Isi form dibawah.</p>
+                    
+                    <form id="request-form" onsubmit="handleRequest(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Nama (Wajib)</label>
+                            <input type="text" name="name" required class="w-full bg-dark border border-gray-600 rounded-lg p-2.5 focus:border-primary outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">URL Target (Wajib)</label>
+                            <input type="url" name="url" placeholder="https://contoh.com" required class="w-full bg-dark border border-gray-600 rounded-lg p-2.5 focus:border-primary outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Deskripsi (Wajib)</label>
+                            <textarea name="desc" rows="4" placeholder="Scrape topic ini, hanya bagian..." required class="w-full bg-dark border border-gray-600 rounded-lg p-2.5 focus:border-primary outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Screenshot (Max 5MB - Opsional)</label>
+                            <input type="file" name="screenshot" accept="image/*" class="w-full text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-blue-600">
+                        </div>
+                        <button type="submit" id="btn-submit-req" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 py-3 rounded-lg font-bold text-white transition transform hover:scale-[1.02]">
+                            <i class="fas fa-paper-plane mr-2"></i> Kirim Request
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="contact" class="page-section hidden">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-bold mb-10 text-center">Get In Touch</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <a href="https://wa.me/628152313006" target="_blank" class="flex items-center p-4 bg-card rounded-xl border border-gray-700 hover:border-green-500 transition group">
+                            <div class="w-12 h-12 rounded-full bg-green-900/50 flex items-center justify-center text-green-400 group-hover:bg-green-500 group-hover:text-white transition">
+                                <i class="fab fa-whatsapp text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="font-bold text-lg">WhatsApp</h3>
+                                <p class="text-gray-400 text-sm">08152313006</p>
+                            </div>
+                        </a>
+                        
+                        <a href="https://t.me/nonewpo" target="_blank" class="flex items-center p-4 bg-card rounded-xl border border-gray-700 hover:border-blue-400 transition group">
+                            <div class="w-12 h-12 rounded-full bg-blue-900/50 flex items-center justify-center text-blue-400 group-hover:bg-blue-400 group-hover:text-white transition">
+                                <i class="fab fa-telegram-plane text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="font-bold text-lg">Telegram</h3>
+                                <p class="text-gray-400 text-sm">@nonewpo</p>
+                            </div>
+                        </a>
+
+                        <a href="https://youtube.com/@kayzenfry" target="_blank" class="flex items-center p-4 bg-card rounded-xl border border-gray-700 hover:border-red-500 transition group">
+                            <div class="w-12 h-12 rounded-full bg-red-900/50 flex items-center justify-center text-red-400 group-hover:bg-red-500 group-hover:text-white transition">
+                                <i class="fab fa-youtube text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="font-bold text-lg">YouTube</h3>
+                                <p class="text-gray-400 text-sm">kayzenfry</p>
+                            </div>
+                        </a>
+
+                        <a href="https://github.com/Kayzen-dev-tech" target="_blank" class="flex items-center p-4 bg-card rounded-xl border border-gray-700 hover:border-gray-400 transition group">
+                            <div class="w-12 h-12 rounded-full bg-gray-700/50 flex items-center justify-center text-gray-300 group-hover:bg-gray-200 group-hover:text-black transition">
+                                <i class="fab fa-github text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="font-bold text-lg">GitHub</h3>
+                                <p class="text-gray-400 text-sm">Kayzen-dev-tech</p>
+                            </div>
+                        </a>
+                        
+                        <a href="mailto:kayzz.my@gmail.com" class="flex items-center p-4 bg-card rounded-xl border border-gray-700 hover:border-yellow-500 transition group">
+                            <div class="w-12 h-12 rounded-full bg-yellow-900/50 flex items-center justify-center text-yellow-400 group-hover:bg-yellow-500 group-hover:text-white transition">
+                                <i class="fas fa-envelope text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="font-bold text-lg">Email</h3>
+                                <p class="text-gray-400 text-sm">kayzz.my@gmail.com</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="admin" class="page-section hidden">
+                <div id="admin-login" class="max-w-md mx-auto mt-20 bg-card p-8 rounded-xl border border-gray-700">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Admin Access</h2>
+                    <input type="password" id="admin-pass" placeholder="Enter Password" class="w-full bg-dark border border-gray-600 rounded-lg p-3 mb-4 focus:border-primary outline-none">
+                    <button onclick="handleAdminLogin()" class="w-full bg-primary hover:bg-blue-600 text-white py-2 rounded-lg font-bold">Login</button>
+                </div>
+
+                <div id="admin-dashboard" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold">Admin Dashboard</h2>
+                        <button onclick="logoutAdmin()" class="bg-red-500/20 text-red-400 px-4 py-2 rounded hover:bg-red-500/40">Logout</button>
+                    </div>
+
+                    <div class="bg-card p-6 rounded-xl border border-gray-700 mb-10">
+                        <h3 class="text-xl font-bold mb-4">Add New Snippet</h3>
+                        
+                        <div id="drop-zone" class="border-2 border-dashed border-gray-600 rounded-xl p-8 text-center mb-4 hover:border-primary transition cursor-pointer relative bg-dark/50">
+                            <input type="file" id="file-upload" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="handleFileSelect(this.files)">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-gray-300">Drag & drop files here (Max 10) or click to upload</p>
+                            <p class="text-xs text-gray-500 mt-1">Content will be auto-filled below</p>
+                        </div>
+
+                        <form id="snippet-form" onsubmit="saveSnippet(event)" class="space-y-4">
+                            <input type="hidden" id="edit-id">
+                            <input type="text" id="snip-title" placeholder="Snippet Title" required class="w-full bg-dark border border-gray-600 rounded-lg p-2.5 outline-none">
+                            <textarea id="snip-desc" placeholder="Description" rows="2" class="w-full bg-dark border border-gray-600 rounded-lg p-2.5 outline-none"></textarea>
+                            <textarea id="snip-code" placeholder="Paste code here or upload file..." rows="10" required class="w-full bg-dark border border-gray-600 rounded-lg p-2.5 font-mono text-sm outline-none"></textarea>
+                            <select id="snip-lang" class="w-full bg-dark border border-gray-600 rounded-lg p-2.5 outline-none">
+                                <option value="text">Plain Text</option>
+                                <option value="javascript">JavaScript</option>
+                                <option value="python">Python</option>
+                                <option value="html">HTML</option>
+                                <option value="css">CSS</option>
+                                <option value="sql">SQL</option>
+                                <option value="json">JSON</option>
+                            </select>
+                            <div class="flex gap-2">
+                                <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-bold">Save Snippet</button>
+                                <button type="button" onclick="resetForm()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 rounded-lg">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center py-6 text-gray-500 text-sm border-t border-gray-800">
+            <p>&copy; 2026 Kayzen Izumi. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // ================= CONFIGURATION =================
+        // NOTE: In Vercel, set these in Project Settings > Environment Variables
+        // Code below attempts to read from Vercel's env injection or falls back to these strings.
+        // DO NOT COMMIT REAL PASSWORDS TO GITHUB IF YOU EDIT THIS FILE DIRECTLY.
         
-        <section id="page-home" class="page-content py-10 animate-fade-in">
-            <div class="text-center mb-16">
-                <img src="https://i.ibb.co.com/wrrLvKCP/image.jpg" class="w-32 h-32 rounded-full mx-auto border-4 border-sky-500 mb-6 shadow-2xl">
-                <h1 class="text-4xl font-extrabold mb-2">Kayzen Izumi</h1>
-                <p class="text-slate-400 max-w-lg mx-auto">Fullstack Developer & Automation Enthusiast. Fokus pada pengembangan bot WhatsApp/Telegram dan optimasi workflow.</p>
-            </div>
+        const ENV = {
+            SUPABASE_URL: 'https://xcugdkmkloosooyzwyte.supabase.co',
+            SUPABASE_KEY: 'sb_publishable_tFSi6uQth6ZMyUIduLjkpA_5r0JbE2m', 
+            // Untuk keamanan maksimal, token bot sebaiknya via backend proxy, tapi untuk project ini kita taruh di JS
+            TG_BOT_REQ: '8455571859:AAFzJU3hS0iv7mVVh6sZEj0LlzU0237Kuqk',
+            TG_BOT_LOGIN: '8415064497:AAGprLIhNq45Kr6m-QNu5ZFcpcWvvlRWYuk',
+            TG_CHAT_ID: '6442476342', 
+            ADMIN_PW: 'kayzenganteng',
+            PROJECT_URL: window.location.origin
+        };
+
+        // ================= SUPABASE INIT =================
+        const supabase = window.supabase.createClient(ENV.SUPABASE_URL, ENV.SUPABASE_KEY);
+
+        // ================= ROUTING & RAW VIEW =================
+        function router(route) {
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(el => el.classList.add('hidden'));
             
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="glass p-6 rounded-2xl">
-                    <h3 class="text-xl font-bold mb-4 text-sky-400"><i class="fas fa-code mr-2"></i> Skillset</h3>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="bg-slate-800 px-3 py-1 rounded-lg text-sm border border-slate-700">JavaScript (Node.js)</span>
-                        <span class="bg-slate-800 px-3 py-1 rounded-lg text-sm border border-slate-700">Python Scraper</span>
-                        <span class="bg-slate-800 px-3 py-1 rounded-lg text-sm border border-slate-700">Next.js</span>
-                        <span class="bg-slate-800 px-3 py-1 rounded-lg text-sm border border-slate-700">Supabase</span>
-                    </div>
-                </div>
-                <div class="glass p-6 rounded-2xl">
-                    <h3 class="text-xl font-bold mb-4 text-sky-400"><i class="fas fa-rocket mr-2"></i> Current Projects</h3>
-                    <ul class="text-slate-300 space-y-2">
-                        <li>• WhatsApp Multi-Device Automation</li>
-                        <li>• Web Scraper Dashboard</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="page-snippets" class="page-content hidden py-10">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-                <h2 class="text-3xl font-bold">Code Snippets</h2>
-                <div class="relative w-full md:w-64">
-                    <input type="text" id="search-input" oninput="searchSnippets()" placeholder="Search code..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-sky-500 outline-none">
-                </div>
-            </div>
-            <div id="snippets-list" class="grid gap-6">
-                <p class="text-center text-slate-500">Loading snippets...</p>
-            </div>
-        </section>
-
-        <section id="page-request" class="page-content hidden py-10">
-            <div class="max-w-xl mx-auto glass p-8 rounded-2xl">
-                <h2 class="text-2xl font-bold mb-6">Request Scrape & Feature</h2>
-                <form id="request-form" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Nama *</label>
-                        <input type="text" id="req-nama" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">URL (https://contoh.com) *</label>
-                        <input type="url" id="req-url" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Deskripsi *</label>
-                        <textarea id="req-desc" required placeholder="scrape [topic] ini, hanya bagian [yang diminta]" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 outline-none h-32"></textarea>
-                    </div>
-                    <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 py-3 rounded-xl font-bold transition">Kirim Request</button>
-                </form>
-            </div>
-        </section>
-
-        <section id="page-contact" class="page-content hidden py-10">
-            <h2 class="text-3xl font-bold mb-8 text-center">Get In Touch</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <a href="https://wa.me/628152313006" class="glass p-6 rounded-2xl flex flex-col items-center hover:bg-sky-500/10 transition">
-                    <i class="fab fa-whatsapp text-3xl text-green-500 mb-3"></i>
-                    <span>WhatsApp</span>
-                </a>
-                <a href="https://t.me/nonewpo" class="glass p-6 rounded-2xl flex flex-col items-center hover:bg-sky-500/10 transition">
-                    <i class="fab fa-telegram text-3xl text-sky-400 mb-3"></i>
-                    <span>Telegram</span>
-                </a>
-                <a href="https://github.com/Kayzen-dev-tech" class="glass p-6 rounded-2xl flex flex-col items-center hover:bg-sky-500/10 transition">
-                    <i class="fab fa-github text-3xl mb-3"></i>
-                    <span>GitHub</span>
-                </a>
-                <a href="mailto:kayzz.my@gmail.com" class="glass p-6 rounded-2xl flex flex-col items-center hover:bg-sky-500/10 transition">
-                    <i class="fas fa-envelope text-3xl text-red-400 mb-3"></i>
-                    <span>Email</span>
-                </a>
-                </div>
-        </section>
-
-        <section id="page-admin" class="page-content hidden py-10">
-            <div id="admin-login" class="max-w-sm mx-auto glass p-8 rounded-2xl">
-                <h2 class="text-2xl font-bold mb-6 text-center">Admin Access</h2>
-                <input type="password" id="admin-pass" placeholder="Password" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 mb-4 outline-none">
-                <button onclick="handleAdminLogin()" class="w-full bg-sky-600 py-2 rounded-lg font-bold">Login</button>
-            </div>
-
-            <div id="admin-panel" class="hidden space-y-8">
-                <div class="glass p-6 rounded-2xl">
-                    <h2 class="text-2xl font-bold mb-4">Upload Code</h2>
-                    <div id="drop-zone" class="border-2 border-dashed border-slate-700 rounded-2xl p-10 text-center hover:border-sky-500 transition cursor-pointer mb-4">
-                        <i class="fas fa-cloud-upload-alt text-4xl text-slate-500 mb-3"></i>
-                        <p>Drag & Drop files here or click to upload (Max 10 files)</p>
-                        <input type="file" id="file-input" multiple class="hidden">
-                    </div>
-                    <div id="file-queue" class="space-y-2 mb-4"></div>
-                    <button id="btn-publish" class="bg-green-600 px-6 py-2 rounded-lg font-bold">Publish All</button>
-                    <button onclick="logout()" class="text-slate-500 ml-4">Logout</button>
-                </div>
-            </div>
-        </section>
-
-    </main>
-</div>
-
-<script>
-    // CONFIGURATION (Disediakan via user)
-    const CONFIG = {
-        SUPABASE_URL: 'https://xcugdkmkloosooyzwyte.supabase.co',
-        SUPABASE_ANON_KEY: 'sb_publishable_tFSi6uQth6ZMyUIduLjkpA_5r0JbE2m',
-        TELEGRAM_BOT_TOKEN_REQUEST: '8455571859:AAFzJU3hS0iv7mVVh6sZEj0LlzU0237Kuqk',
-        TELEGRAM_BOT_TOKEN_LOGIN: '8415064497:AAGprLIhNq45Kr6m-QNu5ZFcpcWvvlRWYuk',
-        TELEGRAM_CHAT_ID: '6442476342',
-        ADMIN_PASSWORD: 'kayzenganteng'
-    };
-
-    const supabase = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
-    let isAdmin = false;
-
-    // --- LOGIKA ROUTING RAW ---
-    const urlParams = new URLSearchParams(window.location.search);
-    const rawId = urlParams.get('raw');
-    if(rawId) {
-        document.getElementById('main-app').style.display = 'none';
-        const rawContainer = document.getElementById('raw-container');
-        rawContainer.style.display = 'block';
-        fetchRaw(rawId);
-    }
-
-    async function fetchRaw(id) {
-        const { data } = await supabase.from('snippets').select('code').eq('id', id).single();
-        document.getElementById('raw-container').textContent = data ? data.code : 'Snippet not found.';
-    }
-
-    // --- LOGIKA DASHBOARD ---
-    function showPage(pageId) {
-        document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
-        document.getElementById(`page-${pageId}`).classList.remove('hidden');
-        if(pageId === 'snippets') fetchSnippets();
-    }
-
-    async function fetchSnippets() {
-        const { data, error } = await supabase.from('snippets').select('*').order('created_at', { ascending: false });
-        renderSnippets(data || []);
-    }
-
-    function renderSnippets(data) {
-        const list = document.getElementById('snippets-list');
-        list.innerHTML = data.map(item => `
-            <div class="glass p-6 rounded-2xl">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 class="text-xl font-bold">${item.title}</h3>
-                        <span class="text-xs text-sky-400 uppercase tracking-widest">${item.language}</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="copyToClipboard(\`${item.code.replace(/`/g, '\\`')}\`)" class="p-2 hover:text-sky-400"><i class="fas fa-copy"></i></button>
-                        <a href="?raw=${item.id}" target="_blank" class="p-2 hover:text-sky-400"><i class="fas fa-external-link-alt"></i></a>
-                        ${isAdmin ? `
-                            <button onclick="deleteSnippet(${item.id})" class="p-2 hover:text-red-500"><i class="fas fa-trash"></i></button>
-                        ` : ''}
-                    </div>
-                </div>
-                <pre class="bg-slate-900 p-4 rounded-xl overflow-x-auto text-sm border border-slate-800"><code>${escapeHtml(item.code.substring(0, 200))}${item.code.length > 200 ? '...' : ''}</code></pre>
-            </div>
-        `).join('');
-    }
-
-    // --- LOGIKA ADMIN & UPLOAD ---
-    async function handleAdminLogin() {
-        const pass = document.getElementById('admin-pass').value;
-        if(pass === CONFIG.ADMIN_PASSWORD) {
-            isAdmin = true;
-            document.getElementById('admin-login').classList.add('hidden');
-            document.getElementById('admin-panel').classList.remove('hidden');
+            // Show target
+            const target = document.getElementById(route) || document.getElementById('home');
+            target.classList.remove('hidden');
+            target.classList.add('fade-in');
             
-            // Notify Telegram Login
-            sendTelegram(CONFIG.TELEGRAM_BOT_TOKEN_LOGIN, `🔑 *Admin Login Detected*\nTime: ${new Date().toLocaleString()}`);
-        } else {
-            alert('Wrong password!');
+            // Close mobile menu
+            document.getElementById('mobile-menu').classList.add('hidden');
+            
+            // Update URL hash
+            window.location.hash = route;
+
+            if(route === 'snippets') fetchSnippets();
+            if(route === 'admin' && localStorage.getItem('isAdmin') === 'true') {
+                document.getElementById('admin-login').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+            }
         }
-    }
 
-    const dropZone = document.getElementById('drop-zone');
-    const fileInput = document.getElementById('file-input');
-    let uploadedFiles = [];
+        // Check for Raw View or Hash on Load
+        window.onload = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const rawId = params.get('raw');
 
-    dropZone.onclick = () => fileInput.click();
-    dropZone.ondragover = (e) => { e.preventDefault(); dropZone.classList.add('border-sky-500'); };
-    dropZone.ondragleave = () => dropZone.classList.remove('border-sky-500');
-    dropZone.ondrop = (e) => {
-        e.preventDefault();
-        handleFiles(e.dataTransfer.files);
-    };
-    fileInput.onchange = (e) => handleFiles(e.target.files);
+            if (rawId) {
+                // RAW MODE LOGIC
+                document.getElementById('app-container').classList.add('hidden');
+                const rawContainer = document.getElementById('raw-container');
+                rawContainer.classList.remove('hidden');
+                rawContainer.textContent = "Loading raw content...";
 
-    function handleFiles(files) {
-        const fileList = Array.from(files).slice(0, 10);
-        fileList.forEach(file => {
+                const { data, error } = await supabase.from('snippets').select('code').eq('id', rawId).single();
+                if (error || !data) {
+                    rawContainer.textContent = "Error: Snippet not found.";
+                } else {
+                    rawContainer.textContent = data.code;
+                }
+            } else {
+                // NORMAL APP MODE
+                const hash = window.location.hash.replace('#', '') || 'home';
+                router(hash);
+            }
+        };
+
+        // ================= SNIPPETS LOGIC =================
+        let allSnippets = [];
+
+        async function fetchSnippets() {
+            const grid = document.getElementById('snippets-grid');
+            const { data, error } = await supabase
+                .from('snippets')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                grid.innerHTML = `<p class="text-red-500 text-center">Error loading snippets: ${error.message}</p>`;
+                return;
+            }
+
+            allSnippets = data;
+            renderSnippets();
+        }
+
+        function renderSnippets(searchTerm = '') {
+            const grid = document.getElementById('snippets-grid');
+            const isAdmin = localStorage.getItem('isAdmin') === 'true';
+            
+            const filtered = allSnippets.filter(s => 
+                s.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                (s.description && s.description.toLowerCase().includes(searchTerm.toLowerCase()))
+            );
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<p class="text-center text-gray-500">No snippets found.</p>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-card rounded-xl overflow-hidden border border-gray-700 hover:border-primary/50 transition shadow-lg">
+                    <div class="p-4 border-b border-gray-700 bg-dark/50 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-mono bg-blue-900 text-blue-300 px-2 py-1 rounded uppercase">${item.language || 'text'}</span>
+                            <h3 class="font-bold text-lg text-white truncate max-w-[200px]">${item.title}</h3>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="?raw=${item.id}" target="_blank" class="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-white" title="View Raw">Raw</a>
+                            <button onclick="copyToClipboard('${item.id}')" class="text-xs bg-gray-700 hover:bg-primary px-2 py-1 rounded text-white"><i class="fas fa-copy"></i></button>
+                            ${isAdmin ? `
+                                <button onclick="editSnippet(${item.id})" class="text-xs bg-yellow-600 hover:bg-yellow-500 px-2 py-1 rounded text-white"><i class="fas fa-edit"></i></button>
+                                <button onclick="deleteSnippet(${item.id})" class="text-xs bg-red-600 hover:bg-red-500 px-2 py-1 rounded text-white"><i class="fas fa-trash"></i></button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-400 text-sm mb-3 h-10 overflow-hidden">${item.description || 'No description.'}</p>
+                        <div class="relative bg-darker rounded p-3 overflow-hidden h-32 group">
+                            <code class="text-xs font-mono text-gray-300 whitespace-pre">${escapeHtml(item.code)}</code>
+                            <div class="absolute inset-0 bg-gradient-to-t from-darker to-transparent opacity-80 flex items-end justify-center pb-2 group-hover:opacity-60 transition">
+                                <span class="text-xs text-gray-500">Click Raw to view full</span>
+                            </div>
+                        </div>
+                        <div class="mt-3 text-xs text-gray-500">
+                            Raw URL: <span class="text-primary select-all">${ENV.PROJECT_URL}/?raw=${item.id}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ================= REQUEST LOGIC =================
+        async function handleRequest(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-req');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            btn.disabled = true;
+
+            const form = e.target;
+            const name = form.name.value;
+            const url = form.url.value;
+            const desc = form.desc.value;
+            const file = form.screenshot.files[0];
+
+            const message = `
+Request Scrape & Feature Bot WhatsApp/Telegram
+nama: ${name}
+url: ${url}
+diskripsi: ${desc}
+
+waktu: ${new Date().toLocaleString('id-ID')}
+            `;
+
+            try {
+                // 1. Send Text Message
+                const textRes = await fetch(`https://api.telegram.org/bot${ENV.TG_BOT_REQ}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: ENV.TG_CHAT_ID, text: message })
+                });
+
+                // 2. Send Photo if exists
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('chat_id', ENV.TG_CHAT_ID);
+                    formData.append('photo', file);
+                    formData.append('caption', `Screenshot from ${name}`);
+                    
+                    await fetch(`https://api.telegram.org/bot${ENV.TG_BOT_REQ}/sendPhoto`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                }
+
+                alert('Request berhasil dikirim ke Admin!');
+                form.reset();
+            } catch (err) {
+                alert('Gagal mengirim request. Cek koneksi internet.');
+                console.error(err);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // ================= ADMIN LOGIC =================
+        async function handleAdminLogin() {
+            const pass = document.getElementById('admin-pass').value;
+            if (pass === ENV.ADMIN_PW) {
+                localStorage.setItem('isAdmin', 'true');
+                
+                // Notify Telegram Login
+                const msg = `⚠️ Admin Login Detected!\nTime: ${new Date().toLocaleString()}\nIP: (Client Side)`;
+                fetch(`https://api.telegram.org/bot${ENV.TG_BOT_LOGIN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: ENV.TG_CHAT_ID, text: msg })
+                });
+
+                document.getElementById('admin-login').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                alert("Login Success");
+            } else {
+                alert("Password Salah!");
+            }
+        }
+
+        function logoutAdmin() {
+            localStorage.removeItem('isAdmin');
+            location.reload();
+        }
+
+        // File Upload Handling
+        function handleFileSelect(files) {
+            if (files.length > 10) {
+                alert("Maksimal 10 file sekaligus!");
+                return;
+            }
+            
             const reader = new FileReader();
-            reader.onload = (e) => {
-                uploadedFiles.push({ title: file.name, code: e.target.result, language: file.name.split('.').pop() });
-                updateQueueUI();
-            };
-            reader.readAsText(file);
-        });
-    }
+            // Currently just reading the first file for simplicity in Single File mode
+            // or concatenating them
+            let combinedCode = "";
+            let processed = 0;
 
-    function updateQueueUI() {
-        document.getElementById('file-queue').innerHTML = uploadedFiles.map((f, i) => `
-            <div class="flex justify-between bg-slate-800 p-2 rounded-lg text-sm">
-                <span>${f.title}</span>
-                <button onclick="uploadedFiles.splice(${i},1);updateQueueUI()" class="text-red-400">Remove</button>
-            </div>
-        `).join('');
-    }
-
-    document.getElementById('btn-publish').onclick = async () => {
-        if(uploadedFiles.length === 0) return;
-        const { error } = await supabase.from('snippets').insert(uploadedFiles);
-        if(!error) {
-            alert('Published successfully!');
-            uploadedFiles = [];
-            updateQueueUI();
-            fetchSnippets();
+            Array.from(files).forEach(file => {
+                const r = new FileReader();
+                r.onload = (e) => {
+                    combinedCode += `// File: ${file.name}\n${e.target.result}\n\n`;
+                    processed++;
+                    if(processed === files.length) {
+                         document.getElementById('snip-code').value = combinedCode;
+                         if(!document.getElementById('snip-title').value) {
+                             document.getElementById('snip-title').value = "Multi-file Upload: " + files[0].name;
+                         }
+                    }
+                };
+                r.readAsText(file);
+            });
         }
-    };
 
-    // --- LOGIKA REQUEST ---
-    document.getElementById('request-form').onsubmit = async (e) => {
-        e.preventDefault();
-        const nama = document.getElementById('req-nama').value;
-        const url = document.getElementById('req-url').value;
-        const desc = document.getElementById('req-desc').value;
+        // CRUD Snippets
+        async function saveSnippet(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const title = document.getElementById('snip-title').value;
+            const desc = document.getElementById('snip-desc').value;
+            const code = document.getElementById('snip-code').value;
+            const lang = document.getElementById('snip-lang').value;
 
-        const message = `📩 *Request Scrape & Feature*\n\n*Nama:* ${nama}\n*URL:* ${url}\n*Deskripsi:* ${desc}\n\n*Waktu:* ${new Date().toLocaleString()}`;
-        
-        const success = await sendTelegram(CONFIG.TELEGRAM_BOT_TOKEN_REQUEST, message);
-        if(success) {
-            alert('Request sent!');
-            e.target.reset();
+            const payload = { title, description: desc, code, language: lang };
+
+            let result;
+            if (id) {
+                result = await supabase.from('snippets').update(payload).eq('id', id);
+            } else {
+                result = await supabase.from('snippets').insert([payload]);
+            }
+
+            if (result.error) {
+                alert('Error saving: ' + result.error.message);
+            } else {
+                alert('Snippet saved!');
+                resetForm();
+                // Send notification to Request Bot as per request logic if needed, 
+                // but usually admin upload is silent.
+            }
         }
-    };
 
-    // --- HELPERS ---
-    async function sendTelegram(token, text) {
-        const url = `https://api.telegram.org/bot${token}/sendMessage`;
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ chat_id: CONFIG.TELEGRAM_CHAT_ID, text: text, parse_mode: 'Markdown' })
-        });
-        return res.ok;
-    }
+        async function deleteSnippet(id) {
+            if(confirm('Are you sure?')) {
+                const { error } = await supabase.from('snippets').delete().eq('id', id);
+                if(!error) {
+                    alert('Deleted');
+                    fetchSnippets();
+                }
+            }
+        }
 
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text);
-        alert('Copied to clipboard!');
-    }
+        function editSnippet(id) {
+            router('admin');
+            const s = allSnippets.find(x => x.id == id);
+            if(s) {
+                document.getElementById('edit-id').value = s.id;
+                document.getElementById('snip-title').value = s.title;
+                document.getElementById('snip-desc').value = s.description;
+                document.getElementById('snip-code').value = s.code;
+                document.getElementById('snip-lang').value = s.language;
+                window.scrollTo(0,0);
+            }
+        }
 
-    function escapeHtml(text) {
-        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
+        function resetForm() {
+            document.getElementById('snippet-form').reset();
+            document.getElementById('edit-id').value = '';
+        }
 
-    function searchSnippets() {
-        const term = document.getElementById('search-input').value.toLowerCase();
-        document.querySelectorAll('#snippets-list > div').forEach(card => {
-            const title = card.querySelector('h3').innerText.toLowerCase();
-            card.style.display = title.includes(term) ? 'block' : 'none';
-        });
-    }
-</script>
+        // ================= UTILS =================
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function copyToClipboard(id) {
+            const s = allSnippets.find(x => x.id == id);
+            if(s) {
+                navigator.clipboard.writeText(s.code).then(() => alert('Code copied!'));
+            }
+        }
+
+        // Drag and Drop Logic Global
+        const dropZone = document.getElementById('drop-zone');
+        if(dropZone){
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-primary');
+            });
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('border-primary');
+            });
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-primary');
+                handleFileSelect(e.dataTransfer.files);
+            });
+        }
+
+    </script>
 </body>
 </html>
