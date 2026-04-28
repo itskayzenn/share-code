@@ -56,6 +56,19 @@
                 <button onclick="router('/snippets')" class="hover:text-primary transition">Snippets</button>
                 <button onclick="router('/request')" class="hover:text-primary transition">Request</button>
                 <button onclick="router('/contact')" class="hover:text-primary transition">Contact</button>
+                
+                <div class="relative inline-block">
+                    <button onclick="toggleAnnouncements()" class="text-gray-400 hover:text-primary transition text-xl mt-1">
+                        <i class="fas fa-bell"></i>
+                        <span id="notif-dot" class="hidden absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div id="announcement-box" class="hidden absolute right-0 mt-4 w-72 bg-card border border-gray-700 rounded-2xl shadow-2xl p-4 z-[60]">
+                        <h4 class="text-sm font-bold mb-3 border-b border-gray-700 pb-2 text-white">📢 Announcements</h4>
+                        <div id="announcement-list" class="text-xs text-gray-300 space-y-3 max-h-60 overflow-y-auto">
+                            </div>
+                    </div>
+                </div>
+                
                 <button onclick="router('/admin')" class="bg-primary/20 text-primary px-4 py-1.5 rounded-lg border border-primary/30 hover:bg-primary/30 transition">Admin</button>
             </div>
             <button class="md:hidden text-2xl text-primary" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
@@ -144,11 +157,28 @@
                 <input type="password" id="pass" placeholder="Password" class="w-full bg-darker border border-gray-700 p-4 rounded-2xl mb-6 outline-none text-center focus:border-primary">
                 <button onclick="doLogin()" class="w-full bg-primary py-4 rounded-2xl font-bold hover:bg-blue-600 transition shadow-lg shadow-primary/20">Login</button>
             </div>
+            
             <div id="dash-area" class="hidden">
                 <div class="flex justify-between items-center mb-8 bg-card p-6 rounded-2xl border border-gray-800">
                     <h2 class="text-2xl font-bold text-primary">Dashboard Admin</h2>
                     <button onclick="logout()" class="bg-red-500/10 text-red-500 px-4 py-2 rounded-lg hover:bg-red-500 hover:text-white transition font-medium">Logout Session</button>
                 </div>
+
+                <div class="bg-card p-8 rounded-3xl border border-gray-800 mb-8 shadow-xl">
+                    <h3 class="text-xl font-bold mb-6 text-primary flex items-center">
+                        <i class="fas fa-bullhorn mr-3"></i> Post New Announcement
+                    </h3>
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <input type="text" id="ann-content" placeholder="Tulis pengumuman baru di sini..." 
+                               class="flex-1 bg-darker border border-gray-700 p-4 rounded-2xl outline-none focus:border-primary">
+                        <button onclick="postAnnouncement()" 
+                                class="bg-primary hover:bg-blue-600 px-8 py-4 rounded-2xl font-bold text-white transition shadow-lg shadow-primary/20">
+                            Broadcast
+                        </button>
+                    </div>
+                    <div id="admin-ann-list" class="mt-6 space-y-2"></div>
+                </div>
+
                 <div id="drop-zone" class="border-2 border-dashed border-gray-700 rounded-3xl p-12 text-center mb-8 cursor-pointer hover:border-primary hover:bg-primary/5 transition group">
                     <input type="file" id="file-in" multiple class="hidden" onchange="handleFiles(this.files)">
                     <div onclick="document.getElementById('file-in').click()">
@@ -181,7 +211,6 @@
     </footer>
 
     <script>
-        // CONFIG - Tetap sama, pastikan kredensial benar
         const CONFIG = {
             URL: 'https://cybgscqbpwnzevwyntdu.supabase.co',
             KEY: 'sb_publishable_IbDRvmKYKCVaaxns7bNESQ_3I6IBK1f',
@@ -193,37 +222,104 @@
 
         const sb = supabase.createClient(CONFIG.URL, CONFIG.KEY);
         let dataStore = [];
+        
+        function toggleAnnouncements() {
+            const box = document.getElementById('announcement-box');
+            box.classList.toggle('hidden');
+            document.getElementById('notif-dot').classList.add('hidden');
+        }
 
-        // NEW ROUTER (PATH-BASED)
+        async function loadAnnouncements() {
+            try {
+                const { data, error } = await sb
+                    .from('announcements')
+                    .select('*')
+                    .eq('is_active', true)
+                    .order('created_at', { ascending: false });
+
+                const list = document.getElementById('announcement-list');
+                if (data && data.length > 0) {
+                    document.getElementById('notif-dot').classList.remove('hidden');
+                    list.innerHTML = data.map(a => `
+                        <div class="bg-darker p-3 rounded-xl border border-gray-800">
+                            <p class="leading-relaxed">${a.content}</p>
+                            <span class="text-[10px] text-gray-500 mt-2 block">${new Date(a.created_at).toLocaleDateString()}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    list.innerHTML = `<p class="text-center text-gray-600 py-4">No new updates.</p>`;
+                }
+            } catch (e) {
+                console.error("Announcement Error:", e);
+            }
+        }
+
+        async function postAnnouncement() {
+            const content = document.getElementById('ann-content').value;
+            if (!content) return alert("Isi pengumuman tidak boleh kosong!");
+
+            const { error } = await sb
+                .from('announcements')
+                .insert([{ content: content, is_active: true }]);
+
+            if (!error) {
+                alert("Pengumuman berhasil dipublikasikan!");
+                document.getElementById('ann-content').value = '';
+                loadAnnouncements();
+                loadAdminAnnouncements();
+            } else {
+                alert("Gagal: " + error.message);
+            }
+        }
+
+        async function loadAdminAnnouncements() {
+            const list = document.getElementById('admin-ann-list');
+            const { data } = await sb
+                .from('announcements')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (data) {
+                list.innerHTML = data.map(a => `
+                    <div class="flex justify-between items-center bg-darker p-3 rounded-xl border border-gray-800">
+                        <span class="text-sm truncate mr-4 ${a.is_active ? 'text-gray-200' : 'text-gray-600 italic'}">${a.content}</span>
+                        <button onclick="deleteAnn('${a.id}')" class="text-red-500 hover:text-red-400 p-2">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function deleteAnn(id) {
+            if (confirm("Hapus pengumuman ini?")) {
+                await sb.from('announcements').delete().eq('id', id);
+                loadAnnouncements();
+                loadAdminAnnouncements();
+            }
+        }
+
         function router(path) {
             const id = path.replace(/^\//, '') || 'home';
-            
-            // UI Switch
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             const target = document.getElementById(id);
             if(target) {
                 target.classList.add('active');
-                // History Push (Tanpa Reload)
                 if (window.location.pathname !== path) {
                     window.history.pushState({}, "", path);
                 }
             }
-
             document.getElementById('mobile-nav').classList.add('hidden');
             window.scrollTo({top: 0, behavior: 'smooth'});
-
-            // Data Triggers
             if(id === 'snippets') loadData();
             if(id === 'contact') loadContacts();
             if(id === 'admin') checkLog();
         }
 
-        // Handle Browser Back/Forward
         window.onpopstate = () => router(window.location.pathname);
 
         function toggleMenu() { document.getElementById('mobile-nav').classList.toggle('hidden'); }
 
-        // SNIPPETS LOGIC
         async function loadData() {
             const list = document.getElementById('snippet-list');
             list.innerHTML = `
@@ -241,14 +337,11 @@
             const q = document.getElementById('search').value.toLowerCase();
             const list = document.getElementById('snippet-list');
             const admin = localStorage.getItem('kayz_adm') === 'true';
-            
             const filtered = dataStore.filter(s => s.title.toLowerCase().includes(q));
-            
             if(filtered.length === 0) {
                 list.innerHTML = `<div class="text-center py-10 text-gray-500 bg-card rounded-2xl border border-gray-800">No snippets found for "${q}"</div>`;
                 return;
             }
-
             list.innerHTML = filtered.map(s => `
                 <div class="bg-card p-6 rounded-3xl border border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 hover:border-primary/40 transition shadow-lg group">
                     <div class="flex items-center gap-4 w-full">
@@ -284,16 +377,13 @@
             document.body.style.overflow = 'auto';
         }
 
-        // REQUEST
         async function sendRequest(e) {
             e.preventDefault();
             const btn = e.submitter;
             btn.disabled = true;
             btn.innerText = "Sending...";
-            
             const f = new FormData(e.target);
             const text = `📬 *NEW REQUEST FROM WEB*\n\n👤 *Nama:* ${f.get('nama')}\n🔗 *URL:* ${f.get('url')}\n📝 *Deskripsi:* ${f.get('desc')}\n\n⏰ _${new Date().toLocaleString()}_`;
-            
             try {
                 await fetch(`https://api.telegram.org/bot${CONFIG.REQ_BOT}/sendMessage`, {
                     method: 'POST',
@@ -310,11 +400,13 @@
             }
         }
 
-        // ADMIN LOGIC
         function checkLog() {
             const isAdm = localStorage.getItem('kayz_adm') === 'true';
             document.getElementById('login-area').classList.toggle('hidden', isAdm);
             document.getElementById('dash-area').classList.toggle('hidden', !isAdm);
+            if (isAdm) {
+                loadAdminAnnouncements();
+            }
         }
 
         function doLogin() {
@@ -343,11 +435,9 @@
                 title: document.getElementById('t-title').value, 
                 code: document.getElementById('t-code').value 
             };
-            
             const { error } = id ? 
                 await sb.from('snippets').update(payload).eq('id', id) : 
                 await sb.from('snippets').insert([payload]);
-            
             if(!error) {
                 alert('Success!'); clearForm(); loadData();
             } else {
@@ -388,7 +478,6 @@
             });
         }
 
-        // CONTACT LIST
         function loadContacts() {
             const c = [
                 {n:'WhatsApp', i:'fa-whatsapp', l:'https://wa.me/628152313006', b:'bg-green-600/10', t:'text-green-500'},
@@ -408,9 +497,9 @@
             `).join('');
         }
 
-        // INITIAL LOAD
         window.addEventListener('DOMContentLoaded', () => {
             router(window.location.pathname);
+            loadAnnouncements();
         });
     </script>
 </body>
