@@ -3,13 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kayzen Izumi - Code Snippets & Portfolio</title>
+    <title>Kayzen ShareCode - Premium Snippets</title>
     <link rel="icon" href="https://i.ibb.co.com/wrrLvKCP/image.jpg" type="image/x-icon">
-
-    <meta property="og:title" content="Kayzen Izumi - Code Snippets & Portfolio">
-    <meta property="og:description" content="Platform berbagi snippets dengan mudah dan cepat oleh Kayzen Izumi.">
-    <meta property="og:image" content="https://i.ibb.co.com/wrrLvKCP/image.jpg">
-    <meta property="og:url" content="https://shcdn.web.id/">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,192 +17,234 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Poppins', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-                    colors: { primary: '#3b82f6', dark: '#0f172a', darker: '#020617', card: '#1e293b' }
+                    colors: { primary: '#3b82f6', dark: '#0b0f1a', darker: '#05070a', card: '#161b2e' }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #0f172a; color: #e2e8f0; min-height: 100vh; overflow-x: hidden; }
-        .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-        .profile-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-        .page-section { display: none; opacity: 0; transform: translateY(10px); }
-        .page-section.active { display: block; opacity: 1; transform: translateY(0); transition: all 0.4s ease; }
-        pre { scrollbar-width: thin; scrollbar-color: #334155 transparent; }
+        body { background-color: #0b0f1a; color: #e2e8f0; min-height: 100vh; overflow-x: hidden; }
+        .glass { background: rgba(11, 15, 26, 0.8); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .profile-img { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px solid #3b82f6; box-shadow: 0 0 30px rgba(59, 130, 246, 0.4); }
+        .page-section { display: none; opacity: 0; transform: scale(0.98); }
+        .page-section.active { display: block; opacity: 1; transform: scale(1); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .nav-link { position: relative; transition: color 0.3s; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background: #3b82f6; transition: width 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+        .notif-badge { position: absolute; top: -2px; right: -2px; width: 10px; height: 10px; background: #ef4444; border-radius: 50%; border: 2px solid #0b0f1a; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0b0f1a; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
     </style>
 </head>
-<body class="font-sans">
+<body class="font-sans selection:bg-primary/30">
 
-    <div id="raw-view" class="hidden fixed inset-0 z-[100] bg-darker p-6 overflow-auto font-mono text-sm">
-        <div class="max-w-4xl mx-auto">
-            <div class="flex justify-between items-center mb-4">
-                <span class="text-primary font-bold">Source Code</span>
-                <button onclick="closeRaw()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-lg transition">Close</button>
+    <div id="notif-panel" class="hidden fixed top-20 right-4 md:right-20 w-80 bg-card border border-gray-800 rounded-3xl shadow-2xl z-[100] overflow-hidden">
+        <div class="p-4 border-b border-gray-800 flex justify-between items-center bg-darker/50">
+            <h3 class="font-bold text-primary italic">Pemberitahuan</h3>
+            <button onclick="toggleNotif()" class="text-gray-500 hover:text-white text-sm">Tutup</button>
+        </div>
+        <div id="notif-list" class="max-h-96 overflow-y-auto p-4 flex flex-col gap-3">
+            <p class="text-center text-gray-500 text-sm py-4">Memuat data...</p>
+        </div>
+    </div>
+
+    <div id="raw-view" class="hidden fixed inset-0 z-[200] bg-darker/95 p-6 overflow-auto font-mono text-sm backdrop-blur-xl">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span class="ml-4 text-gray-400">View Source Mode</span>
+                </div>
+                <button onclick="closeRaw()" class="bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-white px-6 py-2 rounded-xl transition-all font-bold">CLOSE VIEW</button>
             </div>
-            <pre id="raw-content" class="text-white whitespace-pre-wrap bg-dark p-4 rounded-xl border border-gray-800"></pre>
+            <pre id="raw-content" class="text-blue-100 whitespace-pre-wrap bg-dark p-8 rounded-3xl border border-gray-800 shadow-inner leading-relaxed"></pre>
         </div>
     </div>
 
     <nav class="fixed top-0 w-full z-50 glass">
-        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center h-16">
-            <span class="text-xl font-bold text-primary cursor-pointer tracking-tighter" onclick="router('/home')">&lt;Kayzen/&gt;</span>
-            <div class="hidden md:flex gap-8 text-sm font-medium">
-                <button onclick="router('/home')" class="hover:text-primary transition">Home</button>
-                <button onclick="router('/snippets')" class="hover:text-primary transition">Snippets</button>
-                <button onclick="router('/request')" class="hover:text-primary transition">Request</button>
-                <button onclick="router('/contact')" class="hover:text-primary transition">Contact</button>
-                
-                <div class="relative inline-block">
-                    <button onclick="toggleAnnouncements()" class="text-gray-400 hover:text-primary transition text-xl mt-1">
-                        <i class="fas fa-bell"></i>
-                        <span id="notif-dot" class="hidden absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                    </button>
-                    <div id="announcement-box" class="hidden absolute right-0 mt-4 w-72 bg-card border border-gray-700 rounded-2xl shadow-2xl p-4 z-[60]">
-                        <h4 class="text-sm font-bold mb-3 border-b border-gray-700 pb-2 text-white">📢 Announcements</h4>
-                        <div id="announcement-list" class="text-xs text-gray-300 space-y-3 max-h-60 overflow-y-auto">
-                            </div>
-                    </div>
-                </div>
-                
-                <button onclick="router('/admin')" class="bg-primary/20 text-primary px-4 py-1.5 rounded-lg border border-primary/30 hover:bg-primary/30 transition">Admin</button>
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center h-20">
+            <div class="flex items-center gap-4">
+                <span class="text-2xl font-black text-primary cursor-pointer" onclick="router('/home')">KAYZEN.</span>
             </div>
-            <button class="md:hidden text-2xl text-primary" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+            
+            <div class="hidden md:flex gap-10 text-sm font-semibold">
+                <button onclick="router('/home')" class="nav-link">Home</button>
+                <button onclick="router('/snippets')" class="nav-link">Library</button>
+                <button onclick="router('/request')" class="nav-link">Request</button>
+                <button onclick="router('/contact')" class="nav-link">Contact</button>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="relative cursor-pointer group" onclick="toggleNotif()">
+                    <div class="p-3 bg-gray-800/50 rounded-xl group-hover:bg-primary/20 transition-all">
+                        <i class="fas fa-bell text-gray-400 group-hover:text-primary transition-colors"></i>
+                    </div>
+                    <div id="notif-dot" class="hidden notif-badge"></div>
+                </div>
+                <button onclick="router('/admin')" class="bg-primary hover:bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-primary/20 hidden md:block">Admin</button>
+                <button class="md:hidden text-2xl text-primary" onclick="toggleMenu()"><i class="fas fa-bars-staggered"></i></button>
+            </div>
         </div>
-        <div id="mobile-nav" class="hidden md:hidden bg-darker border-t border-gray-800 p-6 flex flex-col gap-6 text-center shadow-2xl">
-            <button onclick="router('/home')" class="text-lg">Home</button>
-            <button onclick="router('/snippets')" class="text-lg">Snippets</button>
-            <button onclick="router('/request')" class="text-lg">Request</button>
-            <button onclick="router('/contact')" class="text-lg">Contact</button>
-            <button onclick="router('/admin')" class="text-primary font-bold text-lg">Admin Panel</button>
+        <div id="mobile-nav" class="hidden md:hidden bg-darker border-t border-gray-900 p-8 flex flex-col gap-6 text-center animate-pulse">
+            <button onclick="router('/home')" class="text-xl font-bold">Home</button>
+            <button onclick="router('/snippets')" class="text-xl font-bold">Library</button>
+            <button onclick="router('/request')" class="text-xl font-bold">Request</button>
+            <button onclick="router('/contact')" class="text-xl font-bold">Contact</button>
+            <button onclick="router('/admin')" class="text-primary font-black text-xl">ADMIN PANEL</button>
         </div>
     </nav>
 
-    <main class="pt-24 pb-12 max-w-5xl mx-auto px-4 min-h-screen">
+    <main class="pt-32 pb-20 max-w-6xl mx-auto px-6 min-h-screen">
         
         <section id="home" class="page-section">
-            <div class="flex flex-col items-center text-center mb-12">
-                <img src="https://i.ibb.co.com/wrrLvKCP/image.jpg" class="profile-img mb-6">
-                <h1 class="text-5xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">Kayzen Izumi</h1>
-                <p class="text-gray-400 text-lg">Fullstack Developer | Scraper Enthusiast | Tech Creator</p>
-                <div class="flex gap-4 mt-8">
-                    <button onclick="router('/snippets')" class="bg-primary hover:bg-blue-600 px-8 py-3 rounded-full font-bold shadow-lg shadow-primary/30 transition-all transform hover:scale-105">Explore Snippets</button>
-                    <button onclick="router('/contact')" class="bg-card hover:bg-gray-800 px-8 py-3 rounded-full font-bold border border-gray-700 transition-all">Contact Me</button>
+            <div class="flex flex-col items-center text-center mb-20">
+                <div class="relative mb-8">
+                    <img src="https://i.ibb.co.com/wrrLvKCP/image.jpg" class="profile-img">
+                    <div class="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-4 border-dark rounded-full"></div>
+                </div>
+                <h1 class="text-6xl font-black mb-4 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-400 to-emerald-400">KAYZEN IZUMI</h1>
+                <p class="text-gray-400 text-xl max-w-2xl font-light">Crafting seamless digital experiences through code automation and backend architecture.</p>
+                <div class="flex flex-wrap justify-center gap-6 mt-12">
+                    <button onclick="router('/snippets')" class="bg-primary hover:bg-blue-600 px-10 py-4 rounded-2xl font-black shadow-2xl shadow-primary/40 transition-all hover:-translate-y-1">EXPLORE LIBRARY</button>
+                    <button onclick="router('/contact')" class="bg-card hover:bg-gray-800 px-10 py-4 rounded-2xl font-black border border-gray-700 transition-all">HIRE ME</button>
                 </div>
             </div>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-card p-8 rounded-3xl border border-gray-800 hover:border-primary/30 transition shadow-xl">
-                    <h2 class="text-2xl font-bold mb-4 text-primary flex items-center"><i class="fas fa-user-circle mr-3"></i>About Me</h2>
-                    <p class="text-gray-300 leading-relaxed">Halo! Saya Kayzen. Berfokus pada pengembangan automasi, web scraping, dan arsitektur backend. Web ini adalah galeri kode yang saya kembangkan untuk mempermudah aksesibilitas script saya sendiri maupun publik.</p>
-                </div>
-                <div class="bg-card p-8 rounded-3xl border border-gray-800 hover:border-primary/30 transition shadow-xl">
-                    <h2 class="text-2xl font-bold mb-4 text-primary flex items-center"><i class="fas fa-code mr-3"></i>Tech Stack</h2>
-                    <div class="flex flex-wrap gap-3">
-                        <span class="bg-darker px-4 py-2 rounded-xl text-sm border border-gray-700 text-blue-400">JavaScript (ES6+)</span>
-                        <span class="bg-darker px-4 py-2 rounded-xl text-sm border border-gray-700 text-green-400">Node.js</span>
-                        <span class="bg-darker px-4 py-2 rounded-xl text-sm border border-gray-700 text-yellow-400">Python</span>
-                        <span class="bg-darker px-4 py-2 rounded-xl text-sm border border-gray-700 text-teal-400">Supabase</span>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-card p-10 rounded-[2.5rem] border border-gray-800 shadow-2xl group hover:border-primary/50 transition-all">
+                    <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 mb-6 group-hover:bg-primary group-hover:text-white transition-all">
+                        <i class="fas fa-bolt text-2xl"></i>
                     </div>
+                    <h2 class="text-2xl font-bold mb-4">Fast Access</h2>
+                    <p class="text-gray-400 leading-relaxed">Akses cepat ke semua snippet kode yang sudah teruji dan siap pakai untuk proyek Anda.</p>
+                </div>
+                <div class="bg-card p-10 rounded-[2.5rem] border border-gray-800 shadow-2xl group hover:border-emerald-500/50 transition-all">
+                    <div class="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 mb-6 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+                        <i class="fas fa-shield-halved text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-4">Secure Data</h2>
+                    <p class="text-gray-400 leading-relaxed">Penyimpanan berbasis cloud Supabase menjamin integritas data dan keamanan source code.</p>
+                </div>
+                <div class="bg-card p-10 rounded-[2.5rem] border border-gray-800 shadow-2xl group hover:border-purple-500/50 transition-all">
+                    <div class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-500 mb-6 group-hover:bg-purple-500 group-hover:text-white transition-all">
+                        <i class="fas fa-layer-group text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-4">Modern Stack</h2>
+                    <p class="text-gray-400 leading-relaxed">Dibangun dengan teknologi terbaru untuk performa yang ringan dan responsif.</p>
                 </div>
             </div>
         </section>
 
         <section id="snippets" class="page-section">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-                <h2 class="text-3xl font-bold">Code Library</h2>
-                <div class="relative w-full md:w-80">
-                    <input type="text" id="search" oninput="renderSnippets()" placeholder="Search snippets..." class="w-full bg-card border border-gray-700 rounded-2xl px-5 py-3 text-sm focus:border-primary outline-none transition shadow-inner">
-                    <i class="fas fa-search absolute right-4 top-4 text-gray-500"></i>
+            <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+                <div>
+                    <h2 class="text-4xl font-black tracking-tighter">CODE LIBRARY</h2>
+                    <p class="text-gray-500 mt-2">Daftar script dan snippet berkualitas.</p>
+                </div>
+                <div class="relative w-full md:w-96">
+                    <input type="text" id="search" oninput="renderSnippets()" placeholder="Cari script..." class="w-full bg-card border border-gray-700 rounded-2xl px-6 py-4 text-sm focus:border-primary outline-none transition-all shadow-2xl">
+                    <i class="fas fa-magnifying-glass absolute right-6 top-5 text-gray-500"></i>
                 </div>
             </div>
             <div id="snippet-list" class="grid gap-6"></div>
         </section>
 
         <section id="request" class="page-section">
-            <div class="max-w-xl mx-auto bg-card p-10 rounded-3xl border border-gray-800 shadow-2xl">
-                <h2 class="text-3xl font-bold mb-6 text-center text-primary">Request Feature</h2>
-                <form id="req-form" onsubmit="sendRequest(event)" class="flex flex-col gap-5">
-                    <div class="space-y-2">
-                        <label class="text-sm text-gray-400 ml-1">Nama Lengkap</label>
-                        <input type="text" name="nama" placeholder="Masukkan nama Anda..." required class="w-full bg-darker border border-gray-700 p-4 rounded-2xl outline-none focus:border-primary transition">
+            <div class="max-w-2xl mx-auto bg-card p-12 rounded-[3rem] border border-gray-800 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[80px]"></div>
+                <h2 class="text-4xl font-black mb-8 text-center bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500">REQUEST PROJECT</h2>
+                <form id="req-form" onsubmit="sendRequest(event)" class="flex flex-col gap-6">
+                    <div class="space-y-3">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-2">Identitas Anda</label>
+                        <input type="text" name="nama" placeholder="Nama lengkap..." required class="w-full bg-darker border border-gray-800 p-5 rounded-2xl outline-none focus:border-primary transition-all">
                     </div>
-                    <div class="space-y-2">
-                        <label class="text-sm text-gray-400 ml-1">Target URL / Project</label>
-                        <input type="url" name="url" placeholder="https://example.com" required class="w-full bg-darker border border-gray-700 p-4 rounded-2xl outline-none focus:border-primary transition">
+                    <div class="space-y-3">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-2">Tautan Referensi</label>
+                        <input type="url" name="url" placeholder="https://github.com/..." required class="w-full bg-darker border border-gray-800 p-5 rounded-2xl outline-none focus:border-primary transition-all">
                     </div>
-                    <div class="space-y-2">
-                        <label class="text-sm text-gray-400 ml-1">Detail Request</label>
-                        <textarea name="desc" placeholder="Jelaskan fitur yang Anda inginkan..." rows="4" required class="w-full bg-darker border border-gray-700 p-4 rounded-2xl outline-none focus:border-primary transition"></textarea>
+                    <div class="space-y-3">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-2">Detail Fitur</label>
+                        <textarea name="desc" placeholder="Jelaskan secara rinci..." rows="5" required class="w-full bg-darker border border-gray-800 p-5 rounded-2xl outline-none focus:border-primary transition-all"></textarea>
                     </div>
-                    <button type="submit" class="bg-primary hover:bg-blue-600 py-4 rounded-2xl font-bold text-white transition transform active:scale-95 shadow-lg shadow-primary/20">Kirim ke Telegram</button>
+                    <button type="submit" class="bg-primary hover:bg-blue-600 py-5 rounded-2xl font-black text-white transition-all transform active:scale-95 shadow-2xl shadow-primary/30 mt-4">KIRIM KE TELEGRAM</button>
                 </form>
             </div>
         </section>
 
         <section id="contact" class="page-section">
-            <h2 class="text-3xl font-bold mb-10 text-center">Connect With Me</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-6" id="contact-grid"></div>
+            <h2 class="text-4xl font-black mb-12 text-center tracking-tighter">GET IN TOUCH</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="contact-grid"></div>
         </section>
 
         <section id="admin" class="page-section">
-            <div id="login-area" class="max-w-sm mx-auto bg-card p-10 rounded-3xl border border-gray-800 text-center shadow-2xl">
-                <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
-                    <i class="fas fa-lock"></i>
+            <div id="login-area" class="max-w-md mx-auto bg-card p-12 rounded-[3rem] border border-gray-800 text-center shadow-2xl">
+                <div class="w-20 h-20 bg-primary/10 text-primary rounded-3xl flex items-center justify-center mx-auto mb-8 text-3xl">
+                    <i class="fas fa-fingerprint"></i>
                 </div>
-                <h2 class="text-2xl font-bold mb-6">Admin Access</h2>
-                <input type="password" id="pass" placeholder="Password" class="w-full bg-darker border border-gray-700 p-4 rounded-2xl mb-6 outline-none text-center focus:border-primary">
-                <button onclick="doLogin()" class="w-full bg-primary py-4 rounded-2xl font-bold hover:bg-blue-600 transition shadow-lg shadow-primary/20">Login</button>
+                <h2 class="text-3xl font-black mb-2">Gatekeeper</h2>
+                <p class="text-gray-500 mb-8">Hanya untuk administrator Kayzen.</p>
+                <input type="password" id="pass" placeholder="Master Key" class="w-full bg-darker border border-gray-800 p-5 rounded-2xl mb-6 outline-none text-center focus:border-primary font-mono tracking-[1em]">
+                <button onclick="doLogin()" class="w-full bg-primary py-5 rounded-2xl font-black hover:bg-blue-600 transition-all shadow-xl shadow-primary/20">AUTHORIZE</button>
             </div>
             
-            <div id="dash-area" class="hidden">
-                <div class="flex justify-between items-center mb-8 bg-card p-6 rounded-2xl border border-gray-800">
-                    <h2 class="text-2xl font-bold text-primary">Dashboard Admin</h2>
-                    <button onclick="logout()" class="bg-red-500/10 text-red-500 px-4 py-2 rounded-lg hover:bg-red-500 hover:text-white transition font-medium">Logout Session</button>
+            <div id="dash-area" class="hidden animate-fade-in">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-10 bg-card p-8 rounded-[2rem] border border-gray-800 gap-6">
+                    <div>
+                        <h2 class="text-3xl font-black text-primary italic">SYSTEM DASHBOARD</h2>
+                        <p class="text-gray-500">Status: Authenticated</p>
+                    </div>
+                    <button onclick="logout()" class="w-full md:w-auto bg-red-500/10 text-red-500 px-10 py-4 rounded-xl hover:bg-red-500 hover:text-white transition-all font-black uppercase text-xs tracking-widest">Destroy Session</button>
                 </div>
 
-                <div class="bg-card p-8 rounded-3xl border border-gray-800 mb-8 shadow-xl">
-                    <h3 class="text-xl font-bold mb-6 text-primary flex items-center">
-                        <i class="fas fa-bullhorn mr-3"></i> Post New Announcement
-                    </h3>
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <input type="text" id="ann-content" placeholder="Tulis pengumuman baru di sini..." 
-                               class="flex-1 bg-darker border border-gray-700 p-4 rounded-2xl outline-none focus:border-primary">
-                        <button onclick="postAnnouncement()" 
-                                class="bg-primary hover:bg-blue-600 px-8 py-4 rounded-2xl font-bold text-white transition shadow-lg shadow-primary/20">
-                            Broadcast
-                        </button>
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1 flex flex-col gap-8">
+                        <div id="drop-zone" class="border-4 border-dashed border-gray-800 rounded-[2.5rem] p-10 text-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-all group relative overflow-hidden">
+                            <input type="file" id="file-in" multiple class="hidden" onchange="handleFiles(this.files)">
+                            <div onclick="document.getElementById('file-in').click()" class="relative z-10">
+                                <i class="fas fa-cloud-arrow-up text-5xl mb-6 text-gray-700 group-hover:text-primary transition-all group-hover:-translate-y-2"></i>
+                                <p class="text-lg font-black text-gray-400 group-hover:text-white">DEPLOY FILES</p>
+                                <p class="text-xs text-gray-600 mt-2">JS, PY, TXT (Max 10)</p>
+                            </div>
+                        </div>
+                        <div class="bg-card p-8 rounded-[2rem] border border-gray-800">
+                            <h3 class="font-black mb-6 text-yellow-500">ANNOUNCEMENT</h3>
+                            <input type="text" id="ann-title" placeholder="Judul..." class="w-full bg-darker border border-gray-800 p-4 rounded-xl mb-4 outline-none focus:border-primary">
+                            <textarea id="ann-msg" placeholder="Isi pesan..." class="w-full bg-darker border border-gray-800 p-4 rounded-xl mb-4 outline-none focus:border-primary"></textarea>
+                            <button onclick="postAnn()" class="w-full bg-yellow-600 hover:bg-yellow-700 py-4 rounded-xl font-black text-white transition-all">BROADCAST</button>
+                        </div>
                     </div>
-                    <div id="admin-ann-list" class="mt-6 space-y-2"></div>
-                </div>
 
-                <div id="drop-zone" class="border-2 border-dashed border-gray-700 rounded-3xl p-12 text-center mb-8 cursor-pointer hover:border-primary hover:bg-primary/5 transition group">
-                    <input type="file" id="file-in" multiple class="hidden" onchange="handleFiles(this.files)">
-                    <div onclick="document.getElementById('file-in').click()">
-                        <i class="fas fa-cloud-upload-alt text-5xl mb-4 text-gray-600 group-hover:text-primary transition"></i>
-                        <p class="text-lg font-medium text-gray-400 group-hover:text-gray-200">Klik atau seret file ke sini</p>
-                        <p class="text-sm text-gray-600 mt-2">Format: .js, .py, .txt (Max 10 files)</p>
+                    <div class="lg:col-span-2">
+                        <form onsubmit="saveSnip(event)" class="bg-card p-10 rounded-[2.5rem] border border-gray-800 flex flex-col gap-6 shadow-2xl">
+                            <input type="hidden" id="snip-id">
+                            <div class="grid md:grid-cols-1 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-2">Snippet Title</label>
+                                    <input type="text" id="t-title" placeholder="Contoh: Scraper Tiktok v1.0" required class="w-full bg-darker border border-gray-800 p-5 rounded-2xl outline-none focus:border-primary">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-2">Source Code Content</label>
+                                    <textarea id="t-code" placeholder="Write or paste your code here..." rows="15" required class="w-full bg-darker border border-gray-800 p-5 rounded-2xl font-mono text-sm outline-none focus:border-primary scroll-p-2"></textarea>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 py-5 rounded-2xl font-black text-white transition-all shadow-xl shadow-green-500/20">SAVE TO CLOUD</button>
+                                <button type="button" onclick="clearForm()" class="bg-gray-800 hover:bg-gray-700 px-10 rounded-2xl font-black transition-all">RESET</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <form onsubmit="saveSnip(event)" class="bg-card p-8 rounded-3xl border border-gray-800 flex flex-col gap-6 shadow-xl">
-                    <input type="hidden" id="snip-id">
-                    <div class="space-y-2">
-                        <label class="text-sm text-gray-400 ml-1">Snippet Title</label>
-                        <input type="text" id="t-title" placeholder="Nama script/snippet..." required class="w-full bg-darker border border-gray-700 p-4 rounded-2xl outline-none focus:border-primary">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-sm text-gray-400 ml-1">Source Code</label>
-                        <textarea id="t-code" placeholder="// Paste your code here..." rows="12" required class="w-full bg-darker border border-gray-700 p-4 rounded-2xl font-mono text-sm outline-none focus:border-primary"></textarea>
-                    </div>
-                    <div class="flex gap-4">
-                        <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 py-4 rounded-2xl font-bold text-white transition shadow-lg shadow-green-500/20">Save to Database</button>
-                        <button type="button" onclick="clearForm()" class="bg-gray-700 hover:bg-gray-600 px-8 rounded-2xl font-bold transition">Reset</button>
-                    </div>
-                </form>
             </div>
         </section>
     </main>
 
-    <footer class="text-center py-12 text-gray-600 text-sm border-t border-gray-900 mt-10">
-        <p>&copy; 2026 Kayzen Izumi. All Rights Reserved.</p>
+    <footer class="text-center py-16 text-gray-600 text-sm border-t border-gray-900 bg-darker/50">
+        <p class="font-mono tracking-tighter uppercase mb-2">Developed by Kayzen Izumi</p>
+        <p>&copy; 2026. All Rights Reserved.</p>
     </footer>
 
     <script>
@@ -222,82 +259,6 @@
 
         const sb = supabase.createClient(CONFIG.URL, CONFIG.KEY);
         let dataStore = [];
-        
-        function toggleAnnouncements() {
-            const box = document.getElementById('announcement-box');
-            box.classList.toggle('hidden');
-            document.getElementById('notif-dot').classList.add('hidden');
-        }
-
-        async function loadAnnouncements() {
-            try {
-                const { data, error } = await sb
-                    .from('announcements')
-                    .select('*')
-                    .eq('is_active', true)
-                    .order('created_at', { ascending: false });
-
-                const list = document.getElementById('announcement-list');
-                if (data && data.length > 0) {
-                    document.getElementById('notif-dot').classList.remove('hidden');
-                    list.innerHTML = data.map(a => `
-                        <div class="bg-darker p-3 rounded-xl border border-gray-800">
-                            <p class="leading-relaxed">${a.content}</p>
-                            <span class="text-[10px] text-gray-500 mt-2 block">${new Date(a.created_at).toLocaleDateString()}</span>
-                        </div>
-                    `).join('');
-                } else {
-                    list.innerHTML = `<p class="text-center text-gray-600 py-4">No new updates.</p>`;
-                }
-            } catch (e) {
-                console.error("Announcement Error:", e);
-            }
-        }
-
-        async function postAnnouncement() {
-            const content = document.getElementById('ann-content').value;
-            if (!content) return alert("Isi pengumuman tidak boleh kosong!");
-
-            const { error } = await sb
-                .from('announcements')
-                .insert([{ content: content, is_active: true }]);
-
-            if (!error) {
-                alert("Pengumuman berhasil dipublikasikan!");
-                document.getElementById('ann-content').value = '';
-                loadAnnouncements();
-                loadAdminAnnouncements();
-            } else {
-                alert("Gagal: " + error.message);
-            }
-        }
-
-        async function loadAdminAnnouncements() {
-            const list = document.getElementById('admin-ann-list');
-            const { data } = await sb
-                .from('announcements')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (data) {
-                list.innerHTML = data.map(a => `
-                    <div class="flex justify-between items-center bg-darker p-3 rounded-xl border border-gray-800">
-                        <span class="text-sm truncate mr-4 ${a.is_active ? 'text-gray-200' : 'text-gray-600 italic'}">${a.content}</span>
-                        <button onclick="deleteAnn('${a.id}')" class="text-red-500 hover:text-red-400 p-2">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>
-                `).join('');
-            }
-        }
-
-        async function deleteAnn(id) {
-            if (confirm("Hapus pengumuman ini?")) {
-                await sb.from('announcements').delete().eq('id', id);
-                loadAnnouncements();
-                loadAdminAnnouncements();
-            }
-        }
 
         function router(path) {
             const id = path.replace(/^\//, '') || 'home';
@@ -317,17 +278,11 @@
         }
 
         window.onpopstate = () => router(window.location.pathname);
-
         function toggleMenu() { document.getElementById('mobile-nav').classList.toggle('hidden'); }
 
         async function loadData() {
             const list = document.getElementById('snippet-list');
-            list.innerHTML = `
-                <div class="flex flex-col items-center py-20 opacity-50">
-                    <i class="fas fa-circle-notch fa-spin text-3xl text-primary mb-4"></i>
-                    <p>Fetching snippets from Supabase...</p>
-                </div>
-            `;
+            list.innerHTML = `<div class="flex flex-col items-center py-20 opacity-30"><i class="fas fa-circle-notch fa-spin text-4xl mb-4"></i><p class="font-mono">SYNCHRONIZING...</p></div>`;
             const { data } = await sb.from('snippets').select('*').order('id', {ascending: false});
             dataStore = data || [];
             renderSnippets();
@@ -338,26 +293,28 @@
             const list = document.getElementById('snippet-list');
             const admin = localStorage.getItem('kayz_adm') === 'true';
             const filtered = dataStore.filter(s => s.title.toLowerCase().includes(q));
+            
             if(filtered.length === 0) {
-                list.innerHTML = `<div class="text-center py-10 text-gray-500 bg-card rounded-2xl border border-gray-800">No snippets found for "${q}"</div>`;
+                list.innerHTML = `<div class="text-center py-20 text-gray-600 bg-card/50 rounded-[2.5rem] border border-dashed border-gray-800 font-mono">No data matching "${q}"</div>`;
                 return;
             }
+
             list.innerHTML = filtered.map(s => `
-                <div class="bg-card p-6 rounded-3xl border border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 hover:border-primary/40 transition shadow-lg group">
-                    <div class="flex items-center gap-4 w-full">
-                        <div class="w-12 h-12 bg-darker rounded-2xl flex items-center justify-center text-primary border border-gray-700">
-                            <i class="fas fa-file-code"></i>
+                <div class="bg-card p-8 rounded-[2.5rem] border border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6 hover:border-primary/50 transition-all group shadow-xl">
+                    <div class="flex items-center gap-6 w-full">
+                        <div class="w-16 h-16 bg-darker rounded-2xl flex items-center justify-center text-primary border border-gray-800 group-hover:scale-110 transition-all">
+                            <i class="fas fa-code text-2xl"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-lg text-gray-200 group-hover:text-primary transition">${s.title}</h3>
-                            <p class="text-xs text-gray-600 font-mono">ID: ${s.id} • ${new Date(s.created_at || Date.now()).toLocaleDateString()}</p>
+                            <h3 class="font-black text-xl text-gray-200 group-hover:text-primary transition-all">${s.title}</h3>
+                            <p class="text-[10px] text-gray-600 font-mono uppercase tracking-widest mt-1">Ref ID: ${s.id} 窶｢ Released: ${new Date(s.created_at || Date.now()).toLocaleDateString()}</p>
                         </div>
                     </div>
-                    <div class="flex gap-2 w-full md:w-auto">
-                        <button onclick="viewRaw('${s.id}')" class="flex-1 md:flex-none px-6 py-2 bg-darker hover:bg-primary hover:text-white rounded-xl border border-gray-700 transition font-medium">Raw</button>
+                    <div class="flex gap-3 w-full md:w-auto">
+                        <button onclick="viewRaw('${s.id}')" class="flex-1 md:flex-none px-8 py-3 bg-darker hover:bg-primary text-white rounded-xl border border-gray-700 transition-all font-black text-xs">VIEW</button>
                         ${admin ? `
-                            <button onclick="editMe('${s.id}')" class="p-2 text-yellow-500 hover:bg-yellow-500/10 rounded-lg"><i class="fas fa-edit"></i></button>
-                            <button onclick="delMe('${s.id}')" class="p-2 text-red-500 hover:bg-red-500/10 rounded-lg"><i class="fas fa-trash"></i></button>
+                            <button onclick="editMe('${s.id}')" class="p-3 text-yellow-500 bg-yellow-500/5 rounded-xl border border-yellow-500/10 hover:bg-yellow-500/20"><i class="fas fa-pen-to-square"></i></button>
+                            <button onclick="delMe('${s.id}')" class="p-3 text-red-500 bg-red-500/5 rounded-xl border border-red-500/10 hover:bg-red-500/20"><i class="fas fa-trash-can"></i></button>
                         ` : ''}
                     </div>
                 </div>
@@ -377,26 +334,68 @@
             document.body.style.overflow = 'auto';
         }
 
+        async function fetchNotif() {
+            const { data } = await sb.from('announcements').select('*').order('id', {ascending: false}).limit(5);
+            const list = document.getElementById('notif-list');
+            const dot = document.getElementById('notif-dot');
+            
+            if(data && data.length > 0) {
+                dot.classList.remove('hidden');
+                list.innerHTML = data.map(n => `
+                    <div class="bg-darker p-4 rounded-2xl border border-gray-800">
+                        <div class="flex items-center gap-2 mb-1">
+                            <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                            <h4 class="font-bold text-xs uppercase text-blue-400">${n.title}</h4>
+                        </div>
+                        <p class="text-xs text-gray-400 leading-relaxed">${n.message}</p>
+                    </div>
+                `).join('');
+            } else {
+                list.innerHTML = `<p class="text-center text-gray-600 text-xs py-4">Belum ada pengumuman.</p>`;
+            }
+        }
+
+        function toggleNotif() {
+            const p = document.getElementById('notif-panel');
+            p.classList.toggle('hidden');
+            if(!p.classList.contains('hidden')) {
+                fetchNotif();
+                document.getElementById('notif-dot').classList.add('hidden');
+            }
+        }
+
+        async function postAnn() {
+            const title = document.getElementById('ann-title').value;
+            const message = document.getElementById('ann-msg').value;
+            if(!title || !message) return alert('Lengkapi data!');
+            const { error } = await sb.from('announcements').insert([{ title, message }]);
+            if(!error) {
+                alert('Berhasil disiarkan!');
+                document.getElementById('ann-title').value = '';
+                document.getElementById('ann-msg').value = '';
+            }
+        }
+
         async function sendRequest(e) {
             e.preventDefault();
             const btn = e.submitter;
             btn.disabled = true;
-            btn.innerText = "Sending...";
+            btn.innerText = "AUTHENTICATING...";
             const f = new FormData(e.target);
-            const text = `📬 *NEW REQUEST FROM WEB*\n\n👤 *Nama:* ${f.get('nama')}\n🔗 *URL:* ${f.get('url')}\n📝 *Deskripsi:* ${f.get('desc')}\n\n⏰ _${new Date().toLocaleString()}_`;
+            const text = `闘 *NEW WEB REQUEST*\n\n側 *Client:* ${f.get('nama')}\n迫 *Project:* ${f.get('url')}\n統 *Detail:* ${f.get('desc')}\n\n竢ｰ _System Time: ${new Date().toLocaleString()}_`;
             try {
                 await fetch(`https://api.telegram.org/bot${CONFIG.REQ_BOT}/sendMessage`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ chat_id: CONFIG.CHAT_ID, text, parse_mode: 'Markdown' })
                 });
-                alert('Request Anda telah terkirim ke Telegram Kayzen!');
+                alert('Request berhasil dikirim ke Kayzen!');
                 e.target.reset();
             } catch (err) {
-                alert('Gagal mengirim request.');
+                alert('Connection Error.');
             } finally {
                 btn.disabled = false;
-                btn.innerText = "Kirim ke Telegram";
+                btn.innerText = "KIRIM KE TELEGRAM";
             }
         }
 
@@ -404,9 +403,6 @@
             const isAdm = localStorage.getItem('kayz_adm') === 'true';
             document.getElementById('login-area').classList.toggle('hidden', isAdm);
             document.getElementById('dash-area').classList.toggle('hidden', !isAdm);
-            if (isAdm) {
-                loadAdminAnnouncements();
-            }
         }
 
         function doLogin() {
@@ -415,18 +411,15 @@
                 fetch(`https://api.telegram.org/bot${CONFIG.LOG_BOT}/sendMessage`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ chat_id: CONFIG.CHAT_ID, text: '🔑 *Security Alert:* Admin dashboard accessed.' , parse_mode: 'Markdown' })
+                    body: JSON.stringify({ chat_id: CONFIG.CHAT_ID, text: '泊 *SECURITY:* Admin Panel accessed via Web.' , parse_mode: 'Markdown' })
                 });
                 checkLog();
             } else {
-                alert('Password salah!');
+                alert('Access Denied: Invalid Master Key.');
             }
         }
 
-        function logout() { 
-            localStorage.removeItem('kayz_adm'); 
-            router('/home'); 
-        }
+        function logout() { localStorage.removeItem('kayz_adm'); router('/home'); }
 
         async function saveSnip(e) {
             e.preventDefault();
@@ -439,14 +432,14 @@
                 await sb.from('snippets').update(payload).eq('id', id) : 
                 await sb.from('snippets').insert([payload]);
             if(!error) {
-                alert('Success!'); clearForm(); loadData();
+                alert('Cloud Sync Success!'); clearForm(); loadData();
             } else {
-                alert('Error: ' + error.message);
+                alert('Sync Fail: ' + error.message);
             }
         }
 
         async function delMe(id) { 
-            if(confirm('Hapus snippet ini secara permanen?')) { 
+            if(confirm('Hapus data secara permanen?')) { 
                 await sb.from('snippets').delete().eq('id', id); 
                 loadData(); 
             } 
@@ -472,7 +465,7 @@
             Array.from(files).slice(0, 10).forEach(f => {
                 const r = new FileReader();
                 r.onload = (e) => {
-                    document.getElementById('t-code').value += `\n// --- FILE: ${f.name} ---\n${e.target.result}\n`;
+                    document.getElementById('t-code').value += `\n/* FILE: ${f.name} */\n${e.target.result}\n`;
                 };
                 r.readAsText(f);
             });
@@ -488,18 +481,18 @@
                 {n:'Email', i:'fa-envelope', l:'mailto:kayzz.my@gmail.com', b:'bg-yellow-500/10', t:'text-yellow-500'}
             ];
             document.getElementById('contact-grid').innerHTML = c.map(x => `
-                <a href="${x.l}" target="_blank" class="bg-card p-8 rounded-3xl border border-gray-800 text-center hover:border-primary transition group shadow-lg">
-                    <div class="w-16 h-16 ${x.b} ${x.t} rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl group-hover:scale-110 transition">
+                <a href="${x.l}" target="_blank" class="bg-card p-10 rounded-[2.5rem] border border-gray-800 text-center hover:border-primary transition-all group shadow-2xl">
+                    <div class="w-20 h-20 ${x.b} ${x.t} rounded-3xl flex items-center justify-center mx-auto mb-6 text-4xl group-hover:scale-110 group-hover:rotate-6 transition-all">
                         <i class="fab ${x.i}"></i>
                     </div>
-                    <p class="font-bold text-lg">${x.n}</p>
+                    <p class="font-black text-xl">${x.n}</p>
                 </a>
             `).join('');
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             router(window.location.pathname);
-            loadAnnouncements();
+            fetchNotif();
         });
     </script>
 </body>
