@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         tailwind.config = {
@@ -35,6 +36,11 @@
         .dropdown-shadow { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5); }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #23293f; border-radius: 10px; }
+        
+        /* SweetAlert Custom Dark Theme */
+        .swal2-popup { background: #161b2c !important; color: #f8fafc !important; border: 1px solid #23293f !important; border-radius: 24px !important; }
+        .swal2-title { color: #f8fafc !important; }
+        .swal2-confirm { background-color: #6366f1 !important; border-radius: 12px !important; padding: 12px 32px !important; }
     </style>
 </head>
 <body class="font-sans">
@@ -110,24 +116,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="grid md:grid-cols-3 gap-6 mt-24">
-                <div class="bg-card p-8 rounded-3xl border border-border">
-                    <i class="fas fa-bolt text-3xl text-yellow-400 mb-6"></i>
-                    <h3 class="text-xl font-bold mb-2">Fast Deployment</h3>
-                    <p class="text-gray-400 text-sm">Automasi yang dibangun untuk efisiensi waktu dan performa tinggi.</p>
-                </div>
-                <div class="bg-card p-8 rounded-3xl border border-border">
-                    <i class="fas fa-layer-group text-3xl text-blue-400 mb-6"></i>
-                    <h3 class="text-xl font-bold mb-2">Scalable Code</h3>
-                    <p class="text-gray-400 text-sm">Arsitektur kode yang bersih dan mudah dikembangkan lebih lanjut.</p>
-                </div>
-                <div class="bg-card p-8 rounded-3xl border border-border">
-                    <i class="fas fa-shield-alt text-3xl text-emerald-400 mb-6"></i>
-                    <h3 class="text-xl font-bold mb-2">Secure Design</h3>
-                    <p class="text-gray-400 text-sm">Prioritas pada keamanan data dan integritas sistem backend.</p>
-                </div>
-            </div>
         </section>
 
         <section id="snippets" class="page-section">
@@ -144,29 +132,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-wrap gap-3 mb-10 overflow-x-auto pb-2">
-                <button onclick="filterCat('All')" class="cat-btn active bg-primary px-6 py-2 rounded-xl text-sm font-bold border border-primary transition">All</button>
-                <button onclick="filterCat('AI')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">AI</button>
-                <button onclick="filterCat('Anime')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Anime</button>
-                <button onclick="filterCat('Audio')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Audio</button>
-                <button onclick="filterCat('Bypass')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Bypass</button>
-                <button onclick="filterCat('Downloader')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Downloader</button>
-                <button onclick="filterCat('Fun')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Fun</button>
-                <button onclick="filterCat('Game')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Game</button>
-                <button onclick="filterCat('Group')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Group</button>
-                <button onclick="filterCat('Image')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Image</button>
-                <button onclick="filterCat('Info')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Info</button>
-                <button onclick="filterCat('Internet')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Internet</button>
-                <button onclick="filterCat('Islam')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Islam</button>
-                <button onclick="filterCat('Main')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Main</button>
-                <button onclick="filterCat('Maker')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Maker</button>
-                <button onclick="filterCat('NSFW')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">NSFW</button>
-                <button onclick="filterCat('Random')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Random</button>
-                <button onclick="filterCat('Rpg')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Rpg</button>
-                <button onclick="filterCat('Scraper')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Scraper</button>
-                <button onclick="filterCat('Search')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Search</button>
-                <button onclick="filterCat('Stalk')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Stalk</button>
-                <button onclick="filterCat('Tools')" class="cat-btn bg-card px-6 py-2 rounded-xl text-sm font-bold border border-border hover:border-primary transition">Tools</button>
+            <div id="cat-filter-list" class="flex flex-wrap gap-3 mb-10 overflow-x-auto pb-2"></div>
 
             <div id="snippet-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
@@ -224,6 +190,7 @@
                 <div class="grid lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2 space-y-6">
                         <form onsubmit="saveSnip(event)" class="bg-card p-8 rounded-3xl border border-border space-y-6">
+                            <h3 class="font-bold border-b border-border pb-4">Manage Snippet</h3>
                             <input type="hidden" id="snip-id">
                             <div class="grid md:grid-cols-2 gap-6">
                                 <div class="space-y-2">
@@ -232,29 +199,7 @@
                                 </div>
                                 <div class="space-y-2">
                                     <label class="text-xs font-bold text-gray-500">CATEGORY</label>
-                                    <select id="t-cat" class="w-full bg-dark border border-border p-4 rounded-2xl outline-none focus:border-primary transition">
-                                        <option>AI</option>
-                                        <option>Anime</option>
-                                        <option>Audio</option>
-                                        <option>Bypass</option>
-                                        <option>Downloader</option>
-                                        <option>Fun</option>
-                                        <option>Game</option>
-                                        <option>Group</option>
-                                        <option>Image</option>
-                                        <option>Info</option>
-                                        <option>Internet</option>
-                                        <option>Islam</option>
-                                        <option>Main</option>
-                                        <option>Maker</option>
-                                        <option>NSFW</option>
-                                        <option>Random</option>
-                                        <option>Rpg</option>
-                                        <option>Scraper</option>
-                                        <option>Search</option>
-                                        <option>Stalk</option>
-                                        <option>Tools</option>
-                                    </select>
+                                    <select id="t-cat" class="w-full bg-dark border border-border p-4 rounded-2xl outline-none focus:border-primary transition"></select>
                                 </div>
                             </div>
                             <div class="space-y-2">
@@ -263,6 +208,15 @@
                             </div>
                             <button type="submit" class="w-full bg-emerald-600 py-5 rounded-2xl font-bold">Save Snippet</button>
                         </form>
+
+                        <div class="bg-card p-8 rounded-3xl border border-border space-y-6">
+                            <h3 class="font-bold border-b border-border pb-4">Manage Categories</h3>
+                            <div class="flex gap-4">
+                                <input type="text" id="new-cat-name" placeholder="Nama kategori baru..." class="flex-1 bg-dark border border-border p-4 rounded-2xl outline-none focus:border-primary">
+                                <button onclick="addCategory()" class="bg-primary px-6 rounded-2xl font-bold">Add</button>
+                            </div>
+                            <div id="admin-cat-list" class="grid grid-cols-2 md:grid-cols-4 gap-2"></div>
+                        </div>
                     </div>
                     
                     <div class="space-y-6">
@@ -298,9 +252,24 @@
 
         const sb = supabase.createClient(CONFIG.URL, CONFIG.KEY);
         let dataStore = [];
+        let categoryStore = [];
         let activeCat = 'All';
 
-        function router(path) {
+        function showToast(title, icon = 'success') {
+            Swal.fire({
+                title: title,
+                icon: icon,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                background: '#161b2c',
+                color: '#f8fafc'
+            });
+        }
+
+        async function router(path) {
             const id = path.replace(/^\//, '') || 'home';
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             const target = document.getElementById(id);
@@ -311,6 +280,7 @@
             document.getElementById('mobile-nav').classList.add('hidden');
             window.scrollTo({top:0, behavior:'smooth'});
 
+            await loadCategories(); // Load kategori di setiap perpindahan halaman yang butuh data
             if(id === 'snippets') loadData();
             if(id === 'contact') loadContacts();
             if(id === 'admin') checkLog();
@@ -320,6 +290,63 @@
         window.onpopstate = () => router(window.location.pathname);
         function toggleMenu() { document.getElementById('mobile-nav').classList.toggle('hidden'); }
         function toggleNotif() { document.getElementById('notif-dropdown').classList.toggle('hidden'); }
+
+        async function loadCategories() {
+            const { data } = await sb.from('categories').select('*').order('name', {ascending: true});
+            categoryStore = data || [];
+            
+            // Render Filter Buttons di Snippets
+            const filterContainer = document.getElementById('cat-filter-list');
+            if(filterContainer) {
+                let html = `<button onclick="filterCat('All')" class="cat-btn ${activeCat === 'All' ? 'active bg-primary border-primary' : 'bg-card border-border'} px-6 py-2 rounded-xl text-sm font-bold border transition">All</button>`;
+                html += categoryStore.map(c => `
+                    <button onclick="filterCat('${c.name}')" class="cat-btn ${activeCat === c.name ? 'active bg-primary border-primary' : 'bg-card border-border'} px-6 py-2 rounded-xl text-sm font-bold border transition">${c.name}</button>
+                `).join('');
+                filterContainer.innerHTML = html;
+            }
+
+            // Render Dropdown di Admin
+            const selectCat = document.getElementById('t-cat');
+            if(selectCat) {
+                selectCat.innerHTML = categoryStore.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+            }
+
+            // Render List Kategori di Admin Panel untuk Delete
+            const adminCatList = document.getElementById('admin-cat-list');
+            if(adminCatList) {
+                adminCatList.innerHTML = categoryStore.map(c => `
+                    <div class="flex justify-between items-center bg-dark p-3 rounded-xl border border-border text-xs">
+                        <span>${c.name}</span>
+                        <button onclick="delCategory('${c.id}')" class="text-red-500 hover:text-red-400"><i class="fas fa-times"></i></button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function addCategory() {
+            const name = document.getElementById('new-cat-name').value.trim();
+            if(!name) return;
+            const { error } = await sb.from('categories').insert([{ name }]);
+            if(error) return showToast('Gagal tambah kategori / Sudah ada', 'error');
+            document.getElementById('new-cat-name').value = '';
+            showToast('Kategori ditambahkan');
+            loadCategories();
+        }
+
+        async function delCategory(id) {
+            const result = await Swal.fire({
+                title: 'Hapus Kategori?',
+                text: "Snippet dengan kategori ini akan kehilangan relasinya.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!'
+            });
+            if(result.isConfirmed) {
+                await sb.from('categories').delete().eq('id', id);
+                showToast('Kategori dihapus');
+                loadCategories();
+            }
+        }
 
         async function loadNotifs() {
             const { data } = await sb.from('announcements').select('*').order('id', {ascending: false}).limit(5);
@@ -352,7 +379,7 @@
             const payload = { title: document.getElementById('n-title').value, message: document.getElementById('n-msg').value };
             const { error } = await sb.from('announcements').insert([payload]);
             if(!error) {
-                alert('Notifikasi dikirim!');
+                showToast('Notifikasi dikirim!');
                 e.target.reset();
                 loadNotifs();
             }
@@ -427,33 +454,43 @@
         async function sendRequest(e) {
             e.preventDefault();
             const f = new FormData(e.target);
-            const text = `🔔 *NEW REQUEST*\n\n👤 *Nama:* ${f.get('nama')}\n📂 *Tipe:* ${f.get('type')}\n🔗 *URL:* ${f.get('url')}\n📝 *Desc:* ${f.get('desc')}`;
+            const text = `🚀 *NEW REQUEST*\n\n👤 *Nama:* ${f.get('nama')}\n📁 *Tipe:* ${f.get('type')}\n🔗 *URL:* ${f.get('url')}\n📝 *Desc:* ${f.get('desc')}`;
             
-            await fetch(`https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ chat_id: CONFIG.CHAT_ID, text, parse_mode: 'Markdown' })
-            });
-            alert('Request terkirim!');
-            e.target.reset();
+            try {
+                await fetch(`https://api.telegram.org/bot${CONFIG.BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ chat_id: CONFIG.CHAT_ID, text, parse_mode: 'Markdown' })
+                });
+                showToast('Request berhasil dikirim ke Telegram!');
+                e.target.reset();
+            } catch (err) {
+                showToast('Gagal mengirim request', 'error');
+            }
         }
 
         function checkLog() {
             const isAdm = localStorage.getItem('kayz_adm') === 'true';
             document.getElementById('login-area').classList.toggle('hidden', isAdm);
             document.getElementById('dash-area').classList.toggle('hidden', !isAdm);
+            if(isAdm) loadCategories();
         }
 
         function doLogin() {
             if(document.getElementById('pass').value === CONFIG.PASS) {
                 localStorage.setItem('kayz_adm', 'true');
+                showToast('Welcome Back, Admin!');
                 router('/admin');
             } else {
-                alert('Wrong Key!');
+                Swal.fire('Error', 'Wrong Access Key!', 'error');
             }
         }
 
-        function logout() { localStorage.removeItem('kayz_adm'); router('/home'); }
+        function logout() { 
+            localStorage.removeItem('kayz_adm'); 
+            showToast('Logged out');
+            router('/home'); 
+        }
 
         async function saveSnip(e) {
             e.preventDefault();
@@ -465,10 +502,30 @@
             };
             
             const { error } = id ? await sb.from('snippets').update(payload).eq('id', id) : await sb.from('snippets').insert([payload]);
-            if(!error) { alert('Success!'); location.reload(); }
+            
+            if(!error) { 
+                showToast(id ? 'Snippet diupdate!' : 'Snippet ditambahkan!');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showToast('Terjadi kesalahan', 'error');
+            }
         }
 
-        async function delMe(id) { if(confirm('Hapus?')) { await sb.from('snippets').delete().eq('id', id); loadData(); } }
+        async function delMe(id) { 
+            const result = await Swal.fire({
+                title: 'Hapus Snippet?',
+                text: "Data yang dihapus tidak bisa dikembalikan.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Ya, Hapus!'
+            });
+            if(result.isConfirmed) {
+                await sb.from('snippets').delete().eq('id', id);
+                showToast('Dihapus!');
+                loadData();
+            }
+        }
         
         function editMe(id) {
             const s = dataStore.find(x => x.id == id);
@@ -477,6 +534,8 @@
                 document.getElementById('t-title').value = s.title;
                 document.getElementById('t-cat').value = s.category;
                 document.getElementById('t-code').value = s.code;
+                window.scrollTo({ top: document.querySelector('form').offsetTop - 100, behavior: 'smooth' });
+                showToast('Mode Edit Aktif', 'info');
             }
         }
 
